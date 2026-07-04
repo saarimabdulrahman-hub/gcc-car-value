@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCC Car Value — Know What It's Worth</title>
+<style>
+:root {
+  --sand: #F5E6D3;
+  --gold: #C8A951;
+  --dark: #1A1A2E;
+  --card: #16213E;
+  --accent: #0F3460;
+  --green: #2ECC71;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --text: #E8E8E8;
+  --muted: #A0A0B0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+}
+.header {
+  background: linear-gradient(135deg, var(--card) 0%, var(--accent) 100%);
+  padding: 60px 20px 40px;
+  text-align: center;
+  border-bottom: 3px solid var(--gold);
+}
+.header h1 {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.header p {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(200,169,81,0.15);
+}
+.card h2 {
+  color: var(--gold);
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; }
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input, .form-group select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  font-size: 1rem;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.btn {
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--gold);
+  color: var(--dark);
+  width: 100%;
+  margin-top: 8px;
+}
+.btn-primary:hover { background: #d4b55a; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.price-display {
+  text-align: center;
+  padding: 20px;
+}
+.price-display .estimate {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+.price-display .range {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.confidence-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.conf-high { background: rgba(46,204,113,0.2); color: var(--green); }
+.conf-medium { background: rgba(243,156,18,0.2); color: var(--yellow); }
+.conf-low { background: rgba(231,76,60,0.2); color: var(--red); }
+.deal-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 8px 0;
+}
+.deal-great { background: rgba(46,204,113,0.2); color: var(--green); }
+.deal-fair { background: rgba(243,156,18,0.2); color: var(--yellow); }
+.deal-above { background: rgba(231,76,60,0.2); color: var(--red); }
+.adj-list { list-style: none; }
+.adj-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: space-between;
+}
+.adj-list .reason { color: var(--muted); font-size: 0.9rem; }
+.adj-list .amount { font-weight: 600; }
+.amount-positive { color: var(--green); }
+.amount-negative { color: var(--red); }
+.comp-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.comp-item .comp-price { font-weight: 700; font-size: 1.1rem; }
+.comp-item .comp-meta { color: var(--muted); font-size: 0.85rem; }
+.comp-item .comp-source { color: var(--gold); font-size: 0.8rem; }
+.knowledge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.knowledge-item {
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+}
+.knowledge-item .label { color: var(--muted); font-size: 0.8rem; }
+.knowledge-item .value { margin-top: 4px; }
+.issue-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 3px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  background: rgba(231,76,60,0.15);
+  color: var(--red);
+}
+.issue-tag.severity-moderate { background: rgba(243,156,18,0.15); color: var(--yellow); }
+.issue-tag.severity-minor { background: rgba(46,204,113,0.15); color: var(--green); }
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+}
+.error {
+  background: rgba(231,76,60,0.15);
+  color: var(--red);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+.hidden { display: none; }
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 20px;
+}
+.stat { text-align: center; }
+.stat .num { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+.stat .label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.footer {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.model-browser {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.model-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.model-chip:hover {
+  background: rgba(200,169,81,0.15);
+  border-color: var(--gold);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>GCC Car Value</h1>
+  <p>Know what any car is worth in the Gulf market — backed by real data</p>
+</div>
+
+<div class="container">
+
+  <!-- Valuation Form -->
+  <div class="card" id="form-card">
+    <h2>What's Your Car Worth?</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Make</label>
+        <select id="make-select" onchange="loadModels()">
+          <option value="">Select make...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Model</label>
+        <select id="model-select" disabled onchange="loadYears()">
+          <option value="">Select model...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <select id="year-select" disabled>
+          <option value="">Select year...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mileage (km)</label>
+        <input type="number" id="mileage" placeholder="e.g. 80000" min="0" max="1000000">
+      </div>
+      <div class="form-group">
+        <label>Spec</label>
+        <select id="spec">
+          <option value="">Any</option>
+          <option value="GCC">GCC</option>
+          <option value="US">US / American</option>
+          <option value="Japan">Japan</option>
+          <option value="European">European</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <select id="city">
+          <option value="">Any</option>
+          <option value="Dubai">Dubai</option>
+          <option value="Abu Dhabi">Abu Dhabi</option>
+          <option value="Sharjah">Sharjah</option>
+          <option value="Riyadh">Riyadh</option>
+          <option value="Jeddah">Jeddah</option>
+          <option value="Dammam">Dammam</option>
+          <option value="Kuwait City">Kuwait City</option>
+          <option value="Doha">Doha</option>
+          <option value="Muscat">Muscat</option>
+          <option value="Manama">Manama</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Country</label>
+        <select id="country">
+          <option value="">Any</option>
+          <option value="AE">UAE</option>
+          <option value="SA">Saudi Arabia</option>
+          <option value="KW">Kuwait</option>
+          <option value="QA">Qatar</option>
+          <option value="BH">Bahrain</option>
+          <option value="OM">Oman</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Asking Price (AED) — optional</label>
+        <input type="number" id="asking-price" placeholder="To check if it's a good deal" min="0">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="getValuation()" id="valuate-btn">Get Valuation</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="card hidden" id="loading-card">
+    <div class="loading">Analyzing market data...</div>
+  </div>
+
+  <!-- Error -->
+  <div class="card hidden" id="error-card"></div>
+
+  <!-- Results -->
+  <div class="card hidden" id="results-card">
+    <div class="price-display">
+      <div class="estimate" id="est-price">—</div>
+      <div class="range" id="est-range"></div>
+      <span class="confidence-badge" id="conf-badge"></span>
+      <div id="deal-badge-container"></div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat"><div class="num" id="stat-comps">—</div><div class="label">Comparable Listings</div></div>
+      <div class="stat"><div class="num" id="stat-median">—</div><div class="label">Segment Median</div></div>
+      <div class="stat"><div class="num" id="stat-ci">—</div><div class="label">80% Confidence Range</div></div>
+    </div>
+  </div>
+
+  <!-- Adjustments -->
+  <div class="card hidden" id="adjustments-card">
+    <h2>How We Got This Price</h2>
+    <ul class="adj-list" id="adj-list"></ul>
+  </div>
+
+  <!-- Comps -->
+  <div class="card hidden" id="comps-card">
+    <h2>Similar Cars in the Market</h2>
+    <div id="comps-list"></div>
+  </div>
+
+  <!-- Knowledge -->
+  <div class="card hidden" id="knowledge-card">
+    <h2>What You Should Know</h2>
+    <div class="knowledge-grid" id="knowledge-grid"></div>
+    <div id="issues-container"></div>
+  </div>
+
+  <!-- Explanation -->
+  <div class="card hidden" id="explanation-card">
+    <h2>In Plain English</h2>
+    <p id="explanation-text" style="line-height:1.7;color:var(--muted)"></p>
+  </div>
+
+</div>
+
+<div class="footer">
+  GCC Car Value &copy; 2026 — Market data refreshed weekly from public listings across the Gulf
+</div>
+
+<script>
+const API = 'http://localhost:8000/v1';
+
+// Load makes on page load
+async function init() {
+  try {
+    const r = await fetch(`${API}/models`);
+    const data = await r.json();
+    const select = document.getElementById('make-select');
+    data.makes.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.make;
+      opt.textContent = `${m.make} (${m.listing_count} listings)`;
+      select.appendChild(opt);
+    });
+  } catch(e) {
+    console.error('Failed to load makes:', e);
+  }
+}
+
+async function loadModels() {
+  const make = document.getElementById('make-select').value;
+  const modelSelect = document.getElementById('model-select');
+  modelSelect.disabled = !make;
+  modelSelect.innerHTML = '<option value="">Select model...</option>';
+  if (!make) return;
+
+  const r = await fetch(`${API}/models/${encodeURIComponent(make)}`);
+  const data = await r.json();
+  data.models.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.model;
+    opt.textContent = `${m.model} (${m.year_range})`;
+    modelSelect.appendChild(opt);
+  });
+  document.getElementById('year-select').disabled = true;
+  document.getElementById('year-select').innerHTML = '<option value="">Select year...</option>';
+}
+
+function loadYears() {
+  // Simplified — years populated from models endpoint
+  document.getElementById('year-select').disabled = false;
+  // Pre-populate common years
+  const yearSelect = document.getElementById('year-select');
+  yearSelect.innerHTML = '<option value="">Select year...</option>';
+  for (let y = 2026; y >= 1990; y--) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+}
+
+function hideAll() {
+  ['loading-card','error-card','results-card','adjustments-card','comps-card','knowledge-card','explanation-card']
+    .forEach(id => document.getElementById(id).classList.add('hidden'));
+}
+
+async function getValuation() {
+  const make = document.getElementById('make-select').value;
+  const model = document.getElementById('model-select').value;
+  const year = document.getElementById('year-select').value;
+  if (!make || !model || !year) {
+    alert('Please select make, model, and year');
+    return;
+  }
+
+  hideAll();
+  document.getElementById('loading-card').classList.remove('hidden');
+  document.getElementById('valuate-btn').disabled = true;
+
+  const body = { make, model, year: parseInt(year) };
+  const mileage = document.getElementById('mileage').value;
+  if (mileage) body.mileage_km = parseInt(mileage);
+  const spec = document.getElementById('spec').value;
+  if (spec) body.spec = spec;
+  const city = document.getElementById('city').value;
+  if (city) body.city = city;
+  const country = document.getElementById('country').value;
+  if (country) body.country = country;
+  const askingPrice = document.getElementById('asking-price').value;
+  if (askingPrice) body.asking_price = parseFloat(askingPrice);
+
+  try {
+    const r = await fetch(`${API}/valuate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!r.ok) {
+      const err = await r.json();
+      throw new Error(err.detail || 'Valuation failed');
+    }
+
+    const data = await r.json();
+    renderResults(data);
+  } catch(e) {
+    document.getElementById('loading-card').classList.add('hidden');
+    const errCard = document.getElementById('error-card');
+    errCard.classList.remove('hidden');
+    errCard.innerHTML = `<div class="error">${e.message}</div>`;
+  } finally {
+    document.getElementById('valuate-btn').disabled = false;
+  }
+}
+
+function renderResults(data) {
+  document.getElementById('loading-card').classList.add('hidden');
+
+  // Price
+  document.getElementById('est-price').textContent = data.estimate.toLocaleString() + ' AED';
+  document.getElementById('est-range').textContent =
+    `Typical range: ${data.price_low.toLocaleString()} — ${data.price_high.toLocaleString()} AED`;
+  const badge = document.getElementById('conf-badge');
+  badge.textContent = data.confidence + ' confidence';
+  badge.className = 'confidence-badge conf-' + data.confidence;
+
+  // Deal indicator
+  const dealContainer = document.getElementById('deal-badge-container');
+  if (data.deal_indicator) {
+    dealContainer.innerHTML = `<div class="deal-badge deal-${data.deal_indicator.replace('_','-')}">${data.deal_description}</div>`;
+  } else {
+    dealContainer.innerHTML = '';
+  }
+
+  // Stats
+  document.getElementById('stat-comps').textContent = data.comp_count;
+  document.getElementById('stat-median').textContent = data.segment_median.toLocaleString() + ' AED';
+  if (data.confidence_interval_80) {
+    document.getElementById('stat-ci').textContent =
+      `${data.confidence_interval_80[0].toLocaleString()} – ${data.confidence_interval_80[1].toLocaleString()}`;
+  }
+
+  document.getElementById('results-card').classList.remove('hidden');
+
+  // Adjustments
+  if (data.adjustments && data.adjustments.length > 0) {
+    const adjList = document.getElementById('adj-list');
+    adjList.innerHTML = data.adjustments.map(a => `
+      <li>
+        <span class="reason">${a.detail}</span>
+        <span class="amount ${a.amount >= 0 ? 'amount-positive' : 'amount-negative'}">
+          ${a.amount >= 0 ? '+' : ''}${a.amount.toLocaleString()} AED
+        </span>
+      </li>
+    `).join('');
+    document.getElementById('adjustments-card').classList.remove('hidden');
+  }
+
+  // Comps
+  if (data.comps && data.comps.length > 0) {
+    document.getElementById('comps-list').innerHTML = data.comps.map(c => `
+      <div class="comp-item">
+        <div>
+          <div class="comp-price">${c.price_aed.toLocaleString()} AED</div>
+          <div class="comp-meta">${c.year} &bull; ${c.mileage_km ? c.mileage_km.toLocaleString() + ' km' : 'N/A'} &bull; ${c.spec || 'N/A'}</div>
+        </div>
+        <div class="comp-source">${c.found_on}</div>
+      </div>
+    `).join('');
+    document.getElementById('comps-card').classList.remove('hidden');
+  }
+
+  // Knowledge
+  if (data.knowledge) {
+    const k = data.knowledge;
+    let html = '';
+    if (k.generation) html += `<div class="knowledge-item"><div class="label">Generation</div><div class="value">${k.generation}</div></div>`;
+    if (k.annual_maintenance_estimate) html += `<div class="knowledge-item"><div class="label">Annual Maintenance</div><div class="value">${k.annual_maintenance_estimate}</div></div>`;
+    if (k.market_liquidity) html += `<div class="knowledge-item"><div class="label">Market Liquidity</div><div class="value">${k.market_liquidity}</div></div>`;
+    if (html) {
+      document.getElementById('knowledge-grid').innerHTML = html;
+      document.getElementById('knowledge-card').classList.remove('hidden');
+    }
+
+    if (k.known_issues && k.known_issues.length > 0) {
+      document.getElementById('issues-container').innerHTML = `
+        <div style="margin-top:16px">
+          <div class="label" style="color:var(--muted);margin-bottom:8px">KNOWN ISSUES</div>
+          ${k.known_issues.map(i => `<span class="issue-tag">${typeof i === 'string' ? i : i.title || i}</span>`).join('')}
+        </div>
+      `;
+      document.getElementById('knowledge-card').classList.remove('hidden');
+    }
+  }
+
+  // Generate text explanation from the data
+  const explanation = buildExplanation(data);
+  document.getElementById('explanation-text').textContent = explanation;
+  document.getElementById('explanation-card').classList.remove('hidden');
+}
+
+function buildExplanation(data) {
+  const parts = [
+    `A ${data.comps?.[0]?.year || ''} ${data.comps?.[0]?.spec || ''} model`,
+    `has an estimated fair market value of ${data.estimate.toLocaleString()} AED,`,
+    `with a typical range of ${data.price_low.toLocaleString()} to ${data.price_high.toLocaleString()} AED.`,
+    data.confidence === 'high' ?
+      `This estimate is based on ${data.comp_count} comparable listings, giving us high confidence.` :
+    data.confidence === 'medium' ?
+      `Based on ${data.comp_count} comparable listings with moderate confidence.` :
+      `Only ${data.comp_count} comps found — use as a general guide.`,
+  ];
+
+  if (data.adjustments?.length) {
+    parts.push(data.adjustments.map(a => a.detail).join('. ') + '.');
+  }
+
+  if (data.knowledge?.market_liquidity) {
+    parts.push(`Similar cars typically sell within ${data.knowledge.market_liquidity}.`);
+  }
+
+  return parts.join(' ');
+}
+
+// Load makes on startup
+init();
+</script>
+</body>
+</html>

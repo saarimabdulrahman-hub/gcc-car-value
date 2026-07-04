@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from src.api.dependencies import limiter
@@ -10,6 +12,8 @@ from src.config import get_settings
 
 settings = get_settings()
 setup_logging()
+
+UI_DIR = Path(__file__).resolve().parent.parent.parent / "ui"
 
 
 @asynccontextmanager
@@ -38,3 +42,7 @@ app.include_router(health.router, prefix="/v1", tags=["health"])
 app.include_router(valuation.router, prefix="/v1", tags=["valuation"])
 app.include_router(models.router, prefix="/v1", tags=["models"])
 app.include_router(admin.router, prefix="/v1", tags=["admin"])
+
+# Serve UI static files
+if UI_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(UI_DIR), html=True), name="ui")
