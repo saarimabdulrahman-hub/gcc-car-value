@@ -103,6 +103,12 @@ body.has-sidebar{display:flex}
 }
 .card h3{font-size:1rem;color:var(--gold-dark);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--sand)}
 
+/* ── Toggle tabs ── */
+.tab-row{display:flex;gap:0;margin-bottom:20px;border-radius:10px;overflow:hidden;border:1.5px solid var(--border)}
+.tab-btn{flex:1;padding:12px;text-align:center;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:600;border:none;background:var(--white);color:var(--muted);transition:all 0.15s}
+.tab-btn.active{background:var(--gold);color:#fff}
+.tab-btn:hover:not(.active){background:#FEFCF7}
+
 /* ── Form ── */
 .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
 .form-group{display:flex;flex-direction:column;gap:5px}
@@ -287,7 +293,20 @@ const SELL_FORM = `
 const BUY_FORM = `
 <div class="form-row"><div class="form-group"><label>Make</label><select class="fm-make"><option>Select...</option></select></div><div class="form-group"><label>Model</label><select class="fm-model" disabled><option>Select...</option></select></div><div class="form-group"><label>Year</label><select class="fm-year" disabled><option>Select...</option></select></div></div>
 <div class="form-row"><div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80,000" min="0"></div><div class="form-group"><label>Spec</label><select class="fm-spec"><option value="">Any</option><option value="GCC">GCC</option><option value="US">US</option><option value="Japan">Japan</option><option value="European">European</option></select></div><div class="form-group"><label>City</label><select class="fm-city"><option value="">Any</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Riyadh">Riyadh</option><option value="Jeddah">Jeddah</option><option value="Dammam">Dammam</option><option value="Kuwait City">Kuwait City</option><option value="Doha">Doha</option><option value="Muscat">Muscat</option></select></div><div class="form-group"><label>Country</label><select class="fm-country"><option value="">Any</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select></div></div>
-<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">💰 What's the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price you saw" min="0" required style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark);white-space:nowrap">AED</span></div><div style="font-size:0.75rem;color:var(--muted);margin-top:6px">Enter the price the seller is asking — we'll tell you if it's fair and show you better alternatives</div></div>`;
+<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">💰 What's the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price you saw" min="0" required style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark);white-space:nowrap">AED</span></div><div style="font-size:0.75rem;color:var(--muted);margin-top:6px">Enter the price the seller is asking — we'll tell you if it's fair and show you better alternatives</div></div></div>
+<div id="buy-url-section" style="display:none">
+  <div style="background:linear-gradient(135deg,#F0F4FF,#E8EDFF);border-radius:12px;padding:24px;margin-bottom:20px;border:2px solid #8B9DC3;text-align:center">
+    <div style="font-size:1.5rem;margin-bottom:8px">&#x1F517;</div>
+    <div style="font-weight:700;color:var(--brown);margin-bottom:4px">Paste the listing URL</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, CarSwitch, OpenSooq, and more</div>
+    <input type="url" class="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px">
+    <div style="font-size:0.75rem;color:var(--muted)">We'll fetch the page, extract car details, and tell you if it's a good deal</div>
+  </div>
+  <div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)">
+    <div style="font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Asking Price (if different from listing)</div>
+    <input type="number" class="fm-url-price" placeholder="Optional - leave empty to use price from listing" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit">
+  </div>
+</div>`;
 
 let currentPage = 'home';
 
@@ -344,7 +363,15 @@ async function getValuation(mode) {
   const formId = mode === 'buy' ? 'buy-form' : 'sell-form';
   const body = readForm(formId);
   if (!body) return alert('Please fill in make, model, and year');
-  if (mode === 'buy' && !body.asking_price) return alert('Please enter the asking price to analyze the deal');
+  if (mode === 'buy') {
+    const tabMode = document.getElementById('tab-url')?.classList.contains('active') ? 'url' : 'manual';
+    if (tabMode === 'url') {
+      const url = document.querySelector('#buy-form .fm-url')?.value;
+      if (!url) return alert('Please paste a listing URL');
+      return getUrlValuation(url);
+    }
+    if (!body.asking_price) return alert('Please enter the asking price to analyze the deal');
+  }
 
   document.getElementById(`${mode}-loading`).classList.remove('hidden');
   document.getElementById(`${mode}-results`).classList.add('hidden');
@@ -531,6 +558,47 @@ async function loadMarketPage() {
     const total=d.makes.reduce((s,m)=>s+m.listing_count,0);
     document.getElementById('mkt-countries').innerHTML=`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)"><span>UAE</span><span style="font-weight:600">${Math.round(total*0.65).toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)"><span>Saudi Arabia</span><span style="font-weight:600">${Math.round(total*0.25).toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)"><span>Kuwait</span><span style="font-weight:600">${Math.round(total*0.05).toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;padding:10px 0"><span>Qatar, Bahrain, Oman</span><span style="font-weight:600">${Math.round(total*0.05).toLocaleString()}</span></div><div style="margin-top:12px;padding:10px;background:#FEF9EE;border-radius:8px;font-size:0.78rem;color:var(--muted);text-align:center">Based on ${total.toLocaleString()} total listings across all GCC countries</div>`;
   }catch(e){}
+}
+
+// ── URL Valuation ──
+function switchBuyTab(mode) {
+  document.getElementById('tab-manual').classList.toggle('active', mode === 'manual');
+  document.getElementById('tab-url').classList.toggle('active', mode === 'url');
+  document.getElementById('buy-manual-section').style.display = mode === 'manual' ? '' : 'none';
+  document.getElementById('buy-url-section').style.display = mode === 'url' ? '' : 'none';
+}
+
+async function getUrlValuation(url) {
+  const priceEl = document.querySelector('#buy-form .fm-url-price');
+  const body = { url: url };
+  if (priceEl?.value) body.asking_price = parseFloat(priceEl.value);
+
+  document.getElementById('buy-loading').classList.remove('hidden');
+  document.getElementById('buy-results').classList.add('hidden');
+  document.getElementById('buy-error').classList.add('hidden');
+  document.getElementById('buy-btn').disabled = true;
+
+  try {
+    const r = await fetch(API + '/valuate-url', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.detail || 'Failed'); }
+    const d = await r.json();
+    document.getElementById('buy-loading').classList.add('hidden');
+
+    const fakeBody = { asking_price: body.asking_price || d.parsed_from_url?.price_found || d.estimate };
+    renderResults('buy', {
+      estimate: d.estimate, price_low: d.price_low, price_high: d.price_high,
+      confidence: d.confidence, comp_count: d.comp_count,
+      segment_median: d.segment_median,
+      adjustments: d.adjustments || [],
+      comps: d.comps || [],
+      confidence_interval_80: d.confidence_interval_80,
+      knowledge: null, deal_indicator: null, deal_description: null,
+    }, fakeBody);
+  } catch(e) {
+    document.getElementById('buy-loading').classList.add('hidden');
+    document.getElementById('buy-error').classList.remove('hidden');
+    document.getElementById('buy-error').innerHTML = '<div class="error-msg">' + e.message + '</div>';
+  } finally { document.getElementById('buy-btn').disabled = false; }
 }
 
 // ── Init ──
