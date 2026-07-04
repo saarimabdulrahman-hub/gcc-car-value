@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # Environment
     environment: str = "development"  # development, staging, production
 
+    # Auth
+    jwt_secret: str = "dev-secret-change-in-production-gcc-car-value-2026"
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

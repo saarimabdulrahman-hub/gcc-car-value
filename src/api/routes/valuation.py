@@ -1,6 +1,6 @@
 import hashlib
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.dependencies import get_db, limiter
 from src.api.schemas.valuation import ValuationRequest, ValuationResponse, CompSummary, Adjustment, Knowledge
@@ -38,10 +38,11 @@ def _compute_deal_indicator(asking_price: float | None, result: ValuationResult)
 @router.post("/valuate", response_model=ValuationResponse)
 @limiter.limit("10/minute")
 async def valuate_vehicle(
-    request: ValuationRequest,
+    request: Request,
+    valuation_req: ValuationRequest,
     db: AsyncSession = Depends(get_db),
 ):
-    cache_key = _compute_cache_key(request)
+    cache_key = _compute_cache_key(valuation_req)
 
     # Check cache
     from sqlalchemy import select
@@ -57,12 +58,12 @@ async def valuate_vehicle(
 
     # Compute valuation
     valuation = await valuate(
-        db, request.make, request.model, request.year,
-        request.mileage_km, request.spec, request.country, request.city,
+        db, valuation_req.make, valuation_req.model, valuation_req.year,
+        valuation_req.mileage_km, valuation_req.spec, valuation_req.country, valuation_req.city,
     )
 
     deal_indicator, deal_description = _compute_deal_indicator(
-        request.asking_price, valuation
+        valuation_req.asking_price, valuation
     )
 
     if valuation.confidence == "insufficient":
@@ -74,9 +75,9 @@ async def valuate_vehicle(
     # Store in cache
     cache = ValuationQuery(
         cache_key=cache_key,
-        make=request.make, model=request.model, year=request.year,
-        mileage_km=request.mileage_km, spec=request.spec,
-        trim=request.trim, city=request.city, country=request.country,
+        make=valuation_req.make, model=valuation_req.model, year=valuation_req.year,
+        mileage_km=valuation_req.mileage_km, spec=valuation_req.spec,
+        trim=valuation_req.trim, city=valuation_req.city, country=valuation_req.country,
         estimated_price=valuation.estimate,
         price_low=valuation.price_low,
         price_high=valuation.price_high,
@@ -92,7 +93,7 @@ async def valuate_vehicle(
     await db.commit()
 
     logger.info("valuation_computed",
-        make=request.make, model=request.model, year=request.year,
+        make=valuation_req.make, model=valuation_req.model, year=valuation_req.year,
         estimate=valuation.estimate, confidence=valuation.confidence,
         comp_count=valuation.comp_count)
 
