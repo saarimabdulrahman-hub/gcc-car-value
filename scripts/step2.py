@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Car Valuator</title>
+page = """<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Car Valuator</title>
 <style>
 :root{--cream:#FDF6EC;--gold:#C8A951;--gold-dark:#8B6914;--brown:#2D1F0C;--muted:#8B7355;--white:#FFF;--border:#E8DCC8;--sand:#F5EAD5;--green:#2E7D32;--green-bg:#E8F5E9;--red:#C0392B;--red-bg:#FFECEC}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -196,14 +196,14 @@ async function loadBrowseMakes(){
 var co=document.getElementById('browse-country').value;var url=API+'/models';if(co)url+='?country='+co;
 var r=await fetch(url);var d=await r.json();
 document.getElementById('browse-total').textContent=d.makes.length+' makes';
-document.getElementById('browse-makes-grid').innerHTML=d.makes.map(function(m){return'<div class="make-card" onclick="selectMake(''+m.make+'')"><div style="font-weight:600">'+m.make+'</div><div style="font-size:0.72rem;color:var(--muted)">'+m.model_count+' models, '+m.listing_count+' listings</div></div>';}).join('');
+document.getElementById('browse-makes-grid').innerHTML=d.makes.map(function(m){return'<div class="make-card" onclick="selectMake(\''+m.make+'\')"><div style="font-weight:600">'+m.make+'</div><div style="font-size:0.72rem;color:var(--muted)">'+m.model_count+' models, '+m.listing_count+' listings</div></div>';}).join('');
 document.getElementById('browse-makes-card').style.display='block';document.getElementById('browse-models-card').style.display='none';document.getElementById('browse-years-card').style.display='none';
 }
 async function selectMake(mk){bmake=mk;
 var co=document.getElementById('browse-country').value;var url=API+'/models/'+encodeURIComponent(mk);if(co)url+='?country='+co;
 var r=await fetch(url);var d=await r.json();
 document.getElementById('browse-make-title').textContent=mk;
-document.getElementById('browse-models-list').innerHTML=d.models.map(function(m){return'<div class="row-link" onclick="selectModel(''+mk+'',''+m.model+'')"><div><div style="font-weight:600">'+m.model+'</div><div style="font-size:0.8rem;color:var(--muted)">'+m.year_range+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+m.listing_count+'</div></div>';}).join('');
+document.getElementById('browse-models-list').innerHTML=d.models.map(function(m){return'<div class="row-link" onclick="selectModel(\''+mk+'\',\''+m.model+'\')"><div><div style="font-weight:600">'+m.model+'</div><div style="font-size:0.8rem;color:var(--muted)">'+m.year_range+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+m.listing_count+'</div></div>';}).join('');
 document.getElementById('browse-makes-card').style.display='none';document.getElementById('browse-models-card').style.display='block';
 }
 async function selectModel(mk,md){
@@ -222,4 +222,8 @@ try{var r=await fetch(API+'/admin/stats');var d=await r.json();document.getEleme
 try{var r2=await fetch(API+'/models');var d2=await r2.json();var top=d2.makes.sort(function(a,b){return b.listing_count-a.listing_count;}).slice(0,10);var max=top[0]?top[0].listing_count:1;document.getElementById('mkt-top-makes').innerHTML=top.map(function(m,i){return'<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="width:20px;color:var(--muted)">'+(i+1)+'</span><span style="flex:1">'+m.make+'</span><span style="color:var(--muted);width:80px;text-align:right">'+m.listing_count.toLocaleString()+'</span><div class="bar-track"><div class="bar-fill" style="width:'+((m.listing_count/max)*100).toFixed(0)+'%"></div></div></div>';}).join('');}catch(e){}
 }
 </script>
-</body></html>
+</body></html>"""
+
+with open('ui/index.html', 'w', encoding='utf-8') as f:
+    f.write(page)
+print('Step 2 written - ' + str(len(page)) + ' chars')
