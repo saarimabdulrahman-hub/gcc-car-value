@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Car Valuator</title>
+page = """<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Car Valuator</title>
 <style>
 :root{--cream:#FDF6EC;--gold:#C8A951;--gold-dark:#8B6914;--brown:#2D1F0C;--muted:#8B7355;--white:#FFF;--border:#E8DCC8;--sand:#F5EAD5}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -111,4 +111,8 @@ async function doValuation(mode) {
   } catch(e) { alert('Error: '+e.message); }
 }
 </script>
-</body></html>
+</body></html>"""
+
+with open('ui/index.html', 'w', encoding='utf-8') as f:
+    f.write(page)
+print('Step 1 written - ' + str(len(page)) + ' chars')
