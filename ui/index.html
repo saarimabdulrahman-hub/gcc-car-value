@@ -287,7 +287,7 @@ const SELL_FORM = `
 const BUY_FORM = `
 <div class="form-row"><div class="form-group"><label>Make</label><select class="fm-make"><option>Select...</option></select></div><div class="form-group"><label>Model</label><select class="fm-model" disabled><option>Select...</option></select></div><div class="form-group"><label>Year</label><select class="fm-year" disabled><option>Select...</option></select></div></div>
 <div class="form-row"><div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80,000" min="0"></div><div class="form-group"><label>Spec</label><select class="fm-spec"><option value="">Any</option><option value="GCC">GCC</option><option value="US">US</option><option value="Japan">Japan</option><option value="European">European</option></select></div><div class="form-group"><label>City</label><select class="fm-city"><option value="">Any</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Riyadh">Riyadh</option><option value="Jeddah">Jeddah</option><option value="Dammam">Dammam</option><option value="Kuwait City">Kuwait City</option><option value="Doha">Doha</option><option value="Muscat">Muscat</option></select></div><div class="form-group"><label>Country</label><select class="fm-country"><option value="">Any</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select></div></div>
-<div class="form-row"><div class="form-group"><label style="color:var(--green)">★ Asking Price (AED)</label><input type="number" class="fm-asking" placeholder="What the seller is asking" min="0" required></div></div>`;
+<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">💰 What's the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price you saw" min="0" required style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark);white-space:nowrap">AED</span></div><div style="font-size:0.75rem;color:var(--muted);margin-top:6px">Enter the price the seller is asking — we'll tell you if it's fair and show you better alternatives</div></div>`;
 
 let currentPage = 'home';
 
@@ -373,19 +373,34 @@ function renderResults(mode, d, body) {
   if (isBuyer && ap) {
     const diff = ap - d.estimate;
     const diffPct = ((diff / d.estimate) * 100).toFixed(1);
-    const color = diff > 0 ? 'var(--red)' : 'var(--green)';
-    const verdict = diff > 0 ? `⚠️ ${diffPct}% ABOVE MARKET` : `✓ ${Math.abs(diffPct)}% BELOW MARKET`;
+    const isOver = diff > 0;
+    const verdictIcon = isOver ? '⚠️' : '✅';
+    const verdictText = isOver ? 'OVERPRICED' : 'GOOD DEAL';
+    const verdictColor = isOver ? 'var(--red)' : 'var(--green)';
+    const verdictBg = isOver ? 'var(--red-bg)' : 'var(--green-bg)';
+    const monthly = Math.round(ap / 60);
+    const monthlyMarket = Math.round(d.estimate / 60);
     dealSection = `
-      <div class="card" style="border:2px solid ${color}">
-        <h3>Deal Analysis</h3>
-        <div style="text-align:center;padding:16px 0">
-          <div style="font-size:2rem;font-weight:700;color:${color}">${verdict}</div>
-          <div style="font-size:1.1rem;color:var(--muted);margin-top:4px">
-            Asking: ${ap.toLocaleString()} AED vs Market: ${d.estimate.toLocaleString()} AED — <strong>${Math.abs(diff).toLocaleString()} AED ${diff>0?'above':'below'} market</strong>
-          </div>
-          ${diff > 0 ? '<div style="margin-top:12px;padding:12px;background:var(--red-bg);border-radius:8px;color:var(--red);font-weight:600">This car is overpriced. Check the alternatives below for better value.</div>' :
-            '<div style="margin-top:12px;padding:12px;background:var(--green-bg);border-radius:8px;color:var(--green);font-weight:600">This looks like a fair price. Still worth checking alternatives to be sure.</div>'}
+      <div class="card" style="border:2px solid ${verdictColor};border-radius:14px;overflow:hidden">
+        <div style="background:${verdictBg};padding:20px;text-align:center">
+          <div style="font-size:1rem;font-weight:700;color:${verdictColor};letter-spacing:2px;text-transform:uppercase">${verdictIcon} ${verdictText}</div>
+          <div style="font-size:2.2rem;font-weight:800;color:${verdictColor};margin:4px 0">${isOver?'+':'-'}${Math.abs(diffPct)}%</div>
+          <div style="font-size:0.95rem;color:var(--muted)">vs fair market value</div>
         </div>
+        <div style="padding:20px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center">
+          <div style="text-align:center">
+            <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">You Found</div>
+            <div style="font-size:1.3rem;font-weight:700;color:${isOver?'var(--red)':'var(--green)'}">${ap.toLocaleString()} AED</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">≈ ${monthly.toLocaleString()} AED/mo*</div>
+          </div>
+          <div style="font-size:1.5rem;color:var(--muted)">→</div>
+          <div style="text-align:center">
+            <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Market Value</div>
+            <div style="font-size:1.3rem;font-weight:700;color:var(--gold-dark)">${d.estimate.toLocaleString()} AED</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">≈ ${monthlyMarket.toLocaleString()} AED/mo*</div>
+          </div>
+        </div>
+        <div style="padding:0 20px 16px;text-align:center;font-size:0.67rem;color:var(--muted)">*Estimated 5-year financing at 3.5% — for comparison only</div>
       </div>`;
   }
 
@@ -414,11 +429,10 @@ function renderResults(mode, d, body) {
 }
 
 function buildAlternatives(d, askingPrice) {
-  const alts = (d.comps||[]).filter(c=>c.price_aed<(askingPrice||d.estimate*1.1)).sort((a,b)=>a.price_aed-b.price_aed).slice(0,3);
+  const alts = (d.comps||[]).filter(c=>c.price_aed<(askingPrice||d.estimate*1.1)).sort((a,b)=>a.price_aed-b.price_aed).slice(0,4);
   if (!alts.length) return '';
-  return `<div class="card" style="border:2px solid var(--green)"><h3 style="color:var(--green)">🟢 Better Alternatives Available Online</h3><p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px">These similar cars are currently listed at lower prices on public marketplaces.</p>${alts.map(c=>`<div class="alt-item"><div><div class="alt-badge">SAVE ${((askingPrice||d.estimate)-c.price_aed).toLocaleString()} AED</div><div class="alt-price">${c.price_aed.toLocaleString()} AED</div><div class="alt-meta">${c.year} · ${c.mileage_km?.toLocaleString()||'?'} km · ${c.spec||'?'} · ${c.city}</div></div><div class="alt-source">${c.found_on}</div></div>`).join('')}<div style="margin-top:12px;font-size:0.8rem;color:var(--muted);text-align:center">These listings were found on public marketplaces and are active right now.</div></div>`;
+  return `<div class="card" style="border:2px solid var(--gold);border-radius:14px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="font-size:1.3rem">🛒</span><h3 style="color:var(--gold-dark);border:none;padding:0;margin:0">Better Deals Currently Online</h3></div><p style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">These similar cars are listed right now at lower prices.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">${alts.map(c=>`<div style="background:linear-gradient(135deg,#FFFAF0,#FEF9EE);border:1.5px solid var(--gold);border-radius:12px;padding:16px"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div style="font-size:1.3rem;font-weight:700;color:var(--brown)">${c.price_aed.toLocaleString()} AED</div><div style="background:var(--green-bg);color:var(--green);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700;white-space:nowrap">SAVE ${((askingPrice||d.estimate)-c.price_aed).toLocaleString()} AED</div></div><div style="font-size:0.82rem;color:var(--muted);margin-bottom:6px">${c.year} · ${c.mileage_km?.toLocaleString()||'?'} km · ${c.spec||'?'} · ${c.city}</div><div style="font-size:0.75rem;color:var(--gold-dark)">${c.found_on}</div></div>`).join('')}</div><div style="margin-top:14px;font-size:0.75rem;color:var(--muted);text-align:center">Found on public marketplaces · Active right now</div></div>`;
 }
-
 function buildKnowledge(k) {
   let h = '<div class="card"><h3>What You Should Know</h3><div class="k-grid">';
   if (k.generation) h+=`<div class="k-item"><div class="kl">Generation</div><div class="kv">${k.generation}</div></div>`;
