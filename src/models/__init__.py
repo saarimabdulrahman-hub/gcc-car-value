@@ -14,10 +14,14 @@ from src.models.car_issue import CarIssue
 from src.models.maintenance_cost import MaintenanceCost
 from src.models.depreciation_curve import DepreciationCurve
 from src.models.model_rating import ModelRating
+from src.models.user_account import UserAccount
+from src.models.saved_valuation import SavedValuation
+from src.models.price_alert import PriceAlert
 
 __all__ = [
     "Base", "CanonicalVehicle", "Listing", "ListingSnapshot",
     "PipelineRun", "DeadLetter", "ValuationQuery", "ModelRegistry",
     "ScraperHealth", "DriftEvent", "FeatureFlag", "CarSpec",
     "CarIssue", "MaintenanceCost", "DepreciationCurve", "ModelRating",
+    "UserAccount", "SavedValuation", "PriceAlert",
 ]
