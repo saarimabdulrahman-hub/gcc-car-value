@@ -44,6 +44,14 @@ app.include_router(models.router, prefix="/v1", tags=["models"])
 app.include_router(admin.router, prefix="/v1", tags=["admin"])
 app.include_router(url_valuate.router, prefix="/v1", tags=["url-valuate"])
 
-# Serve UI static files
+# Serve UI static files — no caching in dev
 if UI_DIR.exists():
-    app.mount("/", StaticFiles(directory=str(UI_DIR), html=True), name="ui")
+    class NoCacheStaticFiles(StaticFiles):
+        async def get_response(self, path, scope):
+            response = await super().get_response(path, scope)
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+            return response
+
+    app.mount("/", NoCacheStaticFiles(directory=str(UI_DIR), html=True), name="ui")
