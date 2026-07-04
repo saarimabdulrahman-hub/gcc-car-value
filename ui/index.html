@@ -132,6 +132,55 @@ function toggleLang() {
   else document.body.dir = 'rtl';
 }
 
+function loadDropdowns() {
+  fetch('http://localhost:8000/v1/models')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var makes = data.makes;
+      var sellSel = document.getElementById('smake');
+      var buySel = document.getElementById('bmake');
+      sellSel.innerHTML = '<option value="">Select make...</option>';
+      buySel.innerHTML = '<option value="">Select make...</option>';
+      for (var i = 0; i < makes.length; i++) {
+        var m = makes[i];
+        var o1 = document.createElement('option');
+        o1.value = m.make; o1.textContent = m.make + ' (' + m.listing_count + ')';
+        sellSel.appendChild(o1);
+        var o2 = document.createElement('option');
+        o2.value = m.make; o2.textContent = m.make + ' (' + m.listing_count + ')';
+        buySel.appendChild(o2);
+      }
+    });
+
+  // Wire make -> model chaining for sell
+  document.getElementById('smake').onchange = function() {
+    var mk = this.value;
+    var md = document.getElementById('smodel');
+    md.innerHTML = '<option>Loading...</option>';
+    if (!mk) { md.innerHTML = '<option>Select model</option>'; return; }
+    fetch('http://localhost:8000/v1/models/' + encodeURIComponent(mk))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        md.innerHTML = '<option value="">Select model...</option>';
+        d.models.forEach(function(m){ var o = document.createElement('option'); o.value = m.model; o.textContent = m.model + ' (' + m.year_range + ')'; md.appendChild(o); });
+      });
+  };
+  // Wire make -> model chaining for buy
+  document.getElementById('bmake').onchange = function() {
+    var mk = this.value;
+    var md = document.getElementById('bmodel');
+    md.innerHTML = '<option>Loading...</option>';
+    if (!mk) { md.innerHTML = '<option>Select model</option>'; return; }
+    fetch('http://localhost:8000/v1/models/' + encodeURIComponent(mk))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        md.innerHTML = '<option value="">Select model...</option>';
+        d.models.forEach(function(m){ var o = document.createElement('option'); o.value = m.model; o.textContent = m.model + ' (' + m.year_range + ')'; md.appendChild(o); });
+      });
+  };
+}
+loadDropdowns();
+
 async function doValuation(mode) {
   var prefix = mode === 'buy' ? 'b' : 's';
   var body = {
