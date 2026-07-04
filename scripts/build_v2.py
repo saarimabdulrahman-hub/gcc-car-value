@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Car Valuator</title><style>
+"""Build the full working UI incrementally."""
+import json
+
+css = '''<style>
 :root{--cream:#FDF6EC;--gold:#C8A951;--gold-dark:#8B6914;--brown:#2D1F0C;--muted:#8B7355;--white:#FFF;--border:#E8DCC8;--green:#2E7D32;--green-bg:#E8F5E9;--yellow:#B8860B;--yellow-bg:#FFF8E1;--red:#C0392B;--red-bg:#FFECEC;--sand:#F5EAD5}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,sans-serif;background:var(--cream);color:var(--brown);min-height:100vh}
@@ -59,7 +62,9 @@ body.has-sidebar{display:flex}
 .back-btn{background:none;border:1px solid var(--border);padding:6px 14px;border-radius:6px;cursor:pointer;color:var(--muted);font-size:0.8rem;font-family:inherit}.back-btn:hover{border-color:var(--gold)}
 .row-link{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--sand);cursor:pointer}.row-link:hover{background:#FFFAF0}
 .bar-track{flex:1;max-width:200px;height:8px;background:var(--sand);border-radius:4px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-dark));border-radius:4px}
-</style></head><body id="body-el"><aside class="sidebar" id="sidebar-el">
+</style>'''
+
+html = '''<aside class="sidebar" id="sidebar-el">
 <nav class="sidebar-nav">
 <a href="#" id="nav-home" onclick="goPage('home',this)">&#8962; Home</a>
 <a href="#" id="nav-sell" onclick="goPage('sell',this)">$ I'm Selling</a>
@@ -101,7 +106,9 @@ body.has-sidebar{display:flex}
 <div id="page-market" class="hidden"><h2 class="page-title">Market Trends</h2><p class="page-sub">Gulf used car market overview.</p>
 <div class="card"><div class="stat-bar" style="margin-top:0;padding-top:0;border-top:none"><div class="stat"><div class="n" id="mkt-total">--</div><div class="l">Total Listings</div></div><div class="stat"><div class="n" id="mkt-active">--</div><div class="l">Active</div></div><div class="stat"><div class="n" id="mkt-week">--</div><div class="l">Valuations (7d)</div></div><div class="stat"><div class="n" id="mkt-all">--</div><div class="l">All-Time</div></div></div></div>
 <div class="card"><h3>Most Popular Makes</h3><div id="mkt-top-makes"></div></div></div>
-</div></div><script>
+</div></div>'''
+
+js = '''<script>
 var API='http://localhost:8000/v1';
 var curPage='home';
 var lang='en';
@@ -134,13 +141,13 @@ el('buy-title','buyTitle');el('buy-sub','buySub');el('buy-btn','buyBtn');
 
 function makeForm(showAsking){
 var h='<div class="form-row"><div class="form-group"><label>Make</label><select class="fm-make"><option>Loading...</option></select></div><div class="form-group"><label>Model</label><select class="fm-model" disabled><option>Select model...</option></select></div><div class="form-group"><label>Year</label><select class="fm-year" disabled><option>Select year...</option></select></div></div><div class="form-row"><div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80000" min="0"></div><div class="form-group"><label>Spec</label><select class="fm-spec"><option value="">Any</option><option value="GCC">GCC</option><option value="US">US</option><option value="Japan">Japan</option><option value="European">European</option></select></div><div class="form-group"><label>City</label><select class="fm-city"><option value="">Any</option><option>Dubai</option><option>Abu Dhabi</option><option>Sharjah</option><option>Riyadh</option><option>Jeddah</option><option>Dammam</option><option>Kuwait City</option><option>Doha</option><option>Muscat</option></select></div><div class="form-group"><label>Country</label><select class="fm-country"><option value="">Any</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select></div></div>';
-if(showAsking)h='<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px">What\'s the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price" min="0" style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark)">AED</span></div></div><h3 style="border:none;padding:0;margin:0 0 16px 0;font-size:0.85rem;color:var(--muted);text-transform:uppercase">Car Details</h3>'+h;
+if(showAsking)h='<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px">What\\'s the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price" min="0" style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark)">AED</span></div></div><h3 style="border:none;padding:0;margin:0 0 16px 0;font-size:0.85rem;color:var(--muted);text-transform:uppercase">Car Details</h3>'+h;
 return h;
 }
 
 var buyTabMode='manual';
 function buyFormHTML(){
-return '<div class="tab-row" style="margin-bottom:20px"><button class="tab-btn active" id="tab-manual" onclick="switchBuyTab('manual')">Enter Details</button><button class="tab-btn" id="tab-url" onclick="switchBuyTab('url')">Paste URL</button></div><div id="buy-manual-section">'+makeForm(true)+'</div><div id="buy-url-section" style="display:none"><div style="background:linear-gradient(135deg,#F0F4FF,#E8EDFF);border-radius:12px;padding:24px;margin-bottom:20px;border:2px solid #8B9DC3;text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">&#128279;</div><div style="font-weight:700;margin-bottom:4px">Paste the listing URL</div><div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, and more</div><input type="url" class="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px"></div><div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)"><div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">Asking Price (if different)</div><input type="number" class="fm-url-price" placeholder="Optional" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit"></div></div>';
+return '<div class="tab-row" style="margin-bottom:20px"><button class="tab-btn active" id="tab-manual" onclick="switchBuyTab(\'manual\')">Enter Details</button><button class="tab-btn" id="tab-url" onclick="switchBuyTab(\'url\')">Paste URL</button></div><div id="buy-manual-section">'+makeForm(true)+'</div><div id="buy-url-section" style="display:none"><div style="background:linear-gradient(135deg,#F0F4FF,#E8EDFF);border-radius:12px;padding:24px;margin-bottom:20px;border:2px solid #8B9DC3;text-align:center"><div style="font-size:1.5rem;margin-bottom:8px">&#128279;</div><div style="font-weight:700;margin-bottom:4px">Paste the listing URL</div><div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, and more</div><input type="url" class="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px"></div><div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)"><div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">Asking Price (if different)</div><input type="number" class="fm-url-price" placeholder="Optional" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit"></div></div>';
 }
 
 function switchBuyTab(mode){buyTabMode=mode;document.getElementById('tab-manual').classList.toggle('active',mode==='manual');document.getElementById('tab-url').classList.toggle('active',mode==='url');document.getElementById('buy-manual-section').style.display=mode==='manual'?'':'none';document.getElementById('buy-url-section').style.display=mode==='url'?'':'none';}
@@ -245,14 +252,14 @@ async function loadBrowseMakes(){
 var co=document.getElementById('browse-country').value;var url=API+'/models';if(co)url+='?country='+co;
 var r=await fetch(url);var d=await r.json();
 document.getElementById('browse-total').textContent=d.makes.length+' makes found';
-document.getElementById('browse-makes-grid').innerHTML=d.makes.map(function(m){return'<div class="make-card" onclick="selectMake(''+m.make+'')"><div style="font-weight:600">'+m.make+'</div><div style="font-size:0.72rem;color:var(--muted)">'+m.model_count+' models, '+m.listing_count+' listings</div></div>';}).join('');
+document.getElementById('browse-makes-grid').innerHTML=d.makes.map(function(m){return'<div class="make-card" onclick="selectMake(\''+m.make+'\')"><div style="font-weight:600">'+m.make+'</div><div style="font-size:0.72rem;color:var(--muted)">'+m.model_count+' models, '+m.listing_count+' listings</div></div>';}).join('');
 document.getElementById('browse-makes-card').style.display='block';document.getElementById('browse-models-card').style.display='none';document.getElementById('browse-years-card').style.display='none';
 }
 async function selectMake(mk){browseMake=mk;
 var co=document.getElementById('browse-country').value;var url=API+'/models/'+encodeURIComponent(mk);if(co)url+='?country='+co;
 var r=await fetch(url);var d=await r.json();
 document.getElementById('browse-make-title').textContent=mk;
-document.getElementById('browse-models-list').innerHTML=d.models.map(function(m){return'<div class="row-link" onclick="selectModel(''+mk+'',''+m.model+'')"><div><div style="font-weight:600">'+m.model+'</div><div style="font-size:0.8rem;color:var(--muted)">'+m.year_range+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+m.listing_count+'</div></div>';}).join('');
+document.getElementById('browse-models-list').innerHTML=d.models.map(function(m){return'<div class="row-link" onclick="selectModel(\''+mk+'\',\''+m.model+'\')"><div><div style="font-weight:600">'+m.model+'</div><div style="font-size:0.8rem;color:var(--muted)">'+m.year_range+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+m.listing_count+'</div></div>';}).join('');
 document.getElementById('browse-makes-card').style.display='none';document.getElementById('browse-models-card').style.display='block';
 }
 async function selectModel(mk,md){
@@ -270,4 +277,10 @@ async function loadMarketPage(){
 try{var r=await fetch(API+'/admin/stats');var d=await r.json();document.getElementById('mkt-total').textContent=(d.listings&&d.listings.total?d.listings.total.toLocaleString():'--');document.getElementById('mkt-active').textContent=(d.listings&&d.listings.active?d.listings.active.toLocaleString():'--');document.getElementById('mkt-week').textContent=(d.valuations&&d.valuations.last_7_days?d.valuations.last_7_days.toLocaleString():'--');document.getElementById('mkt-all').textContent=(d.valuations&&d.valuations.total?d.valuations.total.toLocaleString():'--');}catch(e){}
 try{var r2=await fetch(API+'/models');var d2=await r2.json();var top=d2.makes.sort(function(a,b){return b.listing_count-a.listing_count;}).slice(0,10);var max=top[0]?top[0].listing_count:1;document.getElementById('mkt-top-makes').innerHTML=top.map(function(m,i){return'<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="width:20px;color:var(--muted)">'+(i+1)+'</span><span style="flex:1">'+m.make+'</span><span style="color:var(--muted);width:80px;text-align:right">'+m.listing_count.toLocaleString()+'</span><div class="bar-track"><div class="bar-fill" style="width:'+((m.listing_count/max)*100).toFixed(0)+'%"></div></div></div>';}).join('');}catch(e){}
 }
-</script></body></html>
+</script>'''
+
+page = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Car Valuator</title>' + css + '</head><body id="body-el">' + html + js + '</body></html>'
+
+with open('ui/index.html', 'w', encoding='utf-8') as f:
+    f.write(page)
+print('Full UI written - ' + str(len(page)) + ' chars')
