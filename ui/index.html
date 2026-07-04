@@ -15,13 +15,12 @@ body.has-sidebar{display:flex}
 
 /* ── Header ── */
 .header{
-  background:linear-gradient(135deg,#FDF6EC 0%,#F8EDD8 100%);
-  border-bottom:2px solid var(--border);
-  padding:0 32px;height:56px;
+  background:var(--brown);
+  border-bottom:2px solid rgba(200,169,81,0.25);
+  padding:0 32px;height:62px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;
 }
-.header-brand{display:flex;align-items:center;gap:12px}
 .header-brand .logo-icon{
   width:34px;height:34px;
   background:linear-gradient(135deg,var(--gold),var(--gold-dark));
@@ -29,11 +28,10 @@ body.has-sidebar{display:flex}
   display:flex;align-items:center;justify-content:center;
   font-size:1.1rem;font-weight:700;color:#fff;
 }
-.header-brand h1{font-size:1.05rem;color:var(--gold-dark);font-weight:700;letter-spacing:0.3px}
-.header-right{display:flex;align-items:center;gap:14px}
-.lang{font-size:0.8rem;color:var(--muted);cursor:pointer;padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
-.breadcrumb{font-size:0.82rem;color:var(--muted)}
-.breadcrumb span{color:var(--brown);font-weight:600}
+.header-brand h1{font-size:1.05rem;color:var(--sand);font-weight:700;letter-spacing:0.3px}
+.breadcrumb{font-size:0.82rem;color:#8B7B65}
+.breadcrumb span{color:var(--sand);font-weight:600}
+.lang{font-size:0.8rem;color:#8B7B65;cursor:pointer;padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1)}
 
 /* ── Sidebar ── */
 .sidebar{
