@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -182,4 +182,8 @@ async function doValuation(mode) {
 }
 </script>
 </body>
-</html>
+</html>'''
+
+with open('ui/index.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+print('Written: ' + str(len(html)) + ' bytes')
