@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A: Minimal — GCC Car Value</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#1a1a1a;max-width:680px;margin:60px auto;padding:20px}
+h1{font-size:1.8rem;font-weight:700;margin-bottom:4px}
+.sub{color:#888;font-size:1rem;margin-bottom:32px}
+.row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.row input,.row select{flex:1;min-width:140px;padding:14px 16px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:1rem;background:#fafafa}
+.row input:focus,.row select:focus{outline:none;border-color:#000}
+.btn{width:100%;padding:16px;background:#000;color:#fff;border:none;border-radius:10px;font-size:1.1rem;font-weight:600;cursor:pointer;margin-top:8px}
+.btn:hover{opacity:0.85}
+.result{margin-top:40px;padding:30px;background:#f9f9f9;border-radius:16px;display:none}
+.price{font-size:3rem;font-weight:800;letter-spacing:-1px}
+.range{color:#666;margin-top:4px}
+.badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;margin-top:8px}
+.badge-high{background:#e6f7ee;color:#1a7a4c}
+.badge-medium{background:#fff8e6;color:#b8860b}
+.line{margin:20px 0;border-top:1px solid #e8e8e8}
+.list-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.list-item .meta{color:#888;font-size:0.85rem}
+</style></head><body>
+<h1>What's it worth?</h1>
+<p class="sub">Get a fair market value for any car in the Gulf.</p>
+<div class="row">
+  <select><option>Make</option><option>Toyota</option></select>
+  <select><option>Model</option></select>
+  <select><option>Year</option></select>
+</div>
+<div class="row">
+  <input type="number" placeholder="Mileage (km)">
+  <select><option>Spec</option><option>GCC</option></select>
+  <select><option>City</option><option>Dubai</option></select>
+</div>
+<button class="btn">Get Valuation</button>
+<div class="result" id="r">
+  <div class="price">127,350 AED</div>
+  <div class="range">Range: 123,000 – 132,000 AED</div>
+  <span class="badge badge-medium">MEDIUM CONFIDENCE · 16 comps</span>
+  <div class="line"></div>
+  <div style="font-weight:600;margin-bottom:10px">How we got here</div>
+  <div class="list-item"><span>Mileage vs average</span><span style="color:#1a7a4c">−2,125 AED</span></div>
+  <div class="list-item"><span>Dubai market</span><span style="color:#1a7a4c">+1,725 AED</span></div>
+  <div class="line"></div>
+  <div class="list-item"><span class="meta">Dubizzle UAE, Dubai</span><span>127,000 AED</span></div>
+  <div class="list-item"><span class="meta">Dubizzle UAE, Abu Dhabi</span><span>122,000 AED</span></div>
+  <div class="list-item"><span class="meta">YallaMotor, Dubai</span><span>130,000 AED</span></div>
+</div>
+<script>document.querySelector('.btn').onclick=()=>document.getElementById('r').style.display='block'</script>
+</body></html>

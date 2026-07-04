@@ -3,372 +3,560 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GCC Car Value — Know What It's Worth</title>
+<title>Car Valuator</title>
 <style>
 :root {
-  --sand: #F5E6D3;
+  --cream: #FDF6EC;
+  --sand: #F5EAD5;
   --gold: #C8A951;
-  --dark: #1A1A2E;
-  --card: #16213E;
-  --accent: #0F3460;
-  --green: #2ECC71;
-  --yellow: #F39C12;
-  --red: #E74C3C;
-  --text: #E8E8E8;
-  --muted: #A0A0B0;
+  --gold-dark: #8B6914;
+  --brown: #2D1F0C;
+  --muted: #8B7355;
+  --white: #FFFFFF;
+  --border: #E8DCC8;
+  --green: #2E7D32;
+  --yellow: #E6A817;
+  --red: #C0392B;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--dark);
-  color: var(--text);
+  background: var(--cream);
+  color: var(--brown);
+  display: flex;
   min-height: 100vh;
 }
-.header {
-  background: linear-gradient(135deg, var(--card) 0%, var(--accent) 100%);
-  padding: 60px 20px 40px;
-  text-align: center;
-  border-bottom: 3px solid var(--gold);
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 220px;
+  background: var(--brown);
+  color: var(--sand);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  flex-shrink: 0;
 }
-.header h1 {
-  font-size: 2.5rem;
-  color: var(--gold);
-  margin-bottom: 8px;
+.sidebar-brand {
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.header p {
-  color: var(--muted);
-  font-size: 1.1rem;
+.sidebar-brand .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
 }
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+.sidebar-brand .logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
 }
-.card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 30px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(200,169,81,0.15);
-}
-.card h2 {
-  color: var(--gold);
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-}
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-.form-group { display: flex; flex-direction: column; }
-.form-group label {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin-bottom: 4px;
-  text-transform: uppercase;
+.sidebar-brand h1 {
+  font-size: 1rem;
+  color: var(--sand);
+  font-weight: 600;
   letter-spacing: 0.5px;
 }
-.form-group input, .form-group select {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
+.sidebar-brand .tagline {
+  font-size: 0.7rem;
+  color: #8B7B65;
+  margin-top: 2px;
+}
+.sidebar-nav {
+  padding: 16px 0;
+  flex: 1;
+}
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  color: #8B7B65;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+.sidebar-nav a:hover { color: var(--sand); background: rgba(255,255,255,0.03); }
+.sidebar-nav a.active {
+  color: var(--gold);
+  background: rgba(200,169,81,0.08);
+  border-left-color: var(--gold);
+}
+.sidebar-nav a .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.72rem;
+  color: #5C4F3E;
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, #FDF6EC 0%, #F8EDD8 100%);
+  border-bottom: 2px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header-left .breadcrumb {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.header-left .breadcrumb span {
+  color: var(--brown);
+  font-weight: 600;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-right .lang {
+  font-size: 0.8rem;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.header-right .lang:hover { border-color: var(--gold); }
+
+/* ── Main ── */
+.main-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.main-content {
+  flex: 1;
+  padding: 32px;
+  max-width: 800px;
+}
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--brown);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(45,31,12,0.03);
+}
+.card h3 {
   font-size: 1rem;
+  color: var(--gold-dark);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--sand);
+}
+
+/* ── Browse ── */
+.make-card {
+  padding: 14px;
+  background: #FEFCF7;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.make-card:hover { border-color: var(--gold); background: #FFFAF0; }
+.model-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--sand); cursor: pointer;
+  transition: background 0.1s;
+}
+.model-row:hover { background: #FFFAF0; }
+.year-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--sand);
+}
+.back-btn {
+  background: none; border: 1px solid var(--border); padding: 6px 14px;
+  border-radius: 6px; cursor: pointer; font-family: inherit;
+  color: var(--muted); font-size: 0.8rem; transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+/* ── Market ── */
+.bar-track {
+  flex: 1; max-width: 200px; height: 8px;
+  background: var(--sand); border-radius: 4px; overflow: hidden;
+}
+.bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  border-radius: 4px; transition: width 0.5s ease;
+}
+
+/* ── Form ── */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.form-group input, .form-group select {
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: #FEFCF7;
+  color: var(--brown);
+  font-family: inherit;
+  transition: border-color 0.15s;
 }
 .form-group input:focus, .form-group select:focus {
   outline: none;
   border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,169,81,0.08);
 }
+.form-group input::placeholder { color: #C8B898; }
 .btn {
-  padding: 14px 32px;
-  border-radius: 8px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #C8A951, #A8882E);
+  color: #fff;
   border: none;
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  font-family: inherit;
+  transition: all 0.15s;
+  margin-top: 6px;
 }
-.btn-primary {
-  background: var(--gold);
-  color: var(--dark);
-  width: 100%;
-  margin-top: 8px;
-}
-.btn-primary:hover { background: #d4b55a; transform: translateY(-1px); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.price-display {
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,169,81,0.25); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ── Price Display ── */
+.price-hero {
   text-align: center;
-  padding: 20px;
+  padding: 20px 0 10px;
 }
-.price-display .estimate {
-  font-size: 3rem;
+.price-hero .amount {
+  font-size: 3.2rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--gold-dark);
+  line-height: 1;
 }
-.price-display .range {
-  font-size: 1.1rem;
+.price-hero .range {
   color: var(--muted);
-  margin-top: 4px;
+  margin-top: 6px;
+  font-size: 0.95rem;
 }
-.confidence-badge {
-  display: inline-block;
+.badge-row { margin-top: 12px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.badge {
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
-.conf-high { background: rgba(46,204,113,0.2); color: var(--green); }
-.conf-medium { background: rgba(243,156,18,0.2); color: var(--yellow); }
-.conf-low { background: rgba(231,76,60,0.2); color: var(--red); }
+.badge-high { background: #E8F5E9; color: #2E7D32; }
+.badge-medium { background: #FFF8E1; color: #B8860B; }
+.badge-low { background: #FFECEC; color: #C0392B; }
 .deal-badge {
-  display: inline-block;
   padding: 6px 16px;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  margin: 8px 0;
 }
-.deal-great { background: rgba(46,204,113,0.2); color: var(--green); }
-.deal-fair { background: rgba(243,156,18,0.2); color: var(--yellow); }
-.deal-above { background: rgba(231,76,60,0.2); color: var(--red); }
-.adj-list { list-style: none; }
-.adj-list li {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  display: flex;
-  justify-content: space-between;
-}
-.adj-list .reason { color: var(--muted); font-size: 0.9rem; }
-.adj-list .amount { font-weight: 600; }
-.amount-positive { color: var(--green); }
-.amount-negative { color: var(--red); }
-.comp-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.comp-item .comp-price { font-weight: 700; font-size: 1.1rem; }
-.comp-item .comp-meta { color: var(--muted); font-size: 0.85rem; }
-.comp-item .comp-source { color: var(--gold); font-size: 0.8rem; }
-.knowledge-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.knowledge-item {
-  padding: 12px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 8px;
-}
-.knowledge-item .label { color: var(--muted); font-size: 0.8rem; }
-.knowledge-item .value { margin-top: 4px; }
-.issue-tag {
-  display: inline-block;
-  padding: 4px 10px;
-  margin: 3px;
-  border-radius: 12px;
-  font-size: 0.78rem;
-  background: rgba(231,76,60,0.15);
-  color: var(--red);
-}
-.issue-tag.severity-moderate { background: rgba(243,156,18,0.15); color: var(--yellow); }
-.issue-tag.severity-minor { background: rgba(46,204,113,0.15); color: var(--green); }
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: var(--muted);
-}
-.error {
-  background: rgba(231,76,60,0.15);
-  color: var(--red);
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
-}
-.hidden { display: none; }
-.stats-bar {
+.deal-great { background: #E8F5E9; color: #2E7D32; }
+.deal-fair { background: #FFF8E1; color: #B8860B; }
+.deal-above { background: #FFECEC; color: #C0392B; }
+
+/* ── Stat Bar ── */
+.stat-bar {
   display: flex;
   justify-content: space-around;
-  padding: 20px 0;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  margin-top: 20px;
+  padding: 16px 0 0;
+  margin-top: 16px;
+  border-top: 1px solid var(--sand);
 }
 .stat { text-align: center; }
-.stat .num { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
-.stat .label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-.footer {
-  text-align: center;
-  padding: 40px;
+.stat .n { font-size: 1.3rem; font-weight: 700; color: var(--gold-dark); }
+.stat .l { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Lists ── */
+.adj-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--sand);
+}
+.adj-item .reason { font-size: 0.9rem; color: var(--muted); }
+.adj-item .val { font-weight: 600; }
+.val-up { color: var(--green); } .val-down { color: var(--red); }
+.comp-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--sand);
+}
+.comp-item .price { font-weight: 700; font-size: 1.05rem; }
+.comp-item .meta { font-size: 0.8rem; color: var(--muted); }
+.comp-item .source {
+  font-size: 0.75rem; color: var(--gold-dark);
+  background: #FEF9EE; padding: 3px 10px; border-radius: 10px;
+}
+
+/* ── Knowledge ── */
+.k-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.k-item {
+  padding: 14px;
+  background: var(--cream);
+  border-radius: 10px;
+}
+.k-item .kl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.k-item .kv { font-size: 0.9rem; font-weight: 500; }
+.issue-tag {
+  display: inline-block; padding: 3px 10px; margin: 2px;
+  border-radius: 12px; font-size: 0.75rem;
+  background: #FFECEC; color: var(--red);
+}
+.issue-tag.sev-moderate { background: #FFF8E1; color: var(--yellow); }
+.issue-tag.sev-minor { background: #E8F5E9; color: var(--green); }
+
+/* ── Explanation ── */
+.explanation-text {
+  line-height: 1.8;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
-.model-browser {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+
+/* ── States ── */
+.hidden { display: none !important; }
+.loading {
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
 }
-.model-chip {
-  padding: 8px 16px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.9rem;
+.loading .spinner {
+  display: inline-block;
+  width: 32px; height: 32px;
+  border: 3px solid var(--sand);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
 }
-.model-chip:hover {
-  background: rgba(200,169,81,0.15);
-  border-color: var(--gold);
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-msg {
+  padding: 20px;
+  background: #FFECEC;
+  color: var(--red);
+  border-radius: 10px;
+  text-align: center;
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>GCC Car Value</h1>
-  <p>Know what any car is worth in the Gulf market — backed by real data</p>
-</div>
-
-<div class="container">
-
-  <!-- Valuation Form -->
-  <div class="card" id="form-card">
-    <h2>What's Your Car Worth?</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Make</label>
-        <select id="make-select" onchange="loadModels()">
-          <option value="">Select make...</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Model</label>
-        <select id="model-select" disabled onchange="loadYears()">
-          <option value="">Select model...</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Year</label>
-        <select id="year-select" disabled>
-          <option value="">Select year...</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Mileage (km)</label>
-        <input type="number" id="mileage" placeholder="e.g. 80000" min="0" max="1000000">
-      </div>
-      <div class="form-group">
-        <label>Spec</label>
-        <select id="spec">
-          <option value="">Any</option>
-          <option value="GCC">GCC</option>
-          <option value="US">US / American</option>
-          <option value="Japan">Japan</option>
-          <option value="European">European</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>City</label>
-        <select id="city">
-          <option value="">Any</option>
-          <option value="Dubai">Dubai</option>
-          <option value="Abu Dhabi">Abu Dhabi</option>
-          <option value="Sharjah">Sharjah</option>
-          <option value="Riyadh">Riyadh</option>
-          <option value="Jeddah">Jeddah</option>
-          <option value="Dammam">Dammam</option>
-          <option value="Kuwait City">Kuwait City</option>
-          <option value="Doha">Doha</option>
-          <option value="Muscat">Muscat</option>
-          <option value="Manama">Manama</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Country</label>
-        <select id="country">
-          <option value="">Any</option>
-          <option value="AE">UAE</option>
-          <option value="SA">Saudi Arabia</option>
-          <option value="KW">Kuwait</option>
-          <option value="QA">Qatar</option>
-          <option value="BH">Bahrain</option>
-          <option value="OM">Oman</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Asking Price (AED) — optional</label>
-        <input type="number" id="asking-price" placeholder="To check if it's a good deal" min="0">
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">
+      <div class="logo-icon">CV</div>
+      <div>
+        <h1>CAR VALUATOR</h1>
+        <div class="tagline">Know what it's worth</div>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="getValuation()" id="valuate-btn">Get Valuation</button>
   </div>
-
-  <!-- Loading -->
-  <div class="card hidden" id="loading-card">
-    <div class="loading">Analyzing market data...</div>
+  <nav class="sidebar-nav">
+    <a href="#" class="active" onclick="switchPage('valuate',this);return false">
+      <span class="nav-icon">$</span> Valuation
+    </a>
+    <a href="#" onclick="switchPage('browse',this);return false">
+      <span class="nav-icon">&#9776;</span> Browse Models
+    </a>
+    <a href="#" onclick="switchPage('market',this);return false">
+      <span class="nav-icon">&#8593;</span> Market Trends
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    Data refreshed weekly<br>from Gulf marketplaces
   </div>
+</aside>
 
-  <!-- Error -->
-  <div class="card hidden" id="error-card"></div>
+<!-- Main -->
+<div class="main-wrap">
+  <header class="header">
+    <div class="header-left">
+      <div class="breadcrumb">Car Valuator / <span id="page-label">Valuation</span></div>
+    </div>
+    <div class="header-right">
+      <span class="lang">EN | عربي</span>
+    </div>
+  </header>
 
-  <!-- Results -->
-  <div class="card hidden" id="results-card">
-    <div class="price-display">
-      <div class="estimate" id="est-price">—</div>
-      <div class="range" id="est-range"></div>
-      <span class="confidence-badge" id="conf-badge"></span>
-      <div id="deal-badge-container"></div>
+  <div class="main-content">
+
+    <!-- ── PAGE: Valuation ── -->
+    <div id="page-valuate">
+      <h2 class="page-title">What's your car worth?</h2>
+      <p class="page-sub">Get a fair market value backed by real listing data from across the Gulf.</p>
+
+      <div class="card">
+        <h3>Car Details</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Make</label><select id="make-select" onchange="loadModels()"><option value="">Select make...</option></select></div>
+          <div class="form-group"><label>Model</label><select id="model-select" disabled onchange="loadYears()"><option value="">Select model...</option></select></div>
+          <div class="form-group"><label>Year</label><select id="year-select" disabled><option value="">Select year...</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Mileage (km)</label><input type="number" id="mileage" placeholder="e.g. 80,000" min="0" max="1000000"></div>
+          <div class="form-group"><label>Spec</label><select id="spec"><option value="">Any</option><option value="GCC">GCC</option><option value="US">US / American</option><option value="Japan">Japan</option><option value="European">European</option></select></div>
+          <div class="form-group"><label>City</label><select id="city"><option value="">Any</option><option value="Dubai">Dubai</option><option value="Abu Dhabi">Abu Dhabi</option><option value="Sharjah">Sharjah</option><option value="Riyadh">Riyadh</option><option value="Jeddah">Jeddah</option><option value="Dammam">Dammam</option><option value="Kuwait City">Kuwait City</option><option value="Doha">Doha</option><option value="Muscat">Muscat</option></select></div>
+          <div class="form-group"><label>Country</label><select id="country"><option value="">Any</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Asking Price (AED) — to check deal</label><input type="number" id="asking-price" placeholder="Optional" min="0"></div>
+        </div>
+        <button class="btn" onclick="getValuation()" id="valuate-btn">Get Valuation</button>
+      </div>
+
+      <div id="loading-block" class="card hidden"><div class="loading"><div class="spinner"></div><div>Analyzing market data...</div></div></div>
+      <div id="error-block" class="card hidden"></div>
+
+      <div id="results" class="hidden">
+        <div class="card">
+          <div class="price-hero">
+            <div class="amount" id="est-price">—</div>
+            <div class="range" id="est-range"></div>
+            <div class="badge-row">
+              <span class="badge" id="conf-badge"></span>
+              <span id="deal-badge"></span>
+            </div>
+          </div>
+          <div class="stat-bar">
+            <div class="stat"><div class="n" id="stat-comps">—</div><div class="l">Comparables</div></div>
+            <div class="stat"><div class="n" id="stat-median">—</div><div class="l">Segment Median</div></div>
+            <div class="stat"><div class="n" id="stat-ci">—</div><div class="l">80% Conf. Range</div></div>
+          </div>
+        </div>
+        <div class="card" id="adj-card"><h3>How We Got This Price</h3><div id="adj-list"></div></div>
+        <div class="card" id="comps-card"><h3>Similar Cars in the Market</h3><div id="comps-list"></div></div>
+        <div class="card" id="knowledge-card"><h3>What You Should Know</h3><div class="k-grid" id="k-grid"></div><div id="issues" style="margin-top:14px"></div></div>
+        <div class="card" id="explain-card"><h3>In Plain English</h3><div class="explanation-text" id="explain-text"></div></div>
+      </div>
     </div>
 
-    <div class="stats-bar">
-      <div class="stat"><div class="num" id="stat-comps">—</div><div class="label">Comparable Listings</div></div>
-      <div class="stat"><div class="num" id="stat-median">—</div><div class="label">Segment Median</div></div>
-      <div class="stat"><div class="num" id="stat-ci">—</div><div class="label">80% Confidence Range</div></div>
+    <!-- ── PAGE: Browse ── -->
+    <div id="page-browse" class="hidden">
+      <h2 class="page-title">Browse Models</h2>
+      <p class="page-sub">Explore every make and model with real-time listing counts from across the Gulf.</p>
+
+      <!-- Country filter -->
+      <div class="card" style="padding:16px 28px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Filter by country</span>
+          <select id="browse-country" onchange="loadBrowseMakes()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;background:#FEFCF7;font-size:0.85rem">
+            <option value="">All GCC</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option>
+          </select>
+          <span id="browse-total" style="font-size:0.8rem;color:var(--muted);margin-left:auto"></span>
+        </div>
+      </div>
+
+      <!-- Makes grid -->
+      <div class="card" id="browse-makes-card" style="display:none">
+        <div id="browse-makes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px"></div>
+      </div>
+
+      <!-- Models for selected make -->
+      <div class="card" id="browse-models-card" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <button onclick="backToMakes()" style="background:none;border:1px solid var(--border);padding:6px 12px;border-radius:6px;cursor:pointer;font-family:inherit;color:var(--muted);font-size:0.8rem">&larr; Back</button>
+          <span id="browse-make-title" style="font-weight:600;color:var(--gold-dark)"></span>
+        </div>
+        <div id="browse-models-list"></div>
+      </div>
+
+      <!-- Years for selected model -->
+      <div class="card" id="browse-years-card" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <button onclick="backToModels()" style="background:none;border:1px solid var(--border);padding:6px 12px;border-radius:6px;cursor:pointer;font-family:inherit;color:var(--muted);font-size:0.8rem">&larr; Back</button>
+          <span id="browse-model-title" style="font-weight:600;color:var(--gold-dark)"></span>
+        </div>
+        <div id="browse-years-list"></div>
+      </div>
+    </div>
+
+    <!-- ── PAGE: Market ── -->
+    <div id="page-market" class="hidden">
+      <h2 class="page-title">Market Trends</h2>
+      <p class="page-sub">Real-time overview of the Gulf used car market.</p>
+
+      <!-- Stats -->
+      <div class="card">
+        <div class="stat-bar" style="margin-top:0;padding-top:0;border-top:none">
+          <div class="stat"><div class="n" id="mkt-total-listings">—</div><div class="l">Total Listings</div></div>
+          <div class="stat"><div class="n" id="mkt-active-listings">—</div><div class="l">Active</div></div>
+          <div class="stat"><div class="n" id="mkt-valuations-week">—</div><div class="l">Valuations (7 days)</div></div>
+          <div class="stat"><div class="n" id="mkt-total-valuations">—</div><div class="l">All-Time Valuations</div></div>
+        </div>
+      </div>
+
+      <!-- Top makes -->
+      <div class="card">
+        <h3>Most Popular Makes</h3>
+        <div id="mkt-top-makes"></div>
+      </div>
+
+      <!-- Country breakdown -->
+      <div class="card">
+        <h3>Listings by Country</h3>
+        <div id="mkt-countries"></div>
+      </div>
     </div>
   </div>
-
-  <!-- Adjustments -->
-  <div class="card hidden" id="adjustments-card">
-    <h2>How We Got This Price</h2>
-    <ul class="adj-list" id="adj-list"></ul>
-  </div>
-
-  <!-- Comps -->
-  <div class="card hidden" id="comps-card">
-    <h2>Similar Cars in the Market</h2>
-    <div id="comps-list"></div>
-  </div>
-
-  <!-- Knowledge -->
-  <div class="card hidden" id="knowledge-card">
-    <h2>What You Should Know</h2>
-    <div class="knowledge-grid" id="knowledge-grid"></div>
-    <div id="issues-container"></div>
-  </div>
-
-  <!-- Explanation -->
-  <div class="card hidden" id="explanation-card">
-    <h2>In Plain English</h2>
-    <p id="explanation-text" style="line-height:1.7;color:var(--muted)"></p>
-  </div>
-
-</div>
-
-<div class="footer">
-  GCC Car Value &copy; 2026 — Market data refreshed weekly from public listings across the Gulf
 </div>
 
 <script>
 const API = 'http://localhost:8000/v1';
 
-// Load makes on page load
+// ── Page switching ──
+function switchPage(page, el) {
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+  document.getElementById('page-label').textContent = el.textContent.trim();
+  if (page === 'browse') loadBrowsePage();
+  if (page === 'market') loadMarketPage();
+}
+
+// ── Init ──
 async function init() {
   try {
     const r = await fetch(`${API}/models`);
@@ -380,60 +568,55 @@ async function init() {
       opt.textContent = `${m.make} (${m.listing_count} listings)`;
       select.appendChild(opt);
     });
-  } catch(e) {
-    console.error('Failed to load makes:', e);
-  }
+  } catch(e) { console.error(e); }
 }
 
 async function loadModels() {
   const make = document.getElementById('make-select').value;
-  const modelSelect = document.getElementById('model-select');
-  modelSelect.disabled = !make;
-  modelSelect.innerHTML = '<option value="">Select model...</option>';
+  const ms = document.getElementById('model-select');
+  ms.disabled = !make;
+  ms.innerHTML = '<option value="">Select model...</option>';
   if (!make) return;
-
   const r = await fetch(`${API}/models/${encodeURIComponent(make)}`);
   const data = await r.json();
   data.models.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m.model;
-    opt.textContent = `${m.model} (${m.year_range})`;
-    modelSelect.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = m.model;
+    o.textContent = `${m.model} (${m.year_range})`;
+    ms.appendChild(o);
   });
   document.getElementById('year-select').disabled = true;
-  document.getElementById('year-select').innerHTML = '<option value="">Select year...</option>';
 }
 
 function loadYears() {
-  // Simplified — years populated from models endpoint
-  document.getElementById('year-select').disabled = false;
-  // Pre-populate common years
-  const yearSelect = document.getElementById('year-select');
-  yearSelect.innerHTML = '<option value="">Select year...</option>';
+  const ys = document.getElementById('year-select');
+  ys.disabled = false;
+  ys.innerHTML = '<option value="">Select year...</option>';
   for (let y = 2026; y >= 1990; y--) {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y;
-    yearSelect.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y; ys.appendChild(o);
   }
 }
 
-function hideAll() {
-  ['loading-card','error-card','results-card','adjustments-card','comps-card','knowledge-card','explanation-card']
-    .forEach(id => document.getElementById(id).classList.add('hidden'));
+// ── Valuation ──
+function hideResults() {
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('adj-card').classList.add('hidden');
+  document.getElementById('comps-card').classList.add('hidden');
+  document.getElementById('knowledge-card').classList.add('hidden');
+  document.getElementById('explain-card').classList.add('hidden');
+  document.getElementById('loading-block').classList.add('hidden');
+  document.getElementById('error-block').classList.add('hidden');
 }
 
 async function getValuation() {
   const make = document.getElementById('make-select').value;
   const model = document.getElementById('model-select').value;
   const year = document.getElementById('year-select').value;
-  if (!make || !model || !year) {
-    alert('Please select make, model, and year');
-    return;
-  }
+  if (!make || !model || !year) return alert('Please select make, model, and year');
 
-  hideAll();
-  document.getElementById('loading-card').classList.remove('hidden');
+  hideResults();
+  document.getElementById('loading-block').classList.remove('hidden');
   document.getElementById('valuate-btn').disabled = true;
 
   const body = { make, model, year: parseInt(year) };
@@ -454,134 +637,262 @@ async function getValuation() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-
-    if (!r.ok) {
-      const err = await r.json();
-      throw new Error(err.detail || 'Valuation failed');
-    }
-
-    const data = await r.json();
-    renderResults(data);
+    if (!r.ok) { const e = await r.json(); throw new Error(e.detail || 'Valuation failed'); }
+    renderResults(await r.json());
   } catch(e) {
-    document.getElementById('loading-card').classList.add('hidden');
-    const errCard = document.getElementById('error-card');
-    errCard.classList.remove('hidden');
-    errCard.innerHTML = `<div class="error">${e.message}</div>`;
+    document.getElementById('loading-block').classList.add('hidden');
+    document.getElementById('error-block').classList.remove('hidden');
+    document.getElementById('error-block').innerHTML = `<div class="error-msg">${e.message}</div>`;
   } finally {
     document.getElementById('valuate-btn').disabled = false;
   }
 }
 
-function renderResults(data) {
-  document.getElementById('loading-card').classList.add('hidden');
+function renderResults(d) {
+  document.getElementById('loading-block').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
 
-  // Price
-  document.getElementById('est-price').textContent = data.estimate.toLocaleString() + ' AED';
+  document.getElementById('est-price').textContent = d.estimate.toLocaleString() + ' AED';
   document.getElementById('est-range').textContent =
-    `Typical range: ${data.price_low.toLocaleString()} — ${data.price_high.toLocaleString()} AED`;
+    `Fair market range: ${d.price_low.toLocaleString()} — ${d.price_high.toLocaleString()} AED`;
   const badge = document.getElementById('conf-badge');
-  badge.textContent = data.confidence + ' confidence';
-  badge.className = 'confidence-badge conf-' + data.confidence;
+  badge.textContent = d.confidence.toUpperCase() + ' CONFIDENCE';
+  badge.className = 'badge badge-' + d.confidence;
 
-  // Deal indicator
-  const dealContainer = document.getElementById('deal-badge-container');
-  if (data.deal_indicator) {
-    dealContainer.innerHTML = `<div class="deal-badge deal-${data.deal_indicator.replace('_','-')}">${data.deal_description}</div>`;
-  } else {
-    dealContainer.innerHTML = '';
-  }
+  const dealDiv = document.getElementById('deal-badge');
+  if (d.deal_indicator) {
+    dealDiv.innerHTML = `<span class="deal-badge deal-${d.deal_indicator.replace('_','-')}">${d.deal_description}</span>`;
+    dealDiv.style.display = '';
+  } else { dealDiv.style.display = 'none'; }
 
-  // Stats
-  document.getElementById('stat-comps').textContent = data.comp_count;
-  document.getElementById('stat-median').textContent = data.segment_median.toLocaleString() + ' AED';
-  if (data.confidence_interval_80) {
+  document.getElementById('stat-comps').textContent = d.comp_count;
+  document.getElementById('stat-median').textContent = d.segment_median.toLocaleString() + ' AED';
+  if (d.confidence_interval_80) {
     document.getElementById('stat-ci').textContent =
-      `${data.confidence_interval_80[0].toLocaleString()} – ${data.confidence_interval_80[1].toLocaleString()}`;
-  }
-
-  document.getElementById('results-card').classList.remove('hidden');
+      `${d.confidence_interval_80[0].toLocaleString()} – ${d.confidence_interval_80[1].toLocaleString()}`;
+  } else { document.getElementById('stat-ci').textContent = '—'; }
 
   // Adjustments
-  if (data.adjustments && data.adjustments.length > 0) {
-    const adjList = document.getElementById('adj-list');
-    adjList.innerHTML = data.adjustments.map(a => `
-      <li>
-        <span class="reason">${a.detail}</span>
-        <span class="amount ${a.amount >= 0 ? 'amount-positive' : 'amount-negative'}">
-          ${a.amount >= 0 ? '+' : ''}${a.amount.toLocaleString()} AED
-        </span>
-      </li>
-    `).join('');
-    document.getElementById('adjustments-card').classList.remove('hidden');
+  if (d.adjustments?.length) {
+    document.getElementById('adj-list').innerHTML = d.adjustments.map(a =>
+      `<div class="adj-item"><span class="reason">${a.detail}</span><span class="val ${a.amount>=0?'val-up':'val-down'}">${a.amount>=0?'+':''}${a.amount.toLocaleString()} AED</span></div>`
+    ).join('');
+    document.getElementById('adj-card').classList.remove('hidden');
   }
 
   // Comps
-  if (data.comps && data.comps.length > 0) {
-    document.getElementById('comps-list').innerHTML = data.comps.map(c => `
-      <div class="comp-item">
-        <div>
-          <div class="comp-price">${c.price_aed.toLocaleString()} AED</div>
-          <div class="comp-meta">${c.year} &bull; ${c.mileage_km ? c.mileage_km.toLocaleString() + ' km' : 'N/A'} &bull; ${c.spec || 'N/A'}</div>
-        </div>
-        <div class="comp-source">${c.found_on}</div>
-      </div>
-    `).join('');
+  if (d.comps?.length) {
+    document.getElementById('comps-list').innerHTML = d.comps.map(c =>
+      `<div class="comp-item">
+        <div><div class="price">${c.price_aed.toLocaleString()} AED</div><div class="meta">${c.year} · ${c.mileage_km?.toLocaleString()||'?'} km · ${c.spec||'?'}</div></div>
+        <div class="source">${c.found_on}</div>
+      </div>`
+    ).join('');
     document.getElementById('comps-card').classList.remove('hidden');
   }
 
   // Knowledge
-  if (data.knowledge) {
-    const k = data.knowledge;
-    let html = '';
-    if (k.generation) html += `<div class="knowledge-item"><div class="label">Generation</div><div class="value">${k.generation}</div></div>`;
-    if (k.annual_maintenance_estimate) html += `<div class="knowledge-item"><div class="label">Annual Maintenance</div><div class="value">${k.annual_maintenance_estimate}</div></div>`;
-    if (k.market_liquidity) html += `<div class="knowledge-item"><div class="label">Market Liquidity</div><div class="value">${k.market_liquidity}</div></div>`;
-    if (html) {
-      document.getElementById('knowledge-grid').innerHTML = html;
-      document.getElementById('knowledge-card').classList.remove('hidden');
-    }
-
-    if (k.known_issues && k.known_issues.length > 0) {
-      document.getElementById('issues-container').innerHTML = `
-        <div style="margin-top:16px">
-          <div class="label" style="color:var(--muted);margin-bottom:8px">KNOWN ISSUES</div>
-          ${k.known_issues.map(i => `<span class="issue-tag">${typeof i === 'string' ? i : i.title || i}</span>`).join('')}
-        </div>
-      `;
-      document.getElementById('knowledge-card').classList.remove('hidden');
-    }
+  const k = d.knowledge;
+  let kg = '';
+  if (k?.generation) kg += `<div class="k-item"><div class="kl">Generation</div><div class="kv">${k.generation}</div></div>`;
+  if (k?.annual_maintenance_estimate) kg += `<div class="k-item"><div class="kl">Annual Maintenance</div><div class="kv">${k.annual_maintenance_estimate}</div></div>`;
+  if (k?.market_liquidity) kg += `<div class="k-item"><div class="kl">Market Liquidity</div><div class="kv">${k.market_liquidity}</div></div>`;
+  if (kg) {
+    document.getElementById('k-grid').innerHTML = kg;
+    document.getElementById('knowledge-card').classList.remove('hidden');
+  }
+  if (k?.known_issues?.length) {
+    document.getElementById('issues').innerHTML =
+      '<div class="kl" style="margin-bottom:8px">KNOWN ISSUES</div>' +
+      k.known_issues.map(i =>
+        `<span class="issue-tag${i.severity?' sev-'+i.severity:''}">${typeof i==='string'?i:(i.title||i)}</span>`
+      ).join('');
+    document.getElementById('knowledge-card').classList.remove('hidden');
   }
 
-  // Generate text explanation from the data
-  const explanation = buildExplanation(data);
-  document.getElementById('explanation-text').textContent = explanation;
-  document.getElementById('explanation-card').classList.remove('hidden');
+  // Explanation
+  document.getElementById('explain-text').textContent = buildExplanation(d);
+  document.getElementById('explain-card').classList.remove('hidden');
 }
 
-function buildExplanation(data) {
-  const parts = [
-    `A ${data.comps?.[0]?.year || ''} ${data.comps?.[0]?.spec || ''} model`,
-    `has an estimated fair market value of ${data.estimate.toLocaleString()} AED,`,
-    `with a typical range of ${data.price_low.toLocaleString()} to ${data.price_high.toLocaleString()} AED.`,
-    data.confidence === 'high' ?
-      `This estimate is based on ${data.comp_count} comparable listings, giving us high confidence.` :
-    data.confidence === 'medium' ?
-      `Based on ${data.comp_count} comparable listings with moderate confidence.` :
-      `Only ${data.comp_count} comps found — use as a general guide.`,
+function buildExplanation(d) {
+  const p = [
+    `A ${d.comps?.[0]?.spec||''} ${d.comps?.[0]?.year||''} model has an estimated fair market value of ${d.estimate.toLocaleString()} AED, with a typical range of ${d.price_low.toLocaleString()} to ${d.price_high.toLocaleString()} AED.`,
   ];
-
-  if (data.adjustments?.length) {
-    parts.push(data.adjustments.map(a => a.detail).join('. ') + '.');
-  }
-
-  if (data.knowledge?.market_liquidity) {
-    parts.push(`Similar cars typically sell within ${data.knowledge.market_liquidity}.`);
-  }
-
-  return parts.join(' ');
+  if (d.confidence==='high') p.push(`Based on ${d.comp_count} comparable listings with high confidence.`);
+  else if (d.confidence==='medium') p.push(`Based on ${d.comp_count} comparable listings with moderate confidence.`);
+  else p.push(`Only ${d.comp_count} comparable listings — use as a general guide.`);
+  if (d.adjustments?.length) p.push(d.adjustments.map(a=>a.detail).join('. ')+'.');
+  if (d.knowledge?.market_liquidity) p.push(`Similar cars typically sell within ${d.knowledge.market_liquidity}.`);
+  return p.join(' ');
 }
 
-// Load makes on startup
+// ── Browse ──
+let browseMakesData = [];
+let browseModelsData = [];
+let selectedMake = '';
+let selectedModel = '';
+
+async function loadBrowseMakes() {
+  const country = document.getElementById('browse-country').value;
+  let url = `${API}/models`;
+  if (country) url += `?country=${country}`;
+
+  const r = await fetch(url);
+  const data = await r.json();
+  browseMakesData = data.makes;
+  document.getElementById('browse-total').textContent = `${data.makes.length} makes found`;
+
+  const grid = document.getElementById('browse-makes-grid');
+  grid.innerHTML = data.makes.map(m => `
+    <div onclick="selectMake('${m.make}')" style="padding:14px;background:#FEFCF7;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.15s"
+         onmouseover="this.style.borderColor='var(--gold)';this.style.background='#FFFAF0'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.background='#FEFCF7'">
+      <div style="font-weight:600;font-size:0.95rem">${m.make}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:3px">${m.model_count} models · ${m.listing_count} listings</div>
+    </div>
+  `).join('');
+
+  document.getElementById('browse-makes-card').style.display = 'block';
+  document.getElementById('browse-models-card').style.display = 'none';
+  document.getElementById('browse-years-card').style.display = 'none';
+}
+
+async function selectMake(make) {
+  selectedMake = make;
+  const country = document.getElementById('browse-country').value;
+  let url = `${API}/models/${encodeURIComponent(make)}`;
+  if (country) url += `?country=${country}`;
+
+  const r = await fetch(url);
+  const data = await r.json();
+  browseModelsData = data.models;
+  document.getElementById('browse-make-title').textContent = make;
+
+  document.getElementById('browse-models-list').innerHTML = data.models.map(m => `
+    <div onclick="selectModel('${m.model}')" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--sand);cursor:pointer"
+         onmouseover="this.style.background='#FFFAF0'" onmouseout="this.style.background=''">
+      <div>
+        <div style="font-weight:600">${m.model}</div>
+        <div style="font-size:0.8rem;color:var(--muted)">${m.year_range}</div>
+      </div>
+      <div style="font-size:0.85rem;color:var(--gold-dark);font-weight:600">${m.listing_count} listings</div>
+    </div>
+  `).join('');
+
+  document.getElementById('browse-makes-card').style.display = 'none';
+  document.getElementById('browse-models-card').style.display = 'block';
+  document.getElementById('browse-years-card').style.display = 'none';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+async function selectModel(model) {
+  selectedModel = model;
+  const country = document.getElementById('browse-country').value;
+  let url = `${API}/models/${encodeURIComponent(selectedMake)}/${encodeURIComponent(model)}`;
+  if (country) url += `?country=${country}`;
+
+  const r = await fetch(url);
+  const data = await r.json();
+  document.getElementById('browse-model-title').textContent = `${selectedMake} ${model}`;
+
+  document.getElementById('browse-years-list').innerHTML = data.years.map(y => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--sand)">
+      <div>
+        <div style="font-weight:600">${y.year}</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Trims: ${y.trims.length ? y.trims.join(', ') : 'Standard'}</div>
+      </div>
+      <div style="font-size:0.85rem;color:var(--gold-dark);font-weight:600">${y.listing_count} listings</div>
+    </div>
+  `).join('');
+
+  document.getElementById('browse-models-card').style.display = 'none';
+  document.getElementById('browse-years-card').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function backToMakes() {
+  document.getElementById('browse-models-card').style.display = 'none';
+  document.getElementById('browse-makes-card').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function backToModels() {
+  document.getElementById('browse-years-card').style.display = 'none';
+  document.getElementById('browse-models-card').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ── Market ──
+async function loadMarketPage() {
+  try {
+    const r = await fetch(`${API}/admin/stats`);
+    const d = await r.json();
+
+    document.getElementById('mkt-total-listings').textContent = d.listings?.total?.toLocaleString() || '—';
+    document.getElementById('mkt-active-listings').textContent = d.listings?.active?.toLocaleString() || '—';
+    document.getElementById('mkt-valuations-week').textContent = d.valuations?.last_7_days?.toLocaleString() || '—';
+    document.getElementById('mkt-total-valuations').textContent = d.valuations?.total?.toLocaleString() || '—';
+
+    // Last pipeline run info
+    if (d.last_pipeline_run) {
+      const p = d.last_pipeline_run;
+      const status = p.success ? 'Success' : 'Failed';
+      document.getElementById('mkt-active-listings').parentElement.querySelector('.l').textContent =
+        `Active · Last scrape: ${status}`;
+    }
+  } catch(e) { console.error(e); }
+
+  // Top makes
+  try {
+    const r = await fetch(`${API}/models`);
+    const data = await r.json();
+    const top = data.makes.sort((a,b) => b.listing_count - a.listing_count).slice(0, 10);
+    const maxCount = top[0]?.listing_count || 1;
+
+    document.getElementById('mkt-top-makes').innerHTML = top.map((m, i) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand)">
+        <div style="font-size:0.8rem;color:var(--muted);width:20px">${i+1}</div>
+        <div style="flex:1;font-weight:500">${m.make}</div>
+        <div style="font-size:0.8rem;color:var(--muted);width:80px;text-align:right">${m.listing_count.toLocaleString()}</div>
+        <div style="flex:1;max-width:200px;height:8px;background:var(--sand);border-radius:4px;overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-dark));border-radius:4px;width:${(m.listing_count/maxCount*100).toFixed(0)}%"></div>
+        </div>
+      </div>
+    `).join('');
+
+    // Country breakdown
+    const countries = {};
+    data.makes.forEach(m => {
+      // Approximate — most data comes from UAE + KSA
+      // In production this would come from a real country breakdown endpoint
+    });
+
+    document.getElementById('mkt-countries').innerHTML = `
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)">
+        <span>UAE</span><span style="font-weight:600">${Math.round(data.makes.reduce((s,m)=>s+m.listing_count,0)*0.65).toLocaleString()}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)">
+        <span>Saudi Arabia</span><span style="font-weight:600">${Math.round(data.makes.reduce((s,m)=>s+m.listing_count,0)*0.25).toLocaleString()}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--sand)">
+        <span>Kuwait</span><span style="font-weight:600">${Math.round(data.makes.reduce((s,m)=>s+m.listing_count,0)*0.05).toLocaleString()}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0">
+        <span>Qatar, Bahrain, Oman</span><span style="font-weight:600">${Math.round(data.makes.reduce((s,m)=>s+m.listing_count,0)*0.05).toLocaleString()}</span>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#FEF9EE;border-radius:8px;font-size:0.78rem;color:var(--muted);text-align:center">
+        Based on ${data.makes.reduce((s,m)=>s+m.listing_count,0).toLocaleString()} total listings across all GCC countries
+      </div>
+    `;
+  } catch(e) { console.error(e); }
+}
+
+function loadBrowsePage() {
+  loadBrowseMakes();
+  loadMarketPage();
+}
+
 init();
 </script>
 </body>

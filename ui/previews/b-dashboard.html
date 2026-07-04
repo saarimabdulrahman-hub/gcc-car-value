@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>B: Dark Dashboard — GCC Car Value</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'JetBrains Mono','Fira Code',monospace;background:#0a0e14;color:#c8d6e5;min-height:100vh;display:flex}
+.sidebar{width:240px;background:#0d1117;padding:24px 16px;border-right:1px solid #1a1f2b;display:flex;flex-direction:column;gap:8px}
+.sidebar h1{font-size:0.85rem;color:#ffd700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.sidebar a{color:#566575;text-decoration:none;font-size:0.8rem;padding:8px 12px;border-radius:4px}
+.sidebar a.active{background:#1a1f2b;color:#e8e8e8}
+.main{flex:1;padding:32px;overflow-y:auto}
+.topbar{display:flex;gap:16px;margin-bottom:24px}
+.stat-box{flex:1;background:#0d1117;border:1px solid #1a1f2b;padding:16px;border-radius:6px}
+.stat-box .num{font-size:1.5rem;font-weight:700;color:#ffd700}
+.stat-box .lbl{font-size:0.7rem;color:#566575;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.input-box{display:flex;flex-direction:column;gap:4px}
+.input-box label{font-size:0.7rem;color:#566575;text-transform:uppercase;letter-spacing:1px}
+.input-box input,.input-box select{padding:10px 12px;background:#0d1117;border:1px solid #1a1f2b;color:#e8e8e8;font-family:inherit;font-size:0.9rem;border-radius:4px}
+.input-box input:focus{outline:none;border-color:#ffd700}
+.btn{grid-column:1/-1;padding:14px;background:#ffd700;color:#0a0e14;border:none;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px;border-radius:4px}
+.result{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:24px;display:none}
+.big-price{background:#0d1117;border:1px solid #1a1f2b;padding:24px;border-radius:6px}
+.big-price .val{font-size:2.5rem;font-weight:700;color:#ffd700}
+.big-price .sub{color:#566575;font-size:0.8rem;margin-top:4px}
+.data-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #11151c;font-size:0.8rem}
+.data-row .k{color:#566575}.data-row .v{color:#e8e8e8}.data-row .up{color:#00d2a0}.data-row .down{color:#ff5c5c}
+</style></head><body>
+<div class="sidebar">
+  <h1>GCC Car Value</h1>
+  <a href="#" class="active">▸ Valuation</a>
+  <a href="#">Market</a>
+  <a href="#">Models</a>
+  <a href="#">Alerts</a>
+</div>
+<div class="main">
+  <div class="topbar">
+    <div class="stat-box"><div class="num">12,847</div><div class="lbl">Active Listings</div></div>
+    <div class="stat-box"><div class="num">127.3K</div><div class="lbl">Avg Price (AED)</div></div>
+    <div class="stat-box"><div class="num">1,203</div><div class="lbl">Valuations Today</div></div>
+    <div class="stat-box"><div class="num">34s</div><div class="lbl">Avg Response</div></div>
+  </div>
+  <div class="grid2">
+    <div class="input-box"><label>Make</label><select><option>Toyota</option></select></div>
+    <div class="input-box"><label>Model</label><select><option>Land Cruiser</option></select></div>
+    <div class="input-box"><label>Year</label><input value="2018"></div>
+    <div class="input-box"><label>Mileage (km)</label><input value="80,000"></div>
+    <div class="input-box"><label>Spec</label><select><option>GCC</option></select></div>
+    <div class="input-box"><label>City</label><select><option>Dubai</option></select></div>
+    <button class="btn">Run Valuation</button>
+  </div>
+  <div class="result" id="r">
+    <div class="big-price"><div class="val">127,350 AED</div><div class="sub">80% CI: 123,000 – 132,000 · Confidence: MEDIUM · 16 comps</div></div>
+    <div style="background:#0d1117;border:1px solid #1a1f2b;padding:20px;border-radius:6px">
+      <div style="color:#ffd700;font-size:0.8rem;margin-bottom:12px">ADJUSTMENTS</div>
+      <div class="data-row"><span class="k">Mileage delta</span><span class="down">−2,125</span></div>
+      <div class="data-row"><span class="k">City premium</span><span class="up">+1,725</span></div>
+      <div class="data-row"><span class="k">Spec match</span><span class="up">+0</span></div>
+    </div>
+  </div>
+</div>
+<script>document.querySelector('.btn').onclick=()=>document.getElementById('r').style.display='grid'</script>
+</body></html>
