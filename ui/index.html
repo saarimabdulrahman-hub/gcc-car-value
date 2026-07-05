@@ -49,6 +49,14 @@ body.has-sidebar{display:flex}
 .badge-high{background:var(--green-bg);color:var(--green)}.badge-medium{background:#FFF8E1;color:#B8860B}
 .comp-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--sand)}
 .comp-item .price{font-weight:700}.comp-item .meta{font-size:0.8rem;color:var(--muted)}.comp-item .source{font-size:0.75rem;color:var(--gold-dark);background:#FEF9EE;padding:3px 10px;border-radius:10px}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:10px;color:#fff;font-weight:600;font-size:0.9rem;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:slideIn 0.3s ease,slideOut 0.3s ease 9.7s forwards;cursor:pointer}
+.toast-error{background:linear-gradient(135deg,#E74C3C,#C0392B)}
+.toast-warning{background:linear-gradient(135deg,#F39C12,#E67E22)}
+.toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
 </style>
 </head>
 <body id="body-el">
@@ -340,20 +348,20 @@ async function doUrlValuation(url){
   var bt=document.getElementById('buy-btn'); if(bt)bt.disabled=true;
   try{
     var r=await fetch('http://localhost:8000/v1/valuate-url',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!r.ok){var e=await r.json();throw new Error(e.detail||'Failed');}
+    if(!r.ok){var errData;try{errData=await r.json();}catch(ex){errData={detail:'Site blocked access'};}var errMsg=errData.detail||'Failed';if(errMsg.indexOf('Pardon')>-1||errMsg.indexOf('Interruption')>-1)errMsg='Dubizzle is blocking automated access. Paste links from OpenSooq, Haraj, or YallaMotor instead.';throw new Error(errMsg);}
     var d=await r.json();
     if(ld)ld.classList.add('hidden');
     showResults('buy',{estimate:d.estimate,price_low:d.price_low,price_high:d.price_high,confidence:d.confidence,comp_count:d.comp_count,segment_median:d.segment_median,adjustments:d.adjustments||[],comps:d.comps||[],confidence_interval_80:d.confidence_interval_80},{asking_price:body.asking_price||(d.parsed_from_url?d.parsed_from_url.price_found:d.estimate)});
   }catch(e){
     if(ld)ld.classList.add('hidden');
-    if(er){er.classList.remove('hidden');er.innerHTML='<div class="error-msg">'+e.message+'</div>';}
+    var msg=e.message||'Failed';if(msg.indexOf('Blocked')>-1||msg.indexOf('Pardon')>-1)msg='Dubizzle is blocking automated access. Please use the manual form instead.';showError(msg);
   }
   finally{if(bt)bt.disabled=false;}
 }
 
 function submitUrl(){
   var urlEl=document.getElementById('fm-url');
-  if(!urlEl||!urlEl.value) return alert('Please paste a listing URL first');
+  if(!urlEl||!urlEl.value) showWarning('Please paste a listing URL first');return;
   doUrlValuation(urlEl.value);
 }
 
@@ -372,6 +380,22 @@ function showResults(mode,d,body){
   h+='<div class="card"><h3>Similar Cars</h3>'+(d.comps||[]).slice(0,5).map(function(x){return'<div class="comp-item"><div><div class="price">'+x.price_aed.toLocaleString()+' AED</div><div class="meta">'+x.year+' - '+x.mileage_km+' km - '+x.spec+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
   c.innerHTML=h;
 }
+
+var TOAST_COUNT=0;
+function showToast(msg,type,duration){
+  type=type||"error";duration=duration||10000;
+  var container=document.querySelector(".toast-container");
+  if(!container){container=document.createElement("div");container.className="toast-container";document.body.appendChild(container);}
+  var toast=document.createElement("div");
+  toast.className="toast toast-"+type;
+  toast.textContent=msg;
+  toast.onclick=function(){toast.remove();};
+  container.appendChild(toast);
+  setTimeout(function(){if(toast.parentNode)toast.remove();},duration);
+}
+function showError(msg){showToast(msg,"error",10000);}
+function showWarning(msg){showToast(msg,"warning",8000);}
+function showSuccess(msg){showToast(msg,"success",5000);}
 </script>
 </body>
 </html>
