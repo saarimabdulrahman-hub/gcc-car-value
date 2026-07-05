@@ -474,4 +474,485 @@ function autocomplete(input, type){
 <datalist id="cities"><option value="Dubai"><option value="Abu Dhabi"><option value="Sharjah"><option value="Riyadh"><option value="Jeddah"><option value="Dammam"><option value="Kuwait City"><option value="Doha"><option value="Muscat"><option value="Manama"></datalist>
 <datalist id="countries"><option value="UAE"><option value="Saudi Arabia"><option value="Kuwait"><option value="Qatar"><option value="Bahrain"><option value="Oman"></datalist>
 </body>
+</htmlfunction makeForm(showAsking){
+var h='<div class="form-row"><div class="form-group"><label>Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" placeholder="Type make..." autocomplete="off" oninput="autocomplete(this)" onfocus="autocomplete(this)"><div class="autocomplete-suggestions"></div></div></div><div class="form-group"><label>Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" placeholder="Type model..." autocomplete="off" disabled oninput="autocomplete(this)" onfocus="autocomplete(this)"><div class="autocomplete-suggestions"></div></div></div><div class="form-group"><label>Year</label><input type="number" class="fm-year" placeholder="e.g. 2020" min="1990" max="2026"></div><div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80000"></div></div><div class="form-row"><div class="form-group"><label>Spec</label><input type="text" class="fm-spec" placeholder="GCC, US, Japan..." list="specs" autocomplete="off"></div><div class="form-group"><label>City</label><input type="text" class="fm-city" placeholder="Dubai, Riyadh..." list="cities" autocomplete="off"></div><div class="form-group"><label>Country</label><input type="text" class="fm-country" placeholder="UAE, Saudi Arabia..." list="countries" autocomplete="off"></div></div>';
+if(showAsking)h='<div style="background:linear-gradient(135deg,#FEF9EE,#FFF8E1);border-radius:12px;padding:20px;margin-bottom:20px;border:2px solid var(--gold)"><div style="font-size:0.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:8px">What's the asking price?</div><div style="display:flex;align-items:center;gap:12px"><input type="number" class="fm-asking" placeholder="Enter the price" style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:10px;font-size:1.2rem;font-weight:700;background:#fff;color:var(--brown);font-family:inherit"><span style="font-size:1.1rem;font-weight:700;color:var(--gold-dark)">AED</span></div></div><h3 style="border:none;padding:0;margin:0 0 16px 0;font-size:0.85rem;color:var(--muted);text-transform:uppercase">Car Details</h3>'+h;
+return h;
+}
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Car Valuator</title>
+<style>
+:root{--cream:#FDF6EC;--gold:#C8A951;--gold-dark:#8B6914;--brown:#2D1F0C;--muted:#8B7355;--white:#FFF;--border:#E8DCC8;--sand:#F5EAD5;--green:#2E7D32;--green-bg:#E8F5E9;--red:#C0392B;--red-bg:#FFECEC}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:var(--cream);color:var(--brown);min-height:100vh}
+body.has-sidebar{display:flex}
+.header{background:var(--brown);border-bottom:3px solid var(--gold);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-brand{display:flex;align-items:center;gap:14px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#F5E6A3,var(--gold),#A8882E);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:var(--brown);box-shadow:0 0 16px rgba(200,169,81,0.4)}
+.header-brand h1{font-family:Georgia,serif;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#F5E6A3,var(--gold),#D4B55A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lang-btn{font-size:0.8rem;color:#8B7B65;cursor:pointer;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:none;font-family:inherit}
+.sidebar{width:200px;background:var(--brown);color:var(--sand);display:none;flex-direction:column;flex-shrink:0}
+.has-sidebar .sidebar{display:flex}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:#8B7B65;text-decoration:none;font-size:0.82rem;border-left:2px solid transparent;cursor:pointer}
+.sidebar-nav a:hover{color:var(--sand);background:rgba(255,255,255,0.03)}
+.sidebar-nav a.active{color:var(--gold);background:rgba(200,169,81,0.08);border-left-color:var(--gold)}
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow-y:auto}
+.main-content{flex:1;padding:32px;max-width:860px;margin:0 auto;width:100%}
+.hidden{display:none!important}
+.landing-hero{text-align:center;padding:80px 20px 60px}
+.landing-hero h2{font-size:2.2rem}
+.landing-hero .sub{font-size:1.05rem;color:var(--muted);margin-bottom:56px}
+.choice-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:620px;margin:0 auto}
+.choice-card{background:var(--white);border-radius:16px;padding:44px 30px;text-align:center;border:2px solid var(--border);cursor:pointer}
+.choice-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(45,31,12,0.08);border-color:var(--gold)}
+.choice-card .icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;background:linear-gradient(135deg,#C8A951,#A8882E);color:#fff}
+.choice-card h3{font-size:1.2rem;margin-bottom:8px}
+.choice-card p{font-size:0.9rem;color:var(--muted);line-height:1.5}
+.page-title{font-family:Georgia,serif;font-size:1.5rem;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:0.95rem;color:var(--muted);margin-bottom:28px}
+.card{background:var(--white);border-radius:14px;padding:28px;margin-bottom:20px;border:1px solid var(--border)}
+.card h3{font-size:1rem;color:var(--gold-dark);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--sand)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+.form-group input,.form-group select{padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:0.95rem;background:#FEFCF7;color:var(--brown);font-family:inherit}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;background:linear-gradient(135deg,#C8A951,#A8882E);color:#fff}
+.btn:hover{transform:translateY(-1px)}
+.price-hero{text-align:center;padding:20px 0}
+.price-hero .amount{font-size:3rem;font-weight:700;color:var(--gold-dark)}
+.price-hero .range{color:var(--muted);margin-top:6px}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600}
+.badge-high{background:var(--green-bg);color:var(--green)}.badge-medium{background:#FFF8E1;color:#B8860B}
+.comp-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--sand)}
+.comp-item .price{font-weight:700}.comp-item .meta{font-size:0.8rem;color:var(--muted)}.comp-item .source{font-size:0.75rem;color:var(--gold-dark);background:#FEF9EE;padding:3px 10px;border-radius:10px}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:10px;color:#fff;font-weight:600;font-size:0.9rem;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:slideIn 0.3s ease,slideOut 0.3s ease 9.7s forwards;cursor:pointer}
+.toast-error{background:linear-gradient(135deg,#E74C3C,#C0392B)}
+.toast-warning{background:linear-gradient(135deg,#F39C12,#E67E22)}
+.toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:10px;color:#fff;font-weight:600;font-size:0.9rem;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:slideIn 0.3s ease,slideOut 0.3s ease 9.7s forwards;cursor:pointer}
+.toast-error{background:linear-gradient(135deg,#E74C3C,#C0392B)}
+.toast-warning{background:linear-gradient(135deg,#F39C12,#E67E22)}
+.toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
+
+.autocomplete-wrap{position:relative}
+.autocomplete-suggestions{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--gold);border-top:none;border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:100;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.autocomplete-suggestions.show{display:block}
+.autocomplete-item{padding:10px 14px;cursor:pointer;font-size:0.9rem;border-bottom:1px solid var(--sand)}
+.autocomplete-item:hover,.autocomplete-item.active{background:#FEF9EE;color:var(--gold-dark)}
+.autocomplete-item .count{float:right;color:var(--muted);font-size:0.75rem}
+</style>
+</head>
+<body id="body-el">
+
+<aside class="sidebar">
+<nav class="sidebar-nav">
+<a href="#" id="nav-home" onclick="goPage('home',this)">Home</a>
+<a href="#" id="nav-sell" onclick="goPage('sell',this)">Sell</a>
+<a href="#" id="nav-buy" onclick="goPage('buy',this)">Buy</a>
+<a href="#" id="nav-browse" onclick="goPage('browse',this)">Browse</a>
+<a href="#" id="nav-market" onclick="goPage('market',this)">Market</a>
+</nav>
+</aside>
+
+<div class="main-wrap">
+<header class="header">
+<div class="header-brand"><div class="logo-icon">CV</div><h1>CAR VALUATOR</h1></div>
+<button class="lang-btn" onclick="toggleLang()">EN | AR</button>
+</header>
+
+<div class="main-content">
+
+<div id="page-home">
+<div class="landing-hero">
+<h2>What would you like to do?</h2>
+<p class="sub">Choose your path and we will guide you through it.</p>
+<div class="choice-cards">
+<div class="choice-card" onclick="goPage('sell',document.getElementById('nav-sell'))">
+<div class="icon">$</div><h3>I am Selling</h3><p>Find out what your car is worth.</p>
+</div>
+<div class="choice-card" onclick="goPage('buy',document.getElementById('nav-buy'))">
+<div class="icon">S</div><h3>I am Buying</h3><p>Check if a deal is fair.</p>
+</div>
+</div></div></div>
+
+<div id="page-sell" class="hidden">
+<h2 class="page-title">I am Selling My Car</h2>
+<p class="page-sub">Tell us about your car.</p>
+<div class="card"><h3>My Car</h3>
+<div class="form-row">
+<div class="form-group"><label>Make</label><select id="smake"><option value="Toyota">Toyota</option></select></div>
+<div class="form-group"><label>Model</label><select id="smodel"><option value="Land Cruiser">Land Cruiser</option></select></div>
+<div class="form-group"><label>Year</label><select id="syear"><option>2018</option><option>2019</option><option>2020</option></select></div>
+<div class="form-group"><label>Mileage</label><input id="smileage" type="number" placeholder="80000" value="80000"></div>
+</div>
+<button class="btn" onclick="doValuation('sell')">Get Market Value</button>
+</div>
+<div id="sell-result" class="hidden"></div>
+</div>
+
+<div id="page-buy" class="hidden">
+<h2 class="page-title">I am Buying a Car</h2>
+<p class="page-sub">Enter the car and asking price.</p>
+<div class="card"><h3>About the car</h3>
+<div id="buy-manual-section">
+<div class="form-row">
+<div class="form-group"><label>Make</label><select id="bmake"><option value="Toyota">Toyota</option></select></div>
+<div class="form-group"><label>Model</label><select id="bmodel"><option value="Land Cruiser">Land Cruiser</option></select></div>
+<div class="form-group"><label>Year</label><select id="byear"><option>2018</option></select></div>
+<div class="form-group"><label>Asking Price (AED)</label><input id="bprice" type="number" placeholder="125000" value="125000"></div>
+</div>
+</div>
+<div id="buy-url-section" style="display:none">
+<div style="background:linear-gradient(135deg,#F0F4FF,#E8EDFF);border-radius:12px;padding:24px;margin-bottom:20px;border:2px solid #8B9DC3;text-align:center">
+<div style="font-size:1.5rem;margin-bottom:8px">&#128279;</div>
+<div style="font-weight:700;margin-bottom:4px">Paste the listing URL</div>
+<div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, and more</div>
+<input type="url" id="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px">
+<button class="btn" onclick="submitUrl()" style="background:linear-gradient(135deg,#4A90D9,#2563EB);cursor:pointer;font-size:1.1rem;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,99,235,0.3)">&#9889; Analyze This URL</button>
+</div>
+<div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)">
+<div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">Asking Price (if different)</div>
+<input type="number" id="fm-url-price" placeholder="Optional" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit">
+</div>
+</div>
+<button class="btn" onclick="doValuation('buy')">Analyze This Deal</button><br><button onclick="toggleUrlSection()" style="background:none;border:2px dashed #C8A951;color:#8B6914;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600;margin-top:12px;width:100%">Or paste a listing URL instead</button>
+</div>
+<div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div>Analyzing URL...</div></div></div>
+<div id="buy-error" class="card hidden"></div>
+<div id="buy-result" class="hidden"></div>
+</div>
+
+
+<div id="page-browse" class="hidden"><h2 class="page-title">Browse Models</h2><p class="page-sub">Explore every make and model.</p><div class="card" style="padding:16px 28px;margin-bottom:16px"><select id="browse-country" onchange="loadBrowseMakes()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;background:#FEFCF7"><option value="">All GCC</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="KW">Kuwait</option><option value="QA">Qatar</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select><span id="browse-total" style="font-size:0.8rem;color:var(--muted);margin-left:12px"></span></div><div class="card" id="browse-makes-card"><div id="browse-makes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px"></div></div><div class="card" id="browse-models-card" style="display:none"><button onclick="backToMakes()" class="back-btn">Back</button><span id="browse-make-title" style="font-weight:600;color:var(--gold-dark);margin-left:8px"></span><div id="browse-models-list" style="margin-top:12px"></div></div><div class="card" id="browse-years-card" style="display:none"><button onclick="backToModels()" class="back-btn">Back</button><span id="browse-model-title" style="font-weight:600;color:var(--gold-dark);margin-left:8px"></span><div id="browse-years-list" style="margin-top:12px"></div></div></div>
+<div id="page-market" class="hidden"><h2 class="page-title">Market Trends</h2><p class="page-sub">Gulf used car market overview.</p><div class="card"><div class="stat-bar" style="margin-top:0;padding-top:0;border-top:none"><div class="stat"><div class="n" id="mkt-total">--</div><div class="l">Total Listings</div></div><div class="stat"><div class="n" id="mkt-active">--</div><div class="l">Active</div></div><div class="stat"><div class="n" id="mkt-week">--</div><div class="l">Valuations (7d)</div></div><div class="stat"><div class="n" id="mkt-all">--</div><div class="l">All-Time</div></div></div></div><div class="card"><h3>Most Popular Makes</h3><div id="mkt-top-makes"></div></div></div>
+</div></div>
+
+<script>
+function goPage(p, el) {
+  var links = document.querySelectorAll('.sidebar-nav a');
+  for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
+  el.classList.add('active');
+  var pages = document.querySelectorAll('[id^="page-"]');
+  for (var j = 0; j < pages.length; j++) pages[j].classList.add('hidden');
+  var pg = document.getElementById('page-' + p);
+  if (pg) pg.classList.remove('hidden');
+  if(p==='home')document.body.classList.remove('has-sidebar');else document.body.classList.add('has-sidebar');if(p==='browse')loadBrowseMakes();if(p==='market')loadMarketPage();
+}
+
+function toggleLang() {
+  if (document.body.dir === 'rtl') document.body.dir = 'ltr';
+  else document.body.dir = 'rtl';
+}
+
+function loadDropdowns() {
+  fetch('http://localhost:8000/v1/models')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var makes = data.makes;
+      var sellSel = document.getElementById('smake');
+      var buySel = document.getElementById('bmake');
+      sellSel.innerHTML = '<option value="">Select make...</option>';
+      buySel.innerHTML = '<option value="">Select make...</option>';
+      for (var i = 0; i < makes.length; i++) {
+        var m = makes[i];
+        var o1 = document.createElement('option');
+        o1.value = m.make; o1.textContent = m.make + ' (' + m.listing_count + ')';
+        sellSel.appendChild(o1);
+        var o2 = document.createElement('option');
+        o2.value = m.make; o2.textContent = m.make + ' (' + m.listing_count + ')';
+        buySel.appendChild(o2);
+      }
+    });
+
+  // Wire make -> model chaining for sell
+  document.getElementById('smake').onchange = function() {
+    var mk = this.value;
+    var md = document.getElementById('smodel');
+    md.innerHTML = '<option>Loading...</option>';
+    if (!mk) { md.innerHTML = '<option>Select model</option>'; return; }
+    fetch('http://localhost:8000/v1/models/' + encodeURIComponent(mk))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        md.innerHTML = '<option value="">Select model...</option>';
+        d.models.forEach(function(m){ var o = document.createElement('option'); o.value = m.model; o.textContent = m.model + ' (' + m.year_range + ')'; md.appendChild(o); });
+      });
+  };
+  // Wire make -> model chaining for buy
+  document.getElementById('bmake').onchange = function() {
+    var mk = this.value;
+    var md = document.getElementById('bmodel');
+    md.innerHTML = '<option>Loading...</option>';
+    if (!mk) { md.innerHTML = '<option>Select model</option>'; return; }
+    fetch('http://localhost:8000/v1/models/' + encodeURIComponent(mk))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        md.innerHTML = '<option value="">Select model...</option>';
+        d.models.forEach(function(m){ var o = document.createElement('option'); o.value = m.model; o.textContent = m.model + ' (' + m.year_range + ')'; md.appendChild(o); });
+      });
+  };
+}
+loadDropdowns();
+
+async function doValuation(mode) {
+  var prefix = mode === 'buy' ? 'b' : 's';
+  var body = {
+    make: document.getElementById(prefix + 'make').value,
+    model: document.getElementById(prefix + 'model').value,
+    year: parseInt(document.getElementById(prefix + 'year').value),
+    mileage_km: parseInt(document.getElementById(prefix + 'mileage').value) || 80000,
+    spec: 'GCC',
+    city: 'Dubai',
+    country: 'AE'
+  };
+  if (mode === 'buy') {
+    body.asking_price = parseFloat(document.getElementById('bprice').value);
+  }
+
+  try {
+    var response = await fetch('http://localhost:8000/v1/valuate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var data = await response.json();
+    var resultEl = document.getElementById(mode + '-result');
+    resultEl.classList.remove('hidden');
+
+    var html = '<div class="card"><div class="price-hero"><div class="amount">' + data.estimate.toLocaleString() + ' AED</div><div class="range">Range: ' + data.price_low.toLocaleString() + ' - ' + data.price_high.toLocaleString() + '</div><span class="badge badge-' + data.confidence + '">' + data.confidence.toUpperCase() + '</span></div>';
+
+    if (mode === 'buy' && body.asking_price) {
+      var diff = body.asking_price - data.estimate;
+      var dpct = ((diff / data.estimate) * 100).toFixed(1);
+      var isOver = diff > 0;
+      var color = isOver ? 'var(--red)' : 'var(--green)';
+      html += '<div class="card" style="border:2px solid ' + color + '"><div style="text-align:center;padding:16px"><div style="font-size:1.5rem;font-weight:700;color:' + color + '">' + (isOver ? 'OVERPRICED' : 'GOOD DEAL') + '</div><div style="font-size:2rem;font-weight:800">' + (isOver ? '+' : '-') + Math.abs(dpct) + '%</div><div>Asking: ' + body.asking_price.toLocaleString() + ' AED vs Market: ' + data.estimate.toLocaleString() + ' AED</div></div></div>';
+    }
+
+    var comps = data.comps || [];
+    html += '<div class="card"><h3>Similar Cars</h3>';
+    for (var k = 0; k < Math.min(comps.length, 5); k++) {
+      var c = comps[k];
+      html += '<div class="comp-item"><div><div class="price">' + c.price_aed.toLocaleString() + ' AED</div><div class="meta">' + c.year + ' - ' + (c.mileage_km || '?') + ' km - ' + (c.spec || '?') + '</div></div><div class="source">' + c.found_on + '</div></div>';
+    }
+    html += '</div>';
+
+    resultEl.innerHTML = html;
+  } catch (e) {
+    showError(e.message);
+  }
+}
+function loadBrowseMakes(){
+  var co=document.getElementById('browse-country').value;
+  var url='http://localhost:8000/v1/models'; if(co) url+='?country='+co;
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('browse-total').textContent=d.makes.length+' makes';
+    var h='';
+    for(var i=0;i<d.makes.length;i++){
+      var m=d.makes[i];
+      h+='<div class="make-card" onclick="selectMake(\''+m.make+'\')"><div style="font-weight:600">'+m.make+'</div><div style="font-size:0.72rem;color:var(--muted)">'+m.model_count+' models, '+m.listing_count+' listings</div></div>';
+    }
+    document.getElementById('browse-makes-grid').innerHTML=h;
+    document.getElementById('browse-makes-card').style.display='block';
+    document.getElementById('browse-models-card').style.display='none';
+    document.getElementById('browse-years-card').style.display='none';
+  });
+}
+
+function selectMake(mk){
+  var co=document.getElementById('browse-country').value;
+  var url='http://localhost:8000/v1/models/'+encodeURIComponent(mk); if(co) url+='?country='+co;
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('browse-make-title').textContent=mk;
+    var h='';
+    for(var i=0;i<d.models.length;i++){
+      var m=d.models[i];
+      h+='<div class="row-link" onclick="selectModel(\''+mk+'\',\''+m.model+'\')"><div><div style="font-weight:600">'+m.model+'</div><div style="font-size:0.8rem;color:var(--muted)">'+m.year_range+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+m.listing_count+'</div></div>';
+    }
+    document.getElementById('browse-models-list').innerHTML=h;
+    document.getElementById('browse-makes-card').style.display='none';
+    document.getElementById('browse-models-card').style.display='block';
+  });
+}
+
+function selectModel(mk,md){
+  var co=document.getElementById('browse-country').value;
+  var url='http://localhost:8000/v1/models/'+encodeURIComponent(mk)+'/'+encodeURIComponent(md); if(co) url+='?country='+co;
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('browse-model-title').textContent=mk+' '+md;
+    var h='';
+    for(var i=0;i<d.years.length;i++){
+      var y=d.years[i];
+      h+='<div class="row-link"><div><div style="font-weight:600">'+y.year+'</div><div style="font-size:0.8rem;color:var(--muted)">'+(y.trims&&y.trims.length?y.trims.join(', '):'Standard')+'</div></div><div style="font-weight:600;color:var(--gold-dark)">'+y.listing_count+'</div></div>';
+    }
+    document.getElementById('browse-years-list').innerHTML=h;
+    document.getElementById('browse-models-card').style.display='none';
+    document.getElementById('browse-years-card').style.display='block';
+  });
+}
+
+function backToMakes(){document.getElementById('browse-models-card').style.display='none';document.getElementById('browse-years-card').style.display='none';document.getElementById('browse-makes-card').style.display='block';}
+function backToModels(){document.getElementById('browse-years-card').style.display='none';document.getElementById('browse-models-card').style.display='block';}
+
+function loadMarketPage(){
+  fetch('http://localhost:8000/v1/admin/stats').then(function(r){return r.json()}).then(function(d){
+    document.getElementById('mkt-total').textContent=(d.listings&&d.listings.total?d.listings.total.toLocaleString():'--');
+    document.getElementById('mkt-active').textContent=(d.listings&&d.listings.active?d.listings.active.toLocaleString():'--');
+    document.getElementById('mkt-week').textContent=(d.valuations&&d.valuations.last_7_days?d.valuations.last_7_days.toLocaleString():'--');
+    document.getElementById('mkt-all').textContent=(d.valuations&&d.valuations.total?d.valuations.total.toLocaleString():'--');
+  });
+  fetch('http://localhost:8000/v1/models').then(function(r){return r.json()}).then(function(d){
+    var top=d.makes.sort(function(a,b){return b.listing_count-a.listing_count;}).slice(0,10);
+    var max=top[0]?top[0].listing_count:1;
+    var h='';
+    for(var i=0;i<top.length;i++){
+      var m=top[i];
+      h+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="width:20px;color:var(--muted)">'+(i+1)+'</span><span style="flex:1">'+m.make+'</span><span style="color:var(--muted);width:80px;text-align:right">'+m.listing_count.toLocaleString()+'</span><div class="bar-track"><div class="bar-fill" style="width:'+((m.listing_count/max)*100).toFixed(0)+'%"></div></div></div>';
+    }
+    document.getElementById('mkt-top-makes').innerHTML=h;
+  });
+}
+
+
+function toggleUrlSection(){var el=document.getElementById("buy-url-section");if(el.style.display==="none"||!el.style.display){el.style.display="block";}else{el.style.display="none";}}
+function switchBuyTab(mode){
+  document.getElementById('tab-manual').classList.toggle('active',mode==='manual');
+  document.getElementById('tab-url').classList.toggle('active',mode==='url');
+  document.getElementById('buy-manual-section').style.display=mode==='manual'?'':'none';
+  document.getElementById('buy-url-section').style.display=mode==='url'?'':'none';
+}
+
+async function doUrlValuation(url){
+  var priceEl=document.getElementById('fm-url-price');
+  var body={url:url};
+  if(priceEl&&priceEl.value) body.asking_price=parseFloat(priceEl.value);
+  var ld=document.getElementById('buy-loading'); if(ld)ld.classList.remove('hidden');
+  var rs=document.getElementById('buy-results'); if(rs)rs.classList.add('hidden');
+  var er=document.getElementById('buy-error'); if(er)er.classList.add('hidden');
+  var bt=document.getElementById('buy-btn'); if(bt)bt.disabled=true;
+  try{
+    var r=await fetch('http://localhost:8000/v1/valuate-url',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){var errData;try{errData=await r.json();}catch(ex){errData={detail:'Site blocked access'};}var errMsg=errData.detail||'Failed';if(errMsg.indexOf('Pardon')>-1||errMsg.indexOf('Interruption')>-1)errMsg='Dubizzle is blocking automated access. Paste links from OpenSooq, Haraj, or YallaMotor instead.';throw new Error(errMsg);}
+    var d=await r.json();
+    if(ld)ld.classList.add('hidden');
+    showResults('buy',{estimate:d.estimate,price_low:d.price_low,price_high:d.price_high,confidence:d.confidence,comp_count:d.comp_count,segment_median:d.segment_median,adjustments:d.adjustments||[],comps:d.comps||[],confidence_interval_80:d.confidence_interval_80},{asking_price:body.asking_price||(d.parsed_from_url?d.parsed_from_url.price_found:d.estimate)});
+  }catch(e){
+    if(ld)ld.classList.add('hidden');
+    var msg=e.message||'Failed';if(msg.indexOf('Blocked')>-1||msg.indexOf('Pardon')>-1)msg='Dubizzle is blocking automated access. Please use the manual form instead.';showError(msg);
+  }
+  finally{if(bt)bt.disabled=false;}
+}
+
+function submitUrl(){
+  var urlEl=document.getElementById('fm-url');
+  if(!urlEl||!urlEl.value){showWarning('Please paste a listing URL first');return;}
+  doUrlValuation(urlEl.value);
+}
+
+function showResults(mode,d,body){
+  var c=document.getElementById(mode+'-result'); if(!c)return;
+  c.classList.remove('hidden');
+  var ap=body.asking_price;
+  var h='<div class="card"><div class="price-hero"><div class="amount">'+d.estimate.toLocaleString()+' AED</div><div class="range">Range: '+d.price_low.toLocaleString()+' - '+d.price_high.toLocaleString()+'</div><span class="badge badge-'+d.confidence+'">'+d.confidence.toUpperCase()+'</span></div>';
+  if(mode==='buy'&&ap){
+    var diff=ap-d.estimate;var dpct=((diff/d.estimate)*100).toFixed(1);var isOver=diff>0;
+    var vc=isOver?'var(--red)':'var(--green)';
+    h+='<div class="card" style="border:2px solid '+vc+'"><div style="text-align:center;padding:16px"><div style="font-size:1.5rem;font-weight:700;color:'+vc+'">'+(isOver?'OVERPRICED':'GOOD DEAL')+'</div><div style="font-size:2rem;font-weight:800">'+(isOver?'+':'-')+Math.abs(dpct)+'%</div><div>Asking: '+ap.toLocaleString()+' AED vs Market: '+d.estimate.toLocaleString()+' AED</div></div></div>';
+    var alts=(d.comps||[]).filter(function(x){return x.price_aed<ap;}).sort(function(a,b){return a.price_aed-b.price_aed;}).slice(0,3);
+    if(alts.length){h+='<div class="card" style="border:2px solid var(--gold)"><h3>Better Deals Online</h3>'+alts.map(function(x){return'<div class="alt-card"><div style="display:flex;justify-content:space-between"><div style="font-size:1.2rem;font-weight:700">'+x.price_aed.toLocaleString()+' AED</div><div style="background:var(--green-bg);color:var(--green);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700">SAVE '+(ap-x.price_aed).toLocaleString()+' AED</div></div><div style="font-size:0.82rem;color:var(--muted);margin-top:4px">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div><div style="font-size:0.75rem;color:var(--gold-dark);margin-top:4px">'+x.found_on+'</div></div>';}).join('')+'</div>';}
+  }
+  h+='<div class="card"><h3>Similar Cars</h3>'+(d.comps||[]).slice(0,5).map(function(x){return'<div class="comp-item"><div><div class="price">'+x.price_aed.toLocaleString()+' AED</div><div class="meta">'+x.year+' - '+x.mileage_km+' km - '+x.spec+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
+  c.innerHTML=h;
+}
+
+var TOAST_COUNT=0;
+function showToast(msg,type,duration){
+  type=type||"error";duration=duration||10000;
+  var container=document.querySelector(".toast-container");
+  if(!container){container=document.createElement("div");container.className="toast-container";document.body.appendChild(container);}
+  var toast=document.createElement("div");
+  toast.className="toast toast-"+type;
+  toast.textContent=msg;
+  toast.onclick=function(){toast.remove();};
+  container.appendChild(toast);
+  setTimeout(function(){if(toast.parentNode)toast.remove();},duration);
+}
+function showError(msg){showToast(msg,"error",10000);}
+function showWarning(msg){showToast(msg,"warning",8000);}
+function showSuccess(msg){showToast(msg,"success",5000);}
+
+var TOAST_COUNT=0;
+function showToast(msg,type,duration){
+  type=type||"error";duration=duration||10000;
+  var container=document.querySelector(".toast-container");
+  if(!container){container=document.createElement("div");container.className="toast-container";document.body.appendChild(container);}
+  var toast=document.createElement("div");
+  toast.className="toast toast-"+type;
+  toast.textContent=msg;
+  toast.onclick=function(){toast.remove();};
+  container.appendChild(toast);
+  setTimeout(function(){if(toast.parentNode)toast.remove();},duration);
+}
+function showError(msg){showToast(msg,"error",10000);}
+function showWarning(msg){showToast(msg,"warning",8000);}
+function showSuccess(msg){showToast(msg,"success",5000);}
+
+var ALL_MAKES=[];
+fetch('http://localhost:8000/v1/models').then(function(r){return r.json()}).then(function(d){ALL_MAKES=d.makes;});
+
+function autocomplete(input, type){
+  var wrap=input.parentElement;
+  var sug=wrap.querySelector('.autocomplete-suggestions');
+  var val=input.value.toLowerCase();
+  sug.innerHTML='';
+  if(!val){sug.classList.remove('show');return;}
+
+  if(type==='make'){
+    var matches=ALL_MAKES.filter(function(m){return m.make.toLowerCase().indexOf(val)>=0;}).slice(0,8);
+    matches.forEach(function(m){
+      var div=document.createElement('div');
+      div.className='autocomplete-item';
+      div.innerHTML=m.make+' <span class="count">'+m.listing_count+'</span>';
+      div.onclick=function(){input.value=m.make;sug.classList.remove('show');var form=input.closest('[id$="-form"]');if(form){var mdl=form.querySelector('.fm-model');if(mdl){mdl.disabled=false;mdl.value='';mdl.placeholder='Type model...';}}};
+      sug.appendChild(div);
+    });
+  }else{
+    var makeInput=input.closest('[id$="-form"]').querySelector('.fm-make');
+    var mk=makeInput?makeInput.value:'';
+    if(!mk)return;
+    fetch('http://localhost:8000/v1/models/'+encodeURIComponent(mk)).then(function(r){return r.json()}).then(function(d){
+      var matches=d.models.filter(function(m){return m.model.toLowerCase().indexOf(val)>=0;}).slice(0,8);
+      matches.forEach(function(m){
+        var div=document.createElement('div');
+        div.className='autocomplete-item';
+        div.innerHTML=m.model+' <span class="count">'+m.year_range+'</span>';
+        div.onclick=function(){input.value=m.model;sug.classList.remove('show');var form=input.closest('[id$="-form"]');if(form){var yr=form.querySelector('.fm-year');if(yr){yr.disabled=false;if(yr.options.length<=1)for(var y=2026;y>=1990;y--){var o=document.createElement('option');o.value=y;o.textContent=y;yr.appendChild(o);}}}};
+        sug.appendChild(div);
+      });
+    });
+  }
+  sug.classList.add('show');
+  // Close on outside click
+  setTimeout(function(){
+    document.addEventListener('click',function closeSuggest(e){if(!wrap.contains(e.target)){sug.classList.remove('show');document.removeEventListener('click',closeSuggest);}});
+  },100);
+}
+</script>
+
+<datalist id="specs"><option value="GCC"><option value="US"><option value="Japan"><option value="European"></datalist>
+<datalist id="cities"><option value="Dubai"><option value="Abu Dhabi"><option value="Sharjah"><option value="Riyadh"><option value="Jeddah"><option value="Dammam"><option value="Kuwait City"><option value="Doha"><option value="Muscat"><option value="Manama"></datalist>
+<datalist id="countries"><option value="UAE"><option value="Saudi Arabia"><option value="Kuwait"><option value="Qatar"><option value="Bahrain"><option value="Oman"></datalist>
+</body>
 </html>
