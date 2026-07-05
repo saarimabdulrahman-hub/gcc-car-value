@@ -118,6 +118,7 @@ body.has-sidebar{display:flex}
 <div style="font-weight:700;margin-bottom:4px">Paste the listing URL</div>
 <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, and more</div>
 <input type="url" id="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px">
+<button class="btn" onclick="submitUrl()" style="background:linear-gradient(135deg,#4A90D9,#2563EB);cursor:pointer;font-size:1.1rem;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,99,235,0.3)">&#9889; Analyze This URL</button>
 </div>
 <div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)">
 <div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">Asking Price (if different)</div>
@@ -126,6 +127,8 @@ body.has-sidebar{display:flex}
 </div>
 <button class="btn" onclick="doValuation('buy')">Analyze This Deal</button>
 </div>
+<div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div>Analyzing URL...</div></div></div>
+<div id="buy-error" class="card hidden"></div>
 <div id="buy-result" class="hidden"></div>
 </div>
 
@@ -346,6 +349,28 @@ async function doUrlValuation(url){
     if(er){er.classList.remove('hidden');er.innerHTML='<div class="error-msg">'+e.message+'</div>';}
   }
   finally{if(bt)bt.disabled=false;}
+}
+
+function submitUrl(){
+  var urlEl=document.getElementById('fm-url');
+  if(!urlEl||!urlEl.value) return alert('Please paste a listing URL first');
+  doUrlValuation(urlEl.value);
+}
+
+function showResults(mode,d,body){
+  var c=document.getElementById(mode+'-result'); if(!c)return;
+  c.classList.remove('hidden');
+  var ap=body.asking_price;
+  var h='<div class="card"><div class="price-hero"><div class="amount">'+d.estimate.toLocaleString()+' AED</div><div class="range">Range: '+d.price_low.toLocaleString()+' - '+d.price_high.toLocaleString()+'</div><span class="badge badge-'+d.confidence+'">'+d.confidence.toUpperCase()+'</span></div>';
+  if(mode==='buy'&&ap){
+    var diff=ap-d.estimate;var dpct=((diff/d.estimate)*100).toFixed(1);var isOver=diff>0;
+    var vc=isOver?'var(--red)':'var(--green)';
+    h+='<div class="card" style="border:2px solid '+vc+'"><div style="text-align:center;padding:16px"><div style="font-size:1.5rem;font-weight:700;color:'+vc+'">'+(isOver?'OVERPRICED':'GOOD DEAL')+'</div><div style="font-size:2rem;font-weight:800">'+(isOver?'+':'-')+Math.abs(dpct)+'%</div><div>Asking: '+ap.toLocaleString()+' AED vs Market: '+d.estimate.toLocaleString()+' AED</div></div></div>';
+    var alts=(d.comps||[]).filter(function(x){return x.price_aed<ap;}).sort(function(a,b){return a.price_aed-b.price_aed;}).slice(0,3);
+    if(alts.length){h+='<div class="card" style="border:2px solid var(--gold)"><h3>Better Deals Online</h3>'+alts.map(function(x){return'<div class="alt-card"><div style="display:flex;justify-content:space-between"><div style="font-size:1.2rem;font-weight:700">'+x.price_aed.toLocaleString()+' AED</div><div style="background:var(--green-bg);color:var(--green);padding:3px 10px;border-radius:12px;font-size:0.72rem;font-weight:700">SAVE '+(ap-x.price_aed).toLocaleString()+' AED</div></div><div style="font-size:0.82rem;color:var(--muted);margin-top:4px">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div><div style="font-size:0.75rem;color:var(--gold-dark);margin-top:4px">'+x.found_on+'</div></div>';}).join('')+'</div>';}
+  }
+  h+='<div class="card"><h3>Similar Cars</h3>'+(d.comps||[]).slice(0,5).map(function(x){return'<div class="comp-item"><div><div class="price">'+x.price_aed.toLocaleString()+' AED</div><div class="meta">'+x.year+' - '+x.mileage_km+' km - '+x.spec+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
+  c.innerHTML=h;
 }
 </script>
 </body>

@@ -123,8 +123,15 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
     id_match = re.search(r'/(\d{5,})[/$]', url)
     result["external_id"] = id_match.group(1) if id_match else url[-20:]
 
-    if not result.get("make") or not result.get("year"):
+    # More lenient: only require make. Default missing fields.
+    if not result.get("make") or not result["make"].strip():
         return None
+    if not result.get("year"):
+        result["year"] = 2020  # default
+    if not result.get("asking_price") or result["asking_price"] == 0:
+        result["asking_price"] = 100000  # placeholder — user should provide
+    if not result.get("model") or not result["model"].strip():
+        result["model"] = ""  # will try to match just by make
 
     return result
 
