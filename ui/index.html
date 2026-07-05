@@ -103,11 +103,26 @@ body.has-sidebar{display:flex}
 <h2 class="page-title">I am Buying a Car</h2>
 <p class="page-sub">Enter the car and asking price.</p>
 <div class="card"><h3>The Car</h3>
+<div class="tab-row" style="margin-bottom:20px"><button class="tab-btn active" id="tab-manual" onclick="switchBuyTab('manual')">Enter Details</button><button class="tab-btn" id="tab-url" onclick="switchBuyTab('url')">Paste URL</button></div>
+<div id="buy-manual-section">
 <div class="form-row">
 <div class="form-group"><label>Make</label><select id="bmake"><option value="Toyota">Toyota</option></select></div>
 <div class="form-group"><label>Model</label><select id="bmodel"><option value="Land Cruiser">Land Cruiser</option></select></div>
 <div class="form-group"><label>Year</label><select id="byear"><option>2018</option></select></div>
 <div class="form-group"><label>Asking Price (AED)</label><input id="bprice" type="number" placeholder="125000" value="125000"></div>
+</div>
+</div>
+<div id="buy-url-section" style="display:none">
+<div style="background:linear-gradient(135deg,#F0F4FF,#E8EDFF);border-radius:12px;padding:24px;margin-bottom:20px;border:2px solid #8B9DC3;text-align:center">
+<div style="font-size:1.5rem;margin-bottom:8px">&#128279;</div>
+<div style="font-weight:700;margin-bottom:4px">Paste the listing URL</div>
+<div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">Works with Dubizzle, YallaMotor, Haraj, and more</div>
+<input type="url" id="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;padding:14px;border:2px solid #8B9DC3;border-radius:10px;font-size:0.95rem;font-family:inherit;text-align:center;margin-bottom:12px">
+</div>
+<div style="background:#FEF9EE;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border)">
+<div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">Asking Price (if different)</div>
+<input type="number" id="fm-url-price" placeholder="Optional" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit">
+</div>
 </div>
 <button class="btn" onclick="doValuation('buy')">Analyze This Deal</button>
 </div>
@@ -304,6 +319,34 @@ function loadMarketPage(){
   });
 }
 
+
+function switchBuyTab(mode){
+  document.getElementById('tab-manual').classList.toggle('active',mode==='manual');
+  document.getElementById('tab-url').classList.toggle('active',mode==='url');
+  document.getElementById('buy-manual-section').style.display=mode==='manual'?'':'none';
+  document.getElementById('buy-url-section').style.display=mode==='url'?'':'none';
+}
+
+async function doUrlValuation(url){
+  var priceEl=document.getElementById('fm-url-price');
+  var body={url:url};
+  if(priceEl&&priceEl.value) body.asking_price=parseFloat(priceEl.value);
+  var ld=document.getElementById('buy-loading'); if(ld)ld.classList.remove('hidden');
+  var rs=document.getElementById('buy-results'); if(rs)rs.classList.add('hidden');
+  var er=document.getElementById('buy-error'); if(er)er.classList.add('hidden');
+  var bt=document.getElementById('buy-btn'); if(bt)bt.disabled=true;
+  try{
+    var r=await fetch('http://localhost:8000/v1/valuate-url',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){var e=await r.json();throw new Error(e.detail||'Failed');}
+    var d=await r.json();
+    if(ld)ld.classList.add('hidden');
+    showResults('buy',{estimate:d.estimate,price_low:d.price_low,price_high:d.price_high,confidence:d.confidence,comp_count:d.comp_count,segment_median:d.segment_median,adjustments:d.adjustments||[],comps:d.comps||[],confidence_interval_80:d.confidence_interval_80},{asking_price:body.asking_price||(d.parsed_from_url?d.parsed_from_url.price_found:d.estimate)});
+  }catch(e){
+    if(ld)ld.classList.add('hidden');
+    if(er){er.classList.remove('hidden');er.innerHTML='<div class="error-msg">'+e.message+'</div>';}
+  }
+  finally{if(bt)bt.disabled=false;}
+}
 </script>
 </body>
 </html>
