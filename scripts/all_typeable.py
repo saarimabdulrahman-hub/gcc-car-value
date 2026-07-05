@@ -23,19 +23,34 @@ new_form = (
     b"}\n"
 )
 
-# Find end of current makeForm (next function)
-end = t.find(b'\nfunction loadBrowseMakes', idx)
-if end < 0:
-    end = t.find(b'\nfunction toggleLang', idx)
-t = t[:idx] + new_form + t[end:]
+# Find end of current makeForm — use brace matching
+brace_count = 1
+pos = idx + len(old_form)
+while pos < len(t) and brace_count > 0:
+    if t[pos:pos+1] == b'{': brace_count += 1
+    elif t[pos:pos+1] == b'}': brace_count -= 1
+    pos += 1
+t = t[:idx] + new_form + t[pos:]
 
 # 2. Update autocomplete function to handle all field types
 old_auto = b'function autocomplete(input, type){'
 idx2 = t.find(old_auto)
-# Find end of autocomplete
-end2 = t.find(b'\n// Close on outside click', idx2)
+# Find the FULL old autocomplete function — find the closing brace
+# Search for the next function definition after autocomplete
+end2 = t.find(b'\nfunction loadBrowseMakes', idx2)
 if end2 < 0:
-    end2 = t.find(b'\n}\n', idx2 + 200) + 2
+    end2 = t.find(b'\nfunction toggleLang', idx2)
+if end2 < 0:
+    end2 = t.find(b'\nfunction showResults', idx2)
+if end2 < 0:
+    # Fallback: find matching closing brace
+    brace_count = 1
+    pos = idx2 + len(old_auto)
+    while pos < len(t) and brace_count > 0:
+        if t[pos:pos+1] == b'{': brace_count += 1
+        elif t[pos:pos+1] == b'}': brace_count -= 1
+        pos += 1
+    end2 = pos
 
 new_auto = (
     b'function autocomplete(input){'
@@ -71,6 +86,22 @@ t = t.replace(
     b"var sp=g('.fm-spec');if(sp)b.spec=sp;var ci=g('.fm-city');if(ci)b.city=ci;var co=g('.fm-country');if(co)b.country=co;"
 )
 
+# Fix any brace imbalance by adding/removing at the end
+bal = t.count(b'{') - t.count(b'}')
+if bal > 0:
+    # Remove extra opening braces from the end
+    t += b'}' * bal
+elif bal < 0:
+    # Find extra closing braces and remove them
+    # Just add opening braces at the end of the last function
+    last_func = t.rfind(b'\n}')
+    if last_func > 0:
+        t = t[:last_func] + t[last_func+2:]
+
+bal = t.count(b'{') - t.count(b'}')
+print('Done. Braces:', bal)
+if bal != 0:
+    print('WARNING: Still unbalanced!')
+
 with open('ui/index.html', 'wb') as f:
     f.write(t)
-print('Done. Braces:', t.count(b'{')-t.count(b'}'))
