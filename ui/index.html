@@ -256,7 +256,7 @@ async function doValuation(mode) {
 
     resultEl.innerHTML = html;
   } catch (e) {
-    alert('Error: ' + e.message);
+    showError(e.message);
   }
 }
 function loadBrowseMakes(){
@@ -361,7 +361,7 @@ async function doUrlValuation(url){
 
 function submitUrl(){
   var urlEl=document.getElementById('fm-url');
-  if(!urlEl||!urlEl.value) showWarning('Please paste a listing URL first');return;
+  if(!urlEl||!urlEl.value){showWarning('Please paste a listing URL first');return;}
   doUrlValuation(urlEl.value);
 }
 

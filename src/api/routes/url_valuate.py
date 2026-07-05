@@ -217,6 +217,15 @@ async def valuate_from_url(
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Error fetching URL: {e}")
 
+    # Check if the page is an anti-bot/blocking page
+    html_lower = html.lower()
+    if "pardon our interruption" in html_lower or "cf-browser-verify" in html_lower or "captcha" in html_lower:
+        site = "Dubizzle" if "dubizzle" in request.url.lower() else "this website"
+        raise HTTPException(
+            status_code=422,
+            detail=f"{site} is blocking automated access with bot protection. Please use the manual entry form instead — it works for any car listing."
+        )
+
     parsed = parse_listing_from_html_smart(html, request.url)
     if not parsed:
         raise HTTPException(
