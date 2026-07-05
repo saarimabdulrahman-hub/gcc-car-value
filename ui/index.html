@@ -57,6 +57,14 @@ body.has-sidebar{display:flex}
 .toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
 @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:10px;color:#fff;font-weight:600;font-size:0.9rem;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:slideIn 0.3s ease,slideOut 0.3s ease 9.7s forwards;cursor:pointer}
+.toast-error{background:linear-gradient(135deg,#E74C3C,#C0392B)}
+.toast-warning{background:linear-gradient(135deg,#F39C12,#E67E22)}
+.toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
 </style>
 </head>
 <body id="body-el">
@@ -133,7 +141,7 @@ body.has-sidebar{display:flex}
 <input type="number" id="fm-url-price" placeholder="Optional" min="0" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;font-family:inherit">
 </div>
 </div>
-<button class="btn" onclick="doValuation('buy')">Analyze This Deal</button>
+<button class="btn" onclick="doValuation('buy')">Analyze This Deal</button><br><button onclick="toggleUrlSection()" style="background:none;border:2px dashed #C8A951;color:#8B6914;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600;margin-top:12px;width:100%">Or paste a listing URL instead</button>
 </div>
 <div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div>Analyzing URL...</div></div></div>
 <div id="buy-error" class="card hidden"></div>
@@ -331,6 +339,7 @@ function loadMarketPage(){
 }
 
 
+function toggleUrlSection(){var el=document.getElementById("buy-url-section");if(el.style.display==="none"||!el.style.display){el.style.display="block";}else{el.style.display="none";}}
 function switchBuyTab(mode){
   document.getElementById('tab-manual').classList.toggle('active',mode==='manual');
   document.getElementById('tab-url').classList.toggle('active',mode==='url');
@@ -380,6 +389,22 @@ function showResults(mode,d,body){
   h+='<div class="card"><h3>Similar Cars</h3>'+(d.comps||[]).slice(0,5).map(function(x){return'<div class="comp-item"><div><div class="price">'+x.price_aed.toLocaleString()+' AED</div><div class="meta">'+x.year+' - '+x.mileage_km+' km - '+x.spec+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
   c.innerHTML=h;
 }
+
+var TOAST_COUNT=0;
+function showToast(msg,type,duration){
+  type=type||"error";duration=duration||10000;
+  var container=document.querySelector(".toast-container");
+  if(!container){container=document.createElement("div");container.className="toast-container";document.body.appendChild(container);}
+  var toast=document.createElement("div");
+  toast.className="toast toast-"+type;
+  toast.textContent=msg;
+  toast.onclick=function(){toast.remove();};
+  container.appendChild(toast);
+  setTimeout(function(){if(toast.parentNode)toast.remove();},duration);
+}
+function showError(msg){showToast(msg,"error",10000);}
+function showWarning(msg){showToast(msg,"warning",8000);}
+function showSuccess(msg){showToast(msg,"success",5000);}
 
 var TOAST_COUNT=0;
 function showToast(msg,type,duration){
