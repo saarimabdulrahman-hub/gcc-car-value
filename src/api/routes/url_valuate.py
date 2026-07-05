@@ -1,5 +1,6 @@
 """URL-based valuation — paste a listing URL, we fetch it, parse it, and value it."""
 import re
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,9 +48,11 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
     result["make"] = tokens[0] if tokens else ""
     result["model"] = tokens[1] if len(tokens) > 1 else ""
 
-    # Year
-    year_match = re.search(r'\b(19\d{2}|20[0-2]\d)\b', title_text + " " + html)
-    result["year"] = int(year_match.group(1)) if year_match else None
+    # Year — prefer year from title, fall back to URL slug, avoid future years
+    current_year = datetime.now().year
+    years_found = re.findall(r'\b(19\d{2}|20[0-2]\d)\b', title_text + " " + html)
+    valid_years = [int(y) for y in years_found if 1990 <= int(y) <= current_year]
+    result["year"] = valid_years[0] if valid_years else None
 
     # Mileage
     mileage_match = re.search(r'(\d[\d,]*)\s*km', title_text + " " + html, re.IGNORECASE)
@@ -150,6 +153,50 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
     return result
 
 
+def parse_listing_from_html_smart(html: str, url: str) -> dict:
+    """Try source-specific parsers first, fall back to generic."""
+    url_lower = url.lower()
+
+    # Try Dubizzle parser
+    if "dubizzle" in url_lower:
+        try:
+            from src.scrapers.dubizzle_uae.parser import parse_listing as dubizzle_parse
+            parsed = dubizzle_parse(html, url)
+            if parsed and parsed.get("make"):
+                parsed["source"] = "dubizzle"
+                parsed["external_id"] = parsed.get("external_id", url[-20:])
+                parsed["status"] = "active"
+                parsed["original_currency"] = parsed.get("original_currency", "AED")
+                return parsed
+        except Exception:
+            pass
+
+    # Try YallaMotor parser
+    if "yallamotor" in url_lower:
+        try:
+            from src.scrapers.yallamotor.scraper import YallaMotorScraper
+            s = YallaMotorScraper()
+            parsed = s.parse(html, url)
+            if parsed and parsed.get("make"):
+                return parsed
+        except Exception:
+            pass
+
+    # Try Haraj parser
+    if "haraj" in url_lower:
+        try:
+            from src.scrapers.haraj_ksa.scraper import HarajKSAScraper
+            s = HarajKSAScraper()
+            parsed = s.parse(html, url)
+            if parsed and parsed.get("make"):
+                return parsed
+        except Exception:
+            pass
+
+    # Fall back to generic parser
+    return parse_listing_from_html(html, url)
+
+
 @router.post("/valuate-url")
 async def valuate_from_url(
     request: URLValuationRequest,
@@ -163,7 +210,7 @@ async def valuate_from_url(
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Error fetching URL: {e}")
 
-    parsed = parse_listing_from_html(html, request.url)
+    parsed = parse_listing_from_html_smart(html, request.url)
     if not parsed:
         raise HTTPException(
             status_code=422,
