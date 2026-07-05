@@ -432,7 +432,7 @@ var ALL_MAKES=[];
 fetch('http://localhost:8000/v1/models').then(function(r){return r.json()}).then(function(d){ALL_MAKES=d.makes;});
 
 function autocomplete(input, type){
-  var wrap=input.parentElement;
+  var wrap=input.parentElement;if(!wrap.classList.contains('autocomplete-wrap')){var dw=document.createElement('div');dw.className='autocomplete-wrap';input.parentNode.insertBefore(dw,input);dw.appendChild(input);wrap=dw;}var sug=wrap.querySelector('.autocomplete-suggestions');if(!sug){sug=document.createElement('div');sug.className='autocomplete-suggestions';wrap.appendChild(sug);}
   var sug=wrap.querySelector('.autocomplete-suggestions');
   var val=input.value.toLowerCase();
   sug.innerHTML='';
@@ -473,8 +473,9 @@ var ALL_MAKES=[];
 fetch('http://localhost:8000/v1/models').then(function(r){return r.json()}).then(function(d){ALL_MAKES=d.makes;});
 
 function autocomplete(input){
-  var wrap=input.parentElement;
-  if(!wrap.classList.contains('autocomplete-wrap')) return;
+  var wrap=input.parentElement;if(!wrap.classList.contains('autocomplete-wrap')){var dw=document.createElement('div');dw.className='autocomplete-wrap';input.parentNode.insertBefore(dw,input);dw.appendChild(input);wrap=dw;}var sug=wrap.querySelector('.autocomplete-suggestions');if(!sug){sug=document.createElement('div');sug.className='autocomplete-suggestions';wrap.appendChild(sug);}
+  if(!wrap||!wrap.classList.contains('autocomplete-wrap')){var dw=document.createElement('div');dw.className='autocomplete-wrap';input.parentNode.insertBefore(dw,input);dw.appendChild(input);wrap=dw;}
+
   var sug=wrap.querySelector('.autocomplete-suggestions');
   if(!sug) return;
   var val=input.value.toLowerCase();
