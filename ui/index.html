@@ -65,6 +65,13 @@ body.has-sidebar{display:flex}
 .toast-success{background:linear-gradient(135deg,#2ECC71,#27AE60)}
 @keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}
+
+.autocomplete-wrap{position:relative}
+.autocomplete-suggestions{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--gold);border-top:none;border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:100;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.autocomplete-suggestions.show{display:block}
+.autocomplete-item{padding:10px 14px;cursor:pointer;font-size:0.9rem;border-bottom:1px solid var(--sand)}
+.autocomplete-item:hover,.autocomplete-item.active{background:#FEF9EE;color:var(--gold-dark)}
+.autocomplete-item .count{float:right;color:var(--muted);font-size:0.75rem}
 </style>
 </head>
 <body id="body-el">
@@ -118,8 +125,7 @@ body.has-sidebar{display:flex}
 <div id="page-buy" class="hidden">
 <h2 class="page-title">I am Buying a Car</h2>
 <p class="page-sub">Enter the car and asking price.</p>
-<div class="card"><h3>The Car</h3>
-<div class="tab-row" style="margin-bottom:20px"><button class="tab-btn active" id="tab-manual" onclick="switchBuyTab('manual')">Enter Details</button><button class="tab-btn" id="tab-url" onclick="switchBuyTab('url')">Paste URL</button></div>
+<div class="card"><h3>About the car</h3>
 <div id="buy-manual-section">
 <div class="form-row">
 <div class="form-group"><label>Make</label><select id="bmake"><option value="Toyota">Toyota</option></select></div>
@@ -421,6 +427,47 @@ function showToast(msg,type,duration){
 function showError(msg){showToast(msg,"error",10000);}
 function showWarning(msg){showToast(msg,"warning",8000);}
 function showSuccess(msg){showToast(msg,"success",5000);}
+
+var ALL_MAKES=[];
+fetch('http://localhost:8000/v1/models').then(function(r){return r.json()}).then(function(d){ALL_MAKES=d.makes;});
+
+function autocomplete(input, type){
+  var wrap=input.parentElement;
+  var sug=wrap.querySelector('.autocomplete-suggestions');
+  var val=input.value.toLowerCase();
+  sug.innerHTML='';
+  if(!val){sug.classList.remove('show');return;}
+
+  if(type==='make'){
+    var matches=ALL_MAKES.filter(function(m){return m.make.toLowerCase().indexOf(val)>=0;}).slice(0,8);
+    matches.forEach(function(m){
+      var div=document.createElement('div');
+      div.className='autocomplete-item';
+      div.innerHTML=m.make+' <span class="count">'+m.listing_count+'</span>';
+      div.onclick=function(){input.value=m.make;sug.classList.remove('show');var form=input.closest('[id$="-form"]');if(form){var mdl=form.querySelector('.fm-model');if(mdl){mdl.disabled=false;mdl.value='';mdl.placeholder='Type model...';}}};
+      sug.appendChild(div);
+    });
+  }else{
+    var makeInput=input.closest('[id$="-form"]').querySelector('.fm-make');
+    var mk=makeInput?makeInput.value:'';
+    if(!mk)return;
+    fetch('http://localhost:8000/v1/models/'+encodeURIComponent(mk)).then(function(r){return r.json()}).then(function(d){
+      var matches=d.models.filter(function(m){return m.model.toLowerCase().indexOf(val)>=0;}).slice(0,8);
+      matches.forEach(function(m){
+        var div=document.createElement('div');
+        div.className='autocomplete-item';
+        div.innerHTML=m.model+' <span class="count">'+m.year_range+'</span>';
+        div.onclick=function(){input.value=m.model;sug.classList.remove('show');var form=input.closest('[id$="-form"]');if(form){var yr=form.querySelector('.fm-year');if(yr){yr.disabled=false;if(yr.options.length<=1)for(var y=2026;y>=1990;y--){var o=document.createElement('option');o.value=y;o.textContent=y;yr.appendChild(o);}}}};
+        sug.appendChild(div);
+      });
+    });
+  }
+  sug.classList.add('show');
+  // Close on outside click
+  setTimeout(function(){
+    document.addEventListener('click',function closeSuggest(e){if(!wrap.contains(e.target)){sug.classList.remove('show');document.removeEventListener('click',closeSuggest);}});
+  },100);
+}
 </script>
 </body>
 </html>
