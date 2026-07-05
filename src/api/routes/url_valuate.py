@@ -1,6 +1,7 @@
 """URL-based valuation — paste a listing URL, we fetch it, parse it, and value it."""
 import re
 from datetime import datetime
+from urllib.parse import urlparse
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -219,11 +220,29 @@ async def valuate_from_url(
 
     # Check if the page is an anti-bot/blocking page
     html_lower = html.lower()
-    if "pardon our interruption" in html_lower or "cf-browser-verify" in html_lower or "captcha" in html_lower:
-        site = "Dubizzle" if "dubizzle" in request.url.lower() else "this website"
+    blocked_indicators = [
+        "pardon our interruption", "cf-browser-verify", "captcha",
+        "access denied", "are you a robot", "verify you are human",
+        "blocked", "cloudflare", "ddos-guard",
+    ]
+    if any(indicator in html_lower for indicator in blocked_indicators):
+        # Extract site name from URL
+        domain = urlparse(request.url).netloc
+        # Clean up the domain
+        domain = domain.replace("www.", "").replace("uae.", "").replace("ksa.", "")
+        domain = domain.replace("dubai.", "").replace("qa.", "").replace("kw.", "")
+        domain = domain.replace("bh.", "").replace("om.", "")
+        # Capitalize brand name
+        brand_map = {
+            "dubizzle.com": "Dubizzle", "yallamotor.com": "YallaMotor",
+            "haraj.com.sa": "Haraj", "carswitch.com": "CarSwitch",
+            "opensooq.com": "OpenSooq", "q8car.com": "Q8Car",
+            "olx.com.eg": "OLX", "syarah.com": "Syarah",
+        }
+        site_name = brand_map.get(domain, domain.split(".")[0].title())
         raise HTTPException(
             status_code=422,
-            detail=f"{site} is blocking automated access with bot protection. Please use the manual entry form instead — it works for any car listing."
+            detail=f"{site_name} is blocking automated access with bot protection. Please use the manual entry form instead — it works for any car listing."
         )
 
     parsed = parse_listing_from_html_smart(html, request.url)
