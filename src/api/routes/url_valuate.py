@@ -21,11 +21,11 @@ class URLValuationRequest(BaseModel):
 
 
 async def fetch_url(url: str) -> str:
-    """Fetch a URL with a browser-like user agent."""
-    async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
+    """Fetch a URL with browser-like headers."""
+    async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         r = await client.get(url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
         })
         r.raise_for_status()
@@ -162,14 +162,15 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
         try:
             from src.scrapers.dubizzle_uae.parser import parse_listing as dubizzle_parse
             parsed = dubizzle_parse(html, url)
-            if parsed and parsed.get("make"):
+            if parsed and parsed.get("make") and parsed["make"].strip():
                 parsed["source"] = "dubizzle"
-                parsed["external_id"] = parsed.get("external_id", url[-20:])
+                parsed["external_id"] = parsed.get("external_id") or url[-20:]
                 parsed["status"] = "active"
                 parsed["original_currency"] = parsed.get("original_currency", "AED")
                 return parsed
-        except Exception:
-            pass
+        except Exception as e:
+            import structlog
+            structlog.get_logger().warning("dubizzle_parse_failed", url=url, error=str(e))
 
     # Try YallaMotor parser
     if "yallamotor" in url_lower:
@@ -194,7 +195,13 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
             pass
 
     # Fall back to generic parser
-    return parse_listing_from_html(html, url)
+    result = parse_listing_from_html(html, url)
+    # Ensure required numeric fields are not None
+    if result.get("year") is None:
+        result["year"] = 2020
+    if result.get("asking_price") is None or result["asking_price"] == 0:
+        result["asking_price"] = 100000
+    return result
 
 
 @router.post("/valuate-url")
@@ -220,16 +227,23 @@ async def valuate_from_url(
     logger.info("url_parsed", url=request.url, make=parsed.get("make"),
                 model=parsed.get("model"), year=parsed.get("year"))
 
-    # Normalize and valuate
-    parsed = normalize_listing(parsed)
-    if request.asking_price:
-        parsed["asking_price"] = request.asking_price
+    # Normalize and valuate — wrap in try/except for safety
+    try:
+        parsed = normalize_listing(parsed)
+        if request.asking_price:
+            parsed["asking_price"] = request.asking_price
 
-    valuation = await valuate(
-        db, parsed["make"], parsed["model"], parsed.get("year", 2020),
-        parsed.get("mileage_km"), parsed.get("spec"),
-        parsed.get("country"), parsed.get("city"),
-    )
+        valuation = await valuate(
+            db, parsed["make"], parsed["model"], parsed.get("year", 2020),
+            parsed.get("mileage_km"), parsed.get("spec"),
+            parsed.get("country"), parsed.get("city"),
+        )
+    except Exception as e:
+        logger.error("valuation_error", url=request.url, error=str(e))
+        raise HTTPException(
+            status_code=422,
+            detail=f"Error processing valuation: {str(e)[:200]}"
+        )
 
     if valuation.confidence == "insufficient":
         raise HTTPException(

@@ -74,7 +74,7 @@ def get_exchange_rate(currency: str) -> float:
 def normalize_listing(data: dict) -> dict:
     data["make"] = normalize_make(data["make"])
     data["model"] = data.get("model", "").strip()
-    data["year"] = int(data["year"])
+    data["year"] = int(data["year"]) if data["year"] is not None else 2020
     data["spec"] = normalize_spec(data.get("spec"))
     data["city"] = normalize_city(data.get("city"))
     original_currency = data.get("original_currency", "AED").upper().strip()
