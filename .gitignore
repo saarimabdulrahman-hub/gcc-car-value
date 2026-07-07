@@ -14,3 +14,5 @@ htmlcov/
 *.log
 data/
 *.db
+haraj_debug2.txt
+_test_*.js

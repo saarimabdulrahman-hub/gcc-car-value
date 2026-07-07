@@ -1,0 +1,222 @@
+[
+  {
+    "title": "هايلكس غمارتين 2025 ديزل",
+    "carInfo": {
+      "sellOrWaiver": "SELL",
+      "is4DW": null,
+      "model": 2025,
+      "mileage": 264,
+      "fuel": "DIESEL",
+      "gear": "MANUAL",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": {
+      "formattedPrice": "110,000"
+    },
+    "city": "الرياض",
+    "tags": [
+      "هايلوكس,GL",
+      "هايلوكس 2025",
+      "هايلوكس",
+      "حراج السيارات",
+      "تويوتا"
+    ]
+  },
+  {
+    "title": "لكزس es300 للتنازل",
+    "carInfo": {
+      "sellOrWaiver": "WAIVER",
+      "is4DW": null,
+      "model": 2025,
+      "mileage": 41,
+      "fuel": "HYBRID",
+      "gear": "AUTO",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "الرياض",
+    "tags": [
+      "لكزس",
+      "سيارات للتنازل",
+      "حراج السيارات",
+      "ES,300 AH",
+      "ES 2025",
+      "ES"
+    ]
+  },
+  {
+    "title": "هونداي سوناتا 2026 قير أوتوماتيك بنزين (اقساط فقط)",
+    "carInfo": {
+      "sellOrWaiver": "SELL",
+      "is4DW": null,
+      "model": 2026,
+      "mileage": null,
+      "fuel": "GASOLINE",
+      "gear": "AUTO",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "الرياض",
+    "tags": [
+      "هونداي",
+      "سوناتا 2026",
+      "سوناتا",
+      "حراج السيارات"
+    ]
+  },
+  {
+    "title": "جايكو جي 7 سبورت موديل 2025 العرض الاقوى في المملكة",
+    "carInfo": {
+      "sellOrWaiver": null,
+      "is4DW": null,
+      "model": 2026,
+      "mileage": null,
+      "fuel": null,
+      "gear": null,
+      "carOrRelated": null,
+      "Bank": null
+    },
+    "price": {
+      "formattedPrice": "79,000"
+    },
+    "city": "الرياض",
+    "tags": [
+      "حراج السيارات",
+      "جايكو",
+      "جايكو J7",
+      "جايكو J7 2026"
+    ]
+  },
+  {
+    "title": "GMC Yukon 2011 ممشى 80 ألف 8 سلندر جي ام سي يوكون",
+    "carInfo": {
+      "sellOrWaiver": "SELL",
+      "is4DW": false,
+      "model": 2011,
+      "mileage": 80,
+      "fuel": "GASOLINE",
+      "gear": "AUTO",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "جده",
+    "tags": [
+      "حراج السيارات",
+      "جي ام سي",
+      "يوكن",
+      "يوكن 2011",
+      "يوكن,SLE"
+    ]
+  },
+  {
+    "title": "صني 2023",
+    "carInfo": {
+      "sellOrWaiver": "SELL",
+      "is4DW": null,
+      "model": 2023,
+      "mileage": 111,
+      "fuel": "GASOLINE",
+      "gear": "AUTO",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "الرياض",
+    "tags": [
+      "حراج السيارات",
+      "نيسان",
+      "صني",
+      "صني 2023"
+    ]
+  },
+  {
+    "title": "سوناتا 2012 الوعلان سقف بانوراما بحاله الوكاله",
+    "carInfo": {
+      "sellOrWaiver": null,
+      "is4DW": null,
+      "model": 2012,
+      "mileage": null,
+      "fuel": null,
+      "gear": null,
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "حائل",
+    "tags": [
+      "حراج السيارات",
+      "هونداي",
+      "سوناتا",
+      "سوناتا 2012"
+    ]
+  },
+  {
+    "title": "للبيع فيات 500c كشف فل كامل نظيف جدا",
+    "carInfo": {
+      "sellOrWaiver": "SELL",
+      "is4DW": null,
+      "model": 2021,
+      "mileage": 87,
+      "fuel": null,
+      "gear": "AUTO",
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "الرياض",
+    "tags": [
+      "حراج السيارات",
+      "فيات",
+      "فيات 500",
+      "فيات 500 2021"
+    ]
+  },
+  {
+    "title": "تويوتا",
+    "carInfo": {
+      "sellOrWaiver": null,
+      "is4DW": null,
+      "model": 2015,
+      "mileage": null,
+      "fuel": null,
+      "gear": null,
+      "carOrRelated": "CAR",
+      "Bank": null
+    },
+    "price": null,
+    "city": "الرياض",
+    "tags": [
+      "حراج السيارات",
+      "تويوتا",
+      "هايلوكس",
+      "هايلوكس 2015"
+    ]
+  },
+  {
+    "title": "ES 300 7Gen Executive - لكزس",
+    "carInfo": {
+      "sellOrWaiver": null,
+      "is4DW": null,
+      "model": 2026,
+      "mileage": null,
+      "fuel": null,
+      "gear": null,
+      "carOrRelated": null,
+      "Bank": null
+    },
+    "price": {
+      "formattedPrice": "209,287"
+    },
+    "city": "المدينة",
+    "tags": [
+      "حراج السيارات",
+      "لكزس",
+      "ES",
+      "ES 2026"
+    ]
+  }
+]
