@@ -205,7 +205,7 @@ body.has-sidebar { display: flex; }
 .header-brand h1 {
   font-family: 'Inter', sans-serif;
   font-size: var(--text-lead);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.12em;
   background: linear-gradient(135deg, var(--text-primary), var(--text-accent));
   -webkit-background-clip: text;
@@ -572,7 +572,7 @@ body.has-sidebar { display: flex; }
 
 .page-title {
   font-size: 2.25rem;
-  font-weight: 900;
+  font-weight: 500;
   margin-bottom: var(--space-1);
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -827,7 +827,7 @@ body.has-sidebar { display: flex; }
   margin-bottom: var(--space-4);
   border-radius: var(--radius-2xl);
   background:
-    url('hero-bg.png') 65% 30%/130% no-repeat;
+    url('hero-bg.png') 80% 0%/85% no-repeat;
   border: 1px solid var(--border-subtle);
 }
 
@@ -909,9 +909,9 @@ body.has-sidebar { display: flex; }
 
 .home-hero-title {
   font-size: var(--text-display);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
   color: var(--text-primary);
 }
 .gold-word {
@@ -1003,12 +1003,14 @@ body.has-sidebar { display: flex; }
 .choice-card {
   background: var(--bg-card);
   border-radius: var(--radius-2xl);
-  padding: var(--space-5) var(--space-4);
-  text-align: center;
+  padding: var(--space-4);
   border: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: all var(--duration-base);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .choice-card:hover {
@@ -1022,20 +1024,30 @@ body.has-sidebar { display: flex; }
   box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
-.choice-card-icon {
-  width: 56px; height: 56px;
-  border-radius: var(--radius-xl);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto var(--space-3);
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: var(--text-inverse);
-  box-shadow: 0 0 24px var(--gold-glow);
+.choice-card-body {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
 }
+
+.choice-card-logo {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 0 16px var(--gold-glow);
+}
+
+.choice-card-text { flex: 1; min-width: 0; }
 
 .choice-card h3 {
   font-size: var(--text-lead);
-  font-weight: 700;
-  margin-bottom: var(--space-1);
+  font-weight: 600;
+  margin-bottom: 4px;
   color: var(--text-primary);
   text-transform: none;
   border: none;
@@ -1047,17 +1059,17 @@ body.has-sidebar { display: flex; }
   font-size: var(--text-md);
   color: var(--text-muted);
   line-height: 1.5;
-  margin-bottom: var(--space-2);
+  margin-bottom: 0;
 }
 
-.choice-card-cta {
-  font-size: var(--text-base-sm);
-  font-weight: 600;
+.choice-card-arrow {
+  align-self: flex-end;
+  font-size: 1.2rem;
   color: var(--gold-light);
-  letter-spacing: 0.02em;
-  transition: color var(--duration-fast);
+  margin-top: var(--space-1);
+  transition: color var(--duration-fast), transform var(--duration-fast);
 }
-.choice-card:hover .choice-card-cta { color: var(--gold); }
+.choice-card:hover .choice-card-arrow { color: var(--gold); transform: translateX(3px); }
 
 /* ── Trust Strip ── */
 .home-trust-strip {
@@ -2417,7 +2429,7 @@ body.has-sidebar { display: flex; }
 }
 .kpi-card:hover { border-color: transparent; box-shadow: none; }
 .kpi-card .kpi-label { font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-top: 4px; order: 1; }
-.kpi-card .kpi-value { font-size: var(--text-stat); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; order: 0; }
+.kpi-card .kpi-value { font-size: var(--text-stat); font-weight: 500; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; order: 0; }
 .kpi-card .kpi-trend { display: none; }
 .kpi-card .kpi-trend.down { color: var(--red); }
 
@@ -2720,20 +2732,24 @@ body.has-sidebar { display: flex; }
   <!-- CTA cards floating at bottom -->
   <div class="home-hero-actions">
     <div class="choice-card" role="button" tabindex="0" onclick="goPage('sell',document.getElementById('nav-sell'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('sell',document.getElementById('nav-sell'))}">
-      <div class="choice-card-icon">
-        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <div class="choice-card-body">
+        <div class="choice-card-logo">S</div>
+        <div class="choice-card-text">
+          <h3>I'm Selling</h3>
+          <p>Discover your car's true market value with real-time comparable analysis across the entire GCC.</p>
+        </div>
       </div>
-      <h3>I'm Selling</h3>
-      <p>Discover your car's true market value with real-time comparable analysis across the entire GCC.</p>
-      <span class="choice-card-cta">Get Market Value &rarr;</span>
+      <span class="choice-card-arrow">→</span>
     </div>
     <div class="choice-card" role="button" tabindex="0" onclick="goPage('buy',document.getElementById('nav-buy'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('buy',document.getElementById('nav-buy'))}">
-      <div class="choice-card-icon">
-        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <div class="choice-card-body">
+        <div class="choice-card-logo">B</div>
+        <div class="choice-card-text">
+          <h3>I'm Buying</h3>
+          <p>Verify if a deal is fair with instant market comparison. Find better alternatives and save thousands.</p>
+        </div>
       </div>
-      <h3>I'm Buying</h3>
-      <p>Verify if a deal is fair with instant market comparison. Find better alternatives and save thousands.</p>
-      <span class="choice-card-cta">Analyze This Deal &rarr;</span>
+      <span class="choice-card-arrow">→</span>
     </div>
   </div>
 
