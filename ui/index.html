@@ -941,14 +941,28 @@ body.has-sidebar { display: flex; }
   .home-hero-actions { flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 }
 
-/* ── KPI Strip ── */
+/* ── KPI Strip — tabular row with gold dividers ── */
 .home-kpi-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  max-width: 960px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
   margin: 0 auto var(--space-6);
-  padding-top: var(--space-2);
+  padding: var(--space-3) 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+.kpi-divider {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, transparent, var(--border-active), transparent);
+  flex-shrink: 0;
+}
+.kpi-icon {
+  flex-shrink: 0;
+  margin-bottom: 2px;
+  opacity: 0.7;
 }
 
 /* ── CTA Section ── */
@@ -2338,8 +2352,8 @@ body.has-sidebar { display: flex; }
   border-radius: var(--radius-sm);
 }
 .home-skeleton-kpi {
-  height: 100px;
-  border-radius: var(--radius-xl);
+  height: 72px;
+  border-radius: var(--radius-md);
 }
 
 /* ── Empty State ── */
@@ -2376,17 +2390,22 @@ body.has-sidebar { display: flex; }
 
 /* ── KPI Card ── */
 .kpi-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3) var(--space-4);
-  transition: all var(--duration-fast);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  transition: none;
 }
-.kpi-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); }
-.kpi-card .kpi-label { font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
-.kpi-card .kpi-value { font-size: var(--text-h3); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; }
-.kpi-card .kpi-trend { font-size: var(--text-sm); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-.kpi-card .kpi-trend.up   { color: var(--gold-light); }
+.kpi-card:hover { border-color: transparent; box-shadow: none; }
+.kpi-card .kpi-label { font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-top: 4px; order: 1; }
+.kpi-card .kpi-value { font-size: var(--text-stat); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; order: 0; }
+.kpi-card .kpi-trend { display: none; }
 .kpi-card .kpi-trend.down { color: var(--red); }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2406,6 +2425,9 @@ body.has-sidebar { display: flex; }
   .choice-cards { grid-template-columns: 1fr; }
   .card { padding: var(--space-3); }
   .page-title { font-size: 1.75rem; }
+  .home-kpi-strip { flex-wrap: wrap; gap: var(--space-2); }
+  .kpi-divider { display: none; }
+  .kpi-card { flex: 1 1 40%; min-width: 120px; }
 }
 
 @media (max-width: 640px) {
@@ -2707,41 +2729,25 @@ body.has-sidebar { display: flex; }
 <!-- ═══ KPI STRIP ═══ -->
 <div class="home-kpi-strip">
   <div class="kpi-card">
-    <div class="kpi-label">Countries Covered</div>
+    <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     <div class="kpi-value" id="home-kpi-countries">6</div>
-    <div class="kpi-trend up">&#9650; GCC-wide</div>
+    <div class="kpi-label">Countries Covered</div>
   </div>
+  <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-label">Active Listings</div>
     <div class="kpi-value" id="home-kpi-listings" aria-atomic="true">--</div>
-    <div class="kpi-trend" id="home-kpi-listings-trend">Loading&hellip;</div>
+    <div class="kpi-label">Active Listings</div>
   </div>
+  <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-label">Market Coverage</div>
     <div class="kpi-value" id="home-kpi-marketplaces">10</div>
-    <div class="kpi-trend up">&#9650; Live sources</div>
+    <div class="kpi-label">Market Coverage</div>
   </div>
+  <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-label">Valuations (7d)</div>
     <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">--</div>
-    <div class="kpi-trend" id="home-kpi-valuations-trend">Loading&hellip;</div>
+    <div class="kpi-label">Valuations (7d)</div>
   </div>
-</div>
-
-<!-- ═══ TRUST STRIP ═══ -->
-<div class="home-trust-strip">
-  <p class="home-trust-label">Trusted by dealerships across the GCC</p>
-  <div class="home-marketplace-row">
-    <span class="marketplace-chip">Dubizzle</span>
-    <span class="marketplace-chip">YallaMotor</span>
-    <span class="marketplace-chip">Haraj</span>
-    <span class="marketplace-chip">OpenSooq</span>
-    <span class="marketplace-chip">CarSwitch</span>
-    <span class="marketplace-chip">Emirates Auction</span>
-    <span class="marketplace-chip">Syarah</span>
-    <span class="marketplace-chip">DubiCars</span>
-  </div>
-  <p class="home-trust-sub">Aggregating real-time data from 10 marketplaces across 6 GCC countries</p>
 </div>
 
 </div><!-- /#home-data-content -->
@@ -3004,12 +3010,8 @@ function loadHomeKPIs(){
     var week=d.valuations&&d.valuations.last_7_days?d.valuations.last_7_days:0;
     var el=document.getElementById('home-kpi-listings');
     if(el){el.textContent=active>0?active.toLocaleString():'--';el.setAttribute('aria-label',active>0?active.toLocaleString()+' active listings':'Data unavailable');}
-    el=document.getElementById('home-kpi-listings-trend');
-    if(el){el.textContent=active>0?'▲ '+active.toLocaleString()+' active':'—';el.className='kpi-trend'+(active>0?' up':'');}
     el=document.getElementById('home-kpi-valuations');
     if(el){el.textContent=week>0?week.toLocaleString():'--';el.setAttribute('aria-label',week>0?week.toLocaleString()+' valuations in last 7 days':'Data unavailable');}
-    el=document.getElementById('home-kpi-valuations-trend');
-    if(el){el.textContent=week>0?'▲ Last 7 days':'—';el.className='kpi-trend'+(week>0?' up':'');}
     /* Hide skeleton, show real data */
     var skel=document.getElementById('home-skeleton-content');
     var data=document.getElementById('home-data-content');
