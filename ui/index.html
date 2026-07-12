@@ -605,12 +605,12 @@ body.has-sidebar { display: flex; }
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: var(--green-bg);
-  border: 1px solid rgba(16, 185, 129, 0.15);
+  background: var(--gold-glow);
+  border: 1px solid var(--border-active);
   border-radius: var(--radius-2xl);
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--green);
+  color: var(--gold-light);
   white-space: nowrap;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -622,9 +622,9 @@ body.has-sidebar { display: flex; }
 .page-header-badge::before {
   content: '';
   width: 5px; height: 5px;
-  background: var(--green);
+  background: var(--gold);
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 8px var(--gold-glow-strong);
 }
 
 /* ── Form section divider ── */
@@ -884,12 +884,12 @@ body.has-sidebar { display: flex; }
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
-  background: rgba(16,185,129,0.06);
-  border: 1px solid rgba(16,185,129,0.15);
+  background: var(--gold-glow);
+  border: 1px solid var(--border-active);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--green);
+  color: var(--gold-light);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   width: fit-content;
@@ -1289,7 +1289,7 @@ body.has-sidebar { display: flex; }
   text-transform: uppercase;
 }
 
-.badge-high   { background: var(--green-bg); color: var(--green); }
+.badge-high   { background: var(--gold-glow); color: var(--gold-light); }
 .badge-medium { background: var(--amber-bg); color: var(--amber); }
 .badge-low    { background: var(--red-bg); color: var(--red); }
 
@@ -1748,7 +1748,7 @@ body.has-sidebar { display: flex; }
   gap: 4px;
   margin-top: 2px;
 }
-.market-kpi-sub.good { color: var(--green); }
+.market-kpi-sub.good { color: var(--gold-light); }
 .market-kpi-sub.warn { color: var(--amber); }
 .market-kpi-sub.neutral { color: var(--text-muted); }
 
@@ -1843,7 +1843,7 @@ body.has-sidebar { display: flex; }
 .market-health-row:last-child { border-bottom: none; }
 .market-health-label { font-size: var(--text-base-sm); color: var(--text-muted); }
 .market-health-value { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); }
-.market-health-value.good { color: var(--green); }
+.market-health-value.good { color: var(--gold-light); }
 .market-health-value.warn { color: var(--amber); }
 
 /* ── AI Insights ── */
@@ -2190,8 +2190,8 @@ body.has-sidebar { display: flex; }
   margin-top: 2px;
 }
 .result-alt-save {
-  background: var(--green-bg);
-  color: var(--green);
+  background: var(--gold-glow);
+  color: var(--gold-light);
   padding: 5px 12px;
   border-radius: var(--radius-md);
   font-size: var(--text-xs);
@@ -2232,7 +2232,7 @@ body.has-sidebar { display: flex; }
 
 /* ── Results: Better Deals Card ── */
 .result-better-deals {
-  border-left: 3px solid var(--green);
+  border-left: 3px solid var(--gold);
 }
 
 /* ── Results: Verdict Detail ── */
@@ -2254,7 +2254,7 @@ body.has-sidebar { display: flex; }
 }
 
 .deal-verdict.bad  { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
-.deal-verdict.good { background: var(--green-bg); border: 1px solid rgba(16,185,129,0.2); }
+.deal-verdict.good { background: var(--gold-glow); border: 1px solid var(--border-active); }
 
 .deal-verdict .verdict-label {
   font-size: var(--text-sm);
@@ -2265,7 +2265,7 @@ body.has-sidebar { display: flex; }
 }
 
 .deal-verdict.bad  .verdict-label { color: var(--red); }
-.deal-verdict.good .verdict-label { color: var(--green); }
+.deal-verdict.good .verdict-label { color: var(--gold-light); }
 
 .deal-verdict .verdict-pct {
   font-size: 2.5rem;
@@ -2274,7 +2274,7 @@ body.has-sidebar { display: flex; }
 }
 
 .deal-verdict.bad  .verdict-pct { color: var(--red); }
-.deal-verdict.good .verdict-pct { color: var(--green); }
+.deal-verdict.good .verdict-pct { color: var(--gold-light); }
 
 /* ══════════════════════════════════════════════════════════════════
    ENTERPRISE COMPONENT LIBRARY — buttons, tables, skeletons, empty states
@@ -2386,7 +2386,7 @@ body.has-sidebar { display: flex; }
 .kpi-card .kpi-label { font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 6px; }
 .kpi-card .kpi-value { font-size: var(--text-h3); font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; }
 .kpi-card .kpi-trend { font-size: var(--text-sm); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-.kpi-card .kpi-trend.up   { color: var(--green); }
+.kpi-card .kpi-trend.up   { color: var(--gold-light); }
 .kpi-card .kpi-trend.down { color: var(--red); }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2603,7 +2603,7 @@ body.has-sidebar { display: flex; }
 <div id="page-home">
 
 <div id="home-skeleton-content">
-  <div class="home-hero" style="min-height:520px;display:flex;align-items:center;padding:var(--space-8) var(--space-6)">
+  <div class="home-hero" style="min-height:560px;display:flex;align-items:center;padding:var(--space-8) var(--space-6)">
     <div style="display:flex;flex-direction:column;gap:var(--space-3);max-width:480px">
       <div class="skeleton home-skeleton-badge"></div>
       <div class="skeleton home-skeleton-hero"></div>
@@ -2993,7 +2993,7 @@ function loadBuyRail(){
     var el=document.getElementById('rail-latency');
     if(el)el.textContent='< 50ms';
     el=document.getElementById('rail-status');
-    if(el&&d.status==='ok'){el.textContent='Operational';el.style.color='var(--green)';}
+    if(el&&d.status==='ok'){el.textContent='Operational';el.style.color='var(--gold-light)';}
   }).catch(function(){});
 }
 
@@ -3073,7 +3073,7 @@ function showYearSuggestions(formEl,data){
     var miInput=formEl.querySelector('.fm-mileage');
     if(yrInput)yrInput.value=year;
     if(miInput)miInput.placeholder='e.g. '+((2026-year)*20000)+' km';
-    hintEl.innerHTML='<span style="font-size: var(--text-xs);color:var(--green)">'+count+' listings for '+year+'</span>';
+    hintEl.innerHTML='<span style="font-size: var(--text-xs);color:var(--gold-light)">'+count+' listings for '+year+'</span>';
   };
 }
 
@@ -3360,7 +3360,7 @@ var c=document.getElementById(mode+'-results');if(!c)return;c.classList.remove('
 var ap=body.asking_price;
 var confClass=d.confidence==='high'?'badge-high':(d.confidence==='medium'?'badge-medium':'badge-low');
 var confPct=d.confidence==='high'?75:(d.confidence==='medium'?50:25);
-var confColor=d.confidence==='high'?'var(--green)':(d.confidence==='medium'?'var(--amber)':'var(--red)');
+var confColor=d.confidence==='high'?'var(--gold-light)':(d.confidence==='medium'?'var(--amber)':'var(--red)');
 var rangeSpan=d.price_high-d.price_low;
 var estPos=rangeSpan>0?((d.estimate-d.price_low)/rangeSpan*100):50;
 var h='';
@@ -3401,7 +3401,7 @@ if (d.comps && d.comps.length) {
 /* ═══ AI EXPLANATION ═══ */
 if(d.adjustments&&d.adjustments.length){
   h+='<div class="card"><h3>How We Calculated This</h3><div style="display:flex;flex-direction:column;gap:10px">';
-  d.adjustments.forEach(function(a){h+='<div class="result-adj-row"><div><div class="result-adj-reason">'+esc(a.reason)+'</div><div class="result-adj-detail">'+esc(a.detail)+'</div></div><div class="result-adj-amount" style="color:'+(a.amount>=0?'var(--green)':'var(--red)')+'">'+(a.amount>=0?'+':'')+'AED '+Math.abs(a.amount).toLocaleString()+'</div></div>';});
+  d.adjustments.forEach(function(a){h+='<div class="result-adj-row"><div><div class="result-adj-reason">'+esc(a.reason)+'</div><div class="result-adj-detail">'+esc(a.detail)+'</div></div><div class="result-adj-amount" style="color:'+(a.amount>=0?'var(--gold-light)':'var(--red)')+'">'+(a.amount>=0?'+':'')+'AED '+Math.abs(a.amount).toLocaleString()+'</div></div>';});
   h+='</div></div>';
 } else {
   h+='<div class="card"><h3>How We Calculated This</h3><p style="font-size:var(--text-caption);color:var(--text-muted);text-align:center;padding:var(--space-3) 0">This valuation is based directly on comparable listings with no adjustments needed.</p></div>';
