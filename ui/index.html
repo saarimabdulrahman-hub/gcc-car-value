@@ -1049,17 +1049,8 @@ body.has-sidebar { display: flex; }
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BUY PAGE — Two-column layout with intelligence rail
+   BUY PAGE — 9+3 grid with intelligence rail
    ══════════════════════════════════════════════════════════════════ */
-
-.buy-layout {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: var(--space-4);
-  align-items: start;
-}
-
-.buy-main { min-width: 0; }
 
 .buy-rail {
   display: flex;
@@ -1141,8 +1132,10 @@ body.has-sidebar { display: flex; }
 
 .rail-coverage-flag { font-size: var(--text-md); }
 
+/* ── Rail responsive: collapse below 1100px ── */
 @media (max-width: 1100px) {
-  .buy-layout { grid-template-columns: 1fr; }
+  .grid-12 { grid-template-columns: 1fr; }
+  .col-9, .col-3 { grid-column: span 1; }
   .buy-rail { position: static; }
 }
 
@@ -2739,82 +2732,69 @@ body.has-sidebar { display: flex; }
 
 <div id="page-buy" class="hidden">
 
-<div class="buy-layout">
-
-<!-- ═══ LEFT COLUMN ═══ -->
-<div class="buy-main">
-
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Buy a Car</h2><p class="page-sub">Verify if the asking price is fair against live GCC market data.</p></div><div class="page-header-badge">GCC Live Market</div></div>
 
-<div class="card"><h3>Deal Analysis</h3><div id="buy-form"></div><button class="btn" id="buy-btn" onclick="doValuation('buy')">Analyze This Deal</button></div>
+<!-- ═══ 12-COLUMN GRID: Form (9 cols) + Right Panel (3 cols) ═══ -->
+<div class="grid-12">
 
-<div class="card" style="text-align:center">
-  <p style="font-size: var(--text-md);color:var(--text-muted);margin-bottom:var(--space-3)">Or paste a listing URL from any GCC marketplace</p>
-  <button class="btn-secondary" onclick="toggleUrlSection()" style="max-width:320px;margin:0 auto;display:block">&#128279; Paste a listing URL</button>
-  <div id="buy-url-section" style="display:none;margin-top:var(--space-4)">
-    <div class="url-import-card">
-      <div class="url-import-icon">&#128279;</div>
-      <div class="url-import-title">Paste the listing URL</div>
-      <div class="url-import-sub">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
-      <input type="url" id="fm-url" class="url-import-input" placeholder="https://uae.dubizzle.com/motors/used-cars/..." aria-label="Listing URL">
-      <button class="btn" onclick="submitUrl()" style="max-width:320px;margin:0 auto">Analyze This URL</button>
+  <!-- LEFT: Form Area — spans 9 columns -->
+  <div class="col-9">
+
+    <div class="card">
+      <div class="card-header"><h3>Deal Analysis</h3></div>
+      <div class="card-body"><div id="buy-form"></div></div>
+      <div class="card-footer"><button class="btn" id="buy-btn" onclick="doValuation('buy')">Analyze This Deal</button></div>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <p style="font-size: var(--text-md);color:var(--text-muted);margin-bottom:var(--space-3)">Or paste a listing URL from any GCC marketplace</p>
+      <button class="btn-secondary" onclick="toggleUrlSection()" style="max-width:320px;margin:0 auto;display:block">&#128279; Paste a listing URL</button>
+      <div id="buy-url-section" style="display:none;margin-top:var(--space-4)">
+        <div class="url-import-card">
+          <div class="url-import-icon">&#128279;</div>
+          <div class="url-import-title">Paste the listing URL</div>
+          <div class="url-import-sub">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
+          <input type="url" id="fm-url" class="url-import-input" placeholder="https://uae.dubizzle.com/motors/used-cars/..." aria-label="Listing URL">
+          <button class="btn" onclick="submitUrl()" style="max-width:320px;margin:0 auto">Analyze This URL</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
+    <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
+  </div>
+
+  <!-- RIGHT: AI Panel — spans 3 columns -->
+  <div class="col-3">
+    <div class="buy-rail">
+
+      <div class="rail-panel">
+        <div class="rail-panel-title">AI Features</div>
+        <div class="rail-status-row">
+          <span class="rail-dot active"></span>
+          <span class="rail-status-text" id="rail-ai-status">Live</span>
+        </div>
+        <div class="rail-meta">
+          <div class="rail-meta-row"><span>Engine</span><span id="rail-model-type">Statistical v1</span></div>
+          <div class="rail-meta-row"><span>Intelligence</span><span id="rail-model-source">Comparable Listings</span></div>
+          <div class="rail-meta-row"><span>Confidence</span><span id="rail-confidence">Market-driven</span></div>
+        </div>
+      </div>
+
+      <div class="rail-panel">
+        <div class="rail-panel-title">Countries</div>
+        <div class="rail-coverage-grid">
+          <div class="rail-coverage-item"><span class="rail-coverage-flag">🇦🇪</span> UAE</div>
+          <div class="rail-coverage-item"><span class="rail-coverage-flag">🇸🇦</span> Saudi</div>
+          <div class="rail-coverage-item"><span class="rail-coverage-flag">🇶🇦</span> Qatar</div>
+          <div class="rail-coverage-item"><span class="rail-coverage-flag">🇰🇼</span> Kuwait</div>
+        </div>
+      </div>
+
     </div>
   </div>
-</div>
 
-<div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
-<div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
-</div>
-
-<!-- ═══ RIGHT INTELLIGENCE RAIL ═══ -->
-<div class="buy-rail">
-
-<div class="rail-panel">
-  <div class="rail-panel-title">AI Engine</div>
-  <div class="rail-status-row">
-    <span class="rail-dot active"></span>
-    <span class="rail-status-text" id="rail-ai-status">Statistical v1</span>
-  </div>
-  <div class="rail-meta">
-    <div class="rail-meta-row"><span>Model</span><span id="rail-model-type">Statistical</span></div>
-    <div class="rail-meta-row"><span>Source</span><span id="rail-model-source">Comparable Listings</span></div>
-    <div class="rail-meta-row"><span>Confidence</span><span id="rail-confidence">Market-driven</span></div>
-  </div>
-</div>
-
-<div class="rail-panel">
-  <div class="rail-panel-title">Market Coverage</div>
-  <div class="rail-coverage-grid">
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇦🇪</span> UAE</div>
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇸🇦</span> KSA</div>
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇰🇼</span> Kuwait</div>
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇶🇦</span> Qatar</div>
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇧🇭</span> Bahrain</div>
-    <div class="rail-coverage-item"><span class="rail-coverage-flag">🇴🇲</span> Oman</div>
-  </div>
-  <div class="rail-meta" style="margin-top:var(--space-2)">
-    <div class="rail-meta-row"><span>Listings tracked</span><span id="rail-listing-count">--</span></div>
-    <div class="rail-meta-row"><span>Marketplaces</span><span>10</span></div>
-  </div>
-</div>
-
-<div class="rail-panel">
-  <div class="rail-panel-title">Methodology</div>
-  <p style="font-size: var(--text-sm);color:var(--text-muted);line-height:1.5">Fair market value is computed from comparable active listings across all GCC marketplaces, adjusted for mileage, specification, and location premiums.</p>
-</div>
-
-<div class="rail-panel">
-  <div class="rail-panel-title">System Health</div>
-  <div class="rail-meta">
-    <div class="rail-meta-row"><span>API Latency</span><span id="rail-latency">--</span></div>
-    <div class="rail-meta-row"><span>Data Freshness</span><span id="rail-freshness">Real-time</span></div>
-    <div class="rail-meta-row"><span>Status</span><span id="rail-status" style="color:var(--green)">Operational</span></div>
-  </div>
-</div>
-
-</div>
-
-</div>
+</div><!-- /.grid-12 -->
 </div>
 
 <div id="page-browse" class="hidden">
