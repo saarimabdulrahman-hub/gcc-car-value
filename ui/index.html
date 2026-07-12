@@ -286,7 +286,7 @@ body.has-sidebar { display: flex; }
    ══════════════════════════════════════════════════════════════════ */
 
 .sidebar {
-  width: 256px;
+  width: 220px;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-subtle);
   display: none;
@@ -1140,8 +1140,17 @@ body.has-sidebar { display: flex; }
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BUY PAGE — 9+3 grid with intelligence rail
+   BUY PAGE — Blueprint grid: 1fr + 250px, 24px gutter
    ══════════════════════════════════════════════════════════════════ */
+
+.buy-grid {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 24px;
+  align-items: start;
+}
+
+.buy-main { min-width: 0; }
 
 .buy-rail {
   display: flex;
@@ -1225,8 +1234,7 @@ body.has-sidebar { display: flex; }
 
 /* ── Rail responsive: collapse below 1100px ── */
 @media (max-width: 1100px) {
-  .grid-12 { grid-template-columns: 1fr; }
-  .col-9, .col-3 { grid-column: span 1; }
+  .buy-grid { grid-template-columns: 1fr; }
   .buy-rail { position: static; }
 }
 
@@ -2481,7 +2489,7 @@ body.has-sidebar { display: flex; }
 
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
-  .sidebar { width: 200px; }
+  .sidebar { width: 220px; }
   .price-hero .amount { font-size: 2.5rem; }
   .result-amount { font-size: 2.5rem; }
   .result-actions { flex-direction: column; align-items: stretch; }
@@ -2816,11 +2824,11 @@ body.has-sidebar { display: flex; }
 
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Buy a Car</h2><p class="page-sub">Verify if the asking price is fair against live GCC market data.</p></div><div class="page-header-badge">GCC Live Market</div></div>
 
-<!-- ═══ 12-COLUMN GRID: Form (9 cols) + Right Panel (3 cols) ═══ -->
-<div class="grid-12">
+<!-- ═══ BUY PAGE GRID: Main (1fr) + Right Panel (250px) ═══ -->
+<div class="buy-grid">
 
-  <!-- LEFT: Form Area — spans 9 columns -->
-  <div class="col-9">
+  <!-- LEFT: Form Area -->
+  <div class="buy-main">
 
     <div class="card">
       <div class="card-header"><h3>Deal Analysis</h3></div>
@@ -2844,8 +2852,8 @@ body.has-sidebar { display: flex; }
 
   </div>
 
-  <!-- RIGHT: AI Panel — spans 3 columns -->
-  <div class="col-3">
+  <!-- RIGHT: AI Panel — 250px -->
+  <div class="buy-rail">
     <div class="buy-rail">
 
       <div class="rail-panel">
@@ -2874,7 +2882,7 @@ body.has-sidebar { display: flex; }
     </div>
   </div>
 
-</div><!-- /.grid-12 -->
+</div><!-- /.buy-grid -->
 
 <div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
 <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
