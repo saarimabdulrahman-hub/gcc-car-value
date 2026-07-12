@@ -123,11 +123,33 @@ html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoot
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
+  background-color: var(--bg-primary);
+  background-image: url('hero-bg.png');
+  background-position: 75% center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
   letter-spacing: -0.01em;
+}
+
+/* Full-page ambient overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(8,10,18,.97) 0%,
+    rgba(8,10,18,.90) 28%,
+    rgba(8,10,18,.58) 55%,
+    rgba(8,10,18,.22) 75%,
+    rgba(8,10,18,0) 100%
+  );
 }
 
 body.has-sidebar { display: flex; }
@@ -165,16 +187,16 @@ body.has-sidebar { display: flex; }
    ══════════════════════════════════════════════════════════════════ */
 
 .header {
-  background: rgba(13, 15, 21, 0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   padding: 0 var(--space-5);
   height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   position: relative;
   z-index: 10;
 }
@@ -207,7 +229,7 @@ body.has-sidebar { display: flex; }
 .header-brand h1 {
   font-family: 'Inter', sans-serif;
   font-size: var(--text-lead);
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: 0.12em;
   background: linear-gradient(135deg, var(--text-primary), var(--text-accent));
   -webkit-background-clip: text;
@@ -453,7 +475,9 @@ body.has-sidebar { display: flex; }
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background: var(--bg-primary);
+  background: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 .main-content {
@@ -827,11 +851,7 @@ body.has-sidebar { display: flex; }
   overflow: hidden;
   margin-bottom: 0;
   border-radius: var(--radius-2xl);
-  background-color: var(--bg-hero);
-  background-image: url('hero-bg.png');
-  background-position: 75% center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background: transparent;
   border: 1px solid var(--border-subtle);
 }
 
@@ -918,7 +938,7 @@ body.has-sidebar { display: flex; }
 
 .home-hero-title {
   font-size: 4.25rem;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 0.95;
   color: var(--text-primary);
