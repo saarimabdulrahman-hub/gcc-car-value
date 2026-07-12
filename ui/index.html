@@ -794,10 +794,62 @@ body.has-sidebar { display: flex; }
    LANDING PAGE — Enterprise Home
    ══════════════════════════════════════════════════════════════════ */
 
-/* ── Hero ── */
+/* ── Premium Hero — layered backgrounds, skyline, vehicle ── */
 .home-hero {
-  text-align: center;
-  padding: var(--space-10) var(--space-3) var(--space-6);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 520px;
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(180deg, #0D1018 0%, #0F121C 40%, #111520 100%);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Hero: Skyline layer ── */
+.home-hero-skyline {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 180px;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 1;
+}
+.home-hero-skyline svg { width: 100%; height: 100%; }
+
+/* ── Hero: Gold ambient glow ── */
+.home-hero-glow {
+  position: absolute;
+  top: 10%; right: 5%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(200,169,81,0.15) 0%, rgba(200,169,81,0.04) 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Hero: Vehicle illustration ── */
+.home-hero-vehicle {
+  position: absolute;
+  bottom: 40px; right: 40px;
+  width: 480px; height: 280px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.9;
+}
+.home-hero-vehicle svg { width: 100%; height: 100%; }
+
+/* ── Hero: Content (left side) ── */
+.home-hero-content {
+  position: relative;
+  z-index: 4;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-3);
+  max-width: 560px;
 }
 
 .home-hero-badge {
@@ -813,7 +865,7 @@ body.has-sidebar { display: flex; }
   color: var(--green);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-bottom: var(--space-4);
+  width: fit-content;
 }
 .live-dot {
   width: 6px; height: 6px;
@@ -825,11 +877,10 @@ body.has-sidebar { display: flex; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
 .home-hero-title {
-  font-size: 3rem;
+  font-size: var(--text-display);
   font-weight: 900;
   letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-bottom: var(--space-3);
+  line-height: 1.08;
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 50%, var(--gold-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -839,9 +890,28 @@ body.has-sidebar { display: flex; }
 .home-hero-sub {
   font-size: var(--text-lead);
   color: var(--text-muted);
-  max-width: 620px;
-  margin: 0 auto;
   line-height: 1.6;
+  max-width: 460px;
+}
+
+/* ── Hero: CTA cards floating at bottom-left ── */
+.home-hero-actions {
+  position: relative;
+  z-index: 4;
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--space-3);
+  padding: 0 var(--space-6) var(--space-6);
+  margin-top: -20px;
+}
+
+/* ── Hero responsive ── */
+@media (max-width: 900px) {
+  .home-hero { grid-template-columns: 1fr; min-height: auto; }
+  .home-hero-vehicle { opacity: 0.2; right: -60px; bottom: -20px; width: 340px; height: 200px; }
+  .home-hero-glow { right: 0; width: 300px; height: 300px; }
+  .home-hero-content { padding: var(--space-6) var(--space-4); }
+  .home-hero-actions { flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 }
 
 /* ── KPI Strip ── */
@@ -2516,10 +2586,12 @@ body.has-sidebar { display: flex; }
 <div id="page-home">
 
 <div id="home-skeleton-content">
-  <div class="home-hero" style="padding-bottom:var(--space-4)">
-    <div class="skeleton home-skeleton-badge"></div>
-    <div class="skeleton home-skeleton-hero"></div>
-    <div class="skeleton home-skeleton-sub"></div>
+  <div class="home-hero" style="min-height:520px;display:flex;align-items:center;padding:var(--space-8) var(--space-6)">
+    <div style="display:flex;flex-direction:column;gap:var(--space-3);max-width:480px">
+      <div class="skeleton home-skeleton-badge"></div>
+      <div class="skeleton home-skeleton-hero"></div>
+      <div class="skeleton home-skeleton-sub"></div>
+    </div>
   </div>
   <div class="home-kpi-strip">
     <div class="skeleton home-skeleton-kpi"></div>
@@ -2531,14 +2603,89 @@ body.has-sidebar { display: flex; }
 
 <div id="home-data-content" class="hidden">
 
-<!-- ═══ HERO ═══ -->
+<!-- ═══ PREMIUM HERO — skyline, glow, vehicle, content ═══ -->
 <div class="home-hero">
-  <div class="home-hero-badge" id="home-live-badge">
-    <span class="live-dot"></span>Live GCC Market Data
+
+  <!-- Skyline silhouette layer -->
+  <div class="home-hero-skyline" aria-hidden="true">
+    <svg viewBox="0 0 1200 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 180 L0 140 L30 140 L30 120 L60 120 L60 130 L80 130 L80 80 L100 80 L100 50 L120 50 L120 20 L135 20 L135 50 L150 50 L150 70 L170 70 L170 90 L190 90 L190 60 L210 60 L210 40 L230 40 L230 70 L250 70 L250 100 L280 100 L280 75 L300 75 L300 55 L320 55 L320 85 L340 85 L340 110 L370 110 L370 90 L390 90 L390 60 L410 60 L410 45 L430 45 L430 70 L450 70 L450 95 L480 95 L480 120 L510 120 L510 100 L530 100 L530 80 L550 80 L550 60 L570 60 L570 85 L600 85 L600 70 L620 70 L620 50 L640 50 L640 75 L660 75 L660 95 L690 95 L690 110 L720 110 L720 90 L750 90 L750 70 L770 70 L770 55 L790 55 L790 80 L820 80 L820 100 L850 100 L850 120 L880 120 L880 95 L900 95 L900 75 L920 75 L920 55 L940 55 L940 80 L960 80 L960 100 L990 100 L990 115 L1020 115 L1020 130 L1050 130 L1050 110 L1070 110 L1070 90 L1090 90 L1090 70 L1110 70 L1110 100 L1130 100 L1130 120 L1160 120 L1160 140 L1200 140 L1200 180 Z" fill="rgba(255,255,255,0.06)"/>
+      <path d="M0 180 L0 155 L40 155 L40 140 L70 140 L70 150 L100 150 L100 135 L130 135 L130 120 L160 120 L160 130 L190 130 L190 145 L220 145 L220 125 L250 125 L250 140 L280 140 L280 155 L310 155 L310 135 L340 135 L340 120 L370 120 L370 140 L400 140 L400 155 L430 155 L430 130 L460 130 L460 145 L490 145 L490 125 L520 125 L520 140 L550 140 L550 155 L580 155 L580 135 L610 135 L610 120 L640 120 L640 140 L670 140 L670 155 L700 155 L700 130 L730 130 L730 145 L760 145 L760 125 L790 125 L790 140 L820 140 L820 155 L850 155 L850 135 L880 135 L880 120 L910 120 L910 140 L940 140 L940 155 L970 155 L970 130 L1000 130 L1000 145 L1030 145 L1030 125 L1060 125 L1060 140 L1090 140 L1090 155 L1130 155 L1130 130 L1160 130 L1160 145 L1200 145 L1200 180 Z" fill="rgba(255,255,255,0.03)"/>
+      <!-- Burj Khalifa -->
+      <path d="M555 180 L555 20 L565 20 L565 10 L575 10 L575 20 L585 20 L585 180 Z" fill="rgba(255,255,255,0.08)"/>
+      <path d="M560 20 L560 15 L580 15 L580 20 Z" fill="rgba(255,255,255,0.06)"/>
+    </svg>
   </div>
-  <h1 class="home-hero-title">GCC Automotive<br>Intelligence Platform</h1>
-  <p class="home-hero-sub">Real-time vehicle valuations powered by live market data across 6 countries, 10 marketplaces, and thousands of active listings.</p>
-</div>
+
+  <!-- Gold ambient glow -->
+  <div class="home-hero-glow" aria-hidden="true"></div>
+
+  <!-- SUV illustration -->
+  <div class="home-hero-vehicle" aria-hidden="true">
+    <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="suvGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+        </linearGradient>
+        <linearGradient id="suvWindow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(200,180,140,0.25)"/>
+          <stop offset="100%" stop-color="rgba(200,180,140,0.08)"/>
+        </linearGradient>
+      </defs>
+      <!-- Shadow on ground -->
+      <ellipse cx="240" cy="260" rx="180" ry="12" fill="rgba(0,0,0,0.4)"/>
+      <!-- Body -->
+      <path d="M60 200 L60 175 L90 150 L180 145 L280 145 L340 140 L380 130 L420 130 L430 145 L430 200 L410 200 L400 210 L380 210 L370 200 L110 200 L100 210 L80 210 L70 200 Z" fill="url(#suvGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <!-- Roof -->
+      <path d="M150 145 L150 100 L200 90 L260 90 L320 100 L320 145" fill="url(#suvWindow)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <!-- Windows divider -->
+      <line x1="230" y1="92" x2="230" y2="145" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <!-- Wheels -->
+      <circle cx="160" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="10"/>
+      <circle cx="160" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+      <circle cx="360" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="10"/>
+      <circle cx="360" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+      <!-- Grille -->
+      <rect x="65" y="178" width="10" height="18" rx="2" fill="rgba(255,255,255,0.06)"/>
+      <line x1="75" y1="185" x2="90" y2="178" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <!-- Headlight -->
+      <ellipse cx="70" cy="170" rx="6" ry="4" fill="rgba(200,180,140,0.2)"/>
+      <!-- Taillight -->
+      <ellipse cx="425" cy="170" rx="4" ry="3" fill="rgba(200,50,50,0.2)"/>
+    </svg>
+  </div>
+
+  <!-- Hero content (left side) -->
+  <div class="home-hero-content">
+    <div class="home-hero-badge" id="home-live-badge">
+      <span class="live-dot"></span>Live GCC Market Data
+    </div>
+    <h1 class="home-hero-title">GCC Automotive<br>Intelligence Platform</h1>
+    <p class="home-hero-sub">Real-time vehicle valuations powered by live market data across 6 countries, 10 marketplaces, and thousands of active listings.</p>
+  </div>
+
+  <!-- CTA cards floating at bottom -->
+  <div class="home-hero-actions">
+    <div class="choice-card" role="button" tabindex="0" onclick="goPage('sell',document.getElementById('nav-sell'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('sell',document.getElementById('nav-sell'))}">
+      <div class="choice-card-icon">
+        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h3>I'm Selling</h3>
+      <p>Discover your car's true market value with real-time comparable analysis across the entire GCC.</p>
+      <span class="choice-card-cta">Get Market Value &rarr;</span>
+    </div>
+    <div class="choice-card" role="button" tabindex="0" onclick="goPage('buy',document.getElementById('nav-buy'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('buy',document.getElementById('nav-buy'))}">
+      <div class="choice-card-icon">
+        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </div>
+      <h3>I'm Buying</h3>
+      <p>Verify if a deal is fair with instant market comparison. Find better alternatives and save thousands.</p>
+      <span class="choice-card-cta">Analyze This Deal &rarr;</span>
+    </div>
+  </div>
+
+</div><!-- /.home-hero -->
 
 <!-- ═══ KPI STRIP ═══ -->
 <div class="home-kpi-strip">
@@ -2561,29 +2708,6 @@ body.has-sidebar { display: flex; }
     <div class="kpi-label">Valuations (7d)</div>
     <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">--</div>
     <div class="kpi-trend" id="home-kpi-valuations-trend">Loading&hellip;</div>
-  </div>
-</div>
-
-<!-- ═══ CHOICE CARDS ═══ -->
-<div class="home-cta-section">
-  <h2 class="home-section-title">What would you like to do?</h2>
-  <div class="choice-cards">
-    <div class="choice-card" role="button" tabindex="0" onclick="goPage('sell',document.getElementById('nav-sell'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('sell',document.getElementById('nav-sell'))}">
-      <div class="choice-card-icon">
-        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      </div>
-      <h3>I'm Selling</h3>
-      <p>Discover your car's true market value with real-time comparable analysis across the entire GCC.</p>
-      <span class="choice-card-cta">Get Market Value &rarr;</span>
-    </div>
-    <div class="choice-card" role="button" tabindex="0" onclick="goPage('buy',document.getElementById('nav-buy'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goPage('buy',document.getElementById('nav-buy'))}">
-      <div class="choice-card-icon">
-        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </div>
-      <h3>I'm Buying</h3>
-      <p>Verify if a deal is fair with instant market comparison. Find better alternatives and save thousands.</p>
-      <span class="choice-card-cta">Analyze This Deal &rarr;</span>
-    </div>
   </div>
 </div>
 
