@@ -2966,7 +2966,6 @@ el.querySelectorAll('input').forEach(function(input){
     }
   });
 });
-}
 
 // Keyboard navigation for autocomplete comboboxes
 el.addEventListener('keydown', function(e){
@@ -3089,7 +3088,7 @@ if(input.classList.contains('fm-make')){
   });
   if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No specs found</div>';}
 }
-if(sug.children.length)sug.classList.add('show');input.setAttribute('aria-expanded','true');
+if(sug.children.length){sug.classList.add('show');input.setAttribute('aria-expanded','true');}
 else sug.classList.remove('show');
 
 setTimeout(function(){
