@@ -2047,11 +2047,7 @@ body.has-sidebar { display: flex; }
 /* ── Result Hero ── */
 .result-hero {
   text-align: center;
-  padding: var(--space-6) var(--space-4) var(--space-5);
   margin-bottom: var(--space-4);
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-2xl);
 }
 
 .result-amount {
@@ -2760,8 +2756,6 @@ body.has-sidebar { display: flex; }
       </div>
     </div>
 
-    <div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
-    <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
   </div>
 
   <!-- RIGHT: AI Panel — spans 3 columns -->
@@ -2795,6 +2789,9 @@ body.has-sidebar { display: flex; }
   </div>
 
 </div><!-- /.grid-12 -->
+
+<div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
+<div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
 <div id="page-browse" class="hidden">
@@ -3341,12 +3338,14 @@ var estPos=rangeSpan>0?((d.estimate-d.price_low)/rangeSpan*100):50;
 var h='';
 
 /* ═══ VALUATION HERO ═══ */
-h+='<div class="result-hero">';
+h+='<div class="card result-hero">';
+h+='<div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);justify-content:center">';
+h+='<svg class="conf-ring" viewBox="0 0 64 64" role="img" aria-label="Confidence: '+d.confidence+', '+confPct+' percent"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--border-default)" stroke-width="4"/><circle cx="32" cy="32" r="28" fill="none" stroke="'+confColor+'" stroke-width="4" stroke-dasharray="'+Math.round(confPct/100*175.93)+' 175.93" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 32 32)" style="transition:stroke-dasharray 1s ease"/></svg>';
+h+='<div class="conf-text"><span class="conf-label" style="color:'+confColor+'">'+d.confidence.toUpperCase()+' CONFIDENCE</span><span class="conf-sub">based on '+d.comp_count+' comparable listings</span></div>';
+h+='</div>';
+h+='<div class="card-body" style="text-align:center">';
 h+='<div class="result-amount"><span id="result-amount-value">AED 0</span></div>';
 h+='<div class="result-range">Market Range: AED '+d.price_low.toLocaleString()+' &ndash; AED '+d.price_high.toLocaleString()+'</div>';
-h+='<div class="result-confidence">';
-h+='<svg class="conf-ring" viewBox="0 0 64 64" role="img" aria-label="Confidence: '+d.confidence+', '+confPct+' percent"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--border-default)" stroke-width="4"/><circle cx="32" cy="32" r="28" fill="none" stroke="'+confColor+'" stroke-width="4" stroke-dasharray="'+Math.round(confPct/100*175.93)+' 175.93" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 32 32)" style="transition:stroke-dasharray 1s ease"/></svg>';
-h+='<div class="conf-text"><span class="conf-label" style="color:'+confColor+'">'+d.confidence.toUpperCase()+'</span><span class="conf-sub">'+d.comp_count+' comparable listings</span></div>';
 h+='</div></div>';
 
 /* ═══ PRICE RANGE BAR ═══ */
