@@ -2008,6 +2008,27 @@ body.has-sidebar { display: flex; }
 .skeleton-row > * { flex: 1; }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
+/* ── Home Page Skeleton ── */
+.home-skeleton-badge {
+  width: 180px; height: 28px;
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-4);
+}
+.home-skeleton-hero {
+  width: 420px; height: 56px;
+  margin: 0 auto var(--space-3);
+  border-radius: var(--radius-sm);
+}
+.home-skeleton-sub {
+  width: 480px; height: 20px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-sm);
+}
+.home-skeleton-kpi {
+  height: 100px;
+  border-radius: var(--radius-xl);
+}
+
 /* ── Empty State ── */
 .empty-state {
   text-align: center;
@@ -2205,6 +2226,22 @@ body.has-sidebar { display: flex; }
 
 <div id="page-home">
 
+<div id="home-skeleton-content">
+  <div class="home-hero" style="padding-bottom:var(--space-4)">
+    <div class="skeleton home-skeleton-badge"></div>
+    <div class="skeleton home-skeleton-hero"></div>
+    <div class="skeleton home-skeleton-sub"></div>
+  </div>
+  <div class="home-kpi-strip">
+    <div class="skeleton home-skeleton-kpi"></div>
+    <div class="skeleton home-skeleton-kpi"></div>
+    <div class="skeleton home-skeleton-kpi"></div>
+    <div class="skeleton home-skeleton-kpi"></div>
+  </div>
+</div>
+
+<div id="home-data-content" class="hidden">
+
 <!-- ═══ HERO ═══ -->
 <div class="home-hero">
   <div class="home-hero-badge" id="home-live-badge">
@@ -2276,6 +2313,8 @@ body.has-sidebar { display: flex; }
   </div>
   <p class="home-trust-sub">Aggregating real-time data from 10 marketplaces across 6 GCC countries</p>
 </div>
+
+</div><!-- /#home-data-content -->
 
 </div>
 
@@ -2515,7 +2554,14 @@ if(p==='sell')buildForm('sell-form',false);
 if(p==='buy'){buildForm('buy-form',true);loadBuyRail();}
 if(p==='browse')loadBrowseMakes();
 if(p==='market')loadMarketPage();
-if(p==='home')loadHomeKPIs();
+if(p==='home'){
+  /* Reset to skeleton state before loading */
+  var skel=document.getElementById('home-skeleton-content');
+  var data=document.getElementById('home-data-content');
+  if(skel)skel.classList.remove('hidden');
+  if(data)data.classList.add('hidden');
+  loadHomeKPIs();
+}
 }
 
 function loadBuyRail(){
@@ -2545,7 +2591,18 @@ function loadHomeKPIs(){
     if(el){el.textContent=week>0?week.toLocaleString():'--';el.setAttribute('aria-label',week>0?week.toLocaleString()+' valuations in last 7 days':'Data unavailable');}
     el=document.getElementById('home-kpi-valuations-trend');
     if(el){el.textContent=week>0?'▲ Last 7 days':'—';el.className='kpi-trend'+(week>0?' up':'');}
-  }).catch(function(){});
+    /* Hide skeleton, show real data */
+    var skel=document.getElementById('home-skeleton-content');
+    var data=document.getElementById('home-data-content');
+    if(skel)skel.classList.add('hidden');
+    if(data)data.classList.remove('hidden');
+  }).catch(function(){
+    /* On error, still show data section (with -- values) and hide skeleton */
+    var skel=document.getElementById('home-skeleton-content');
+    var data=document.getElementById('home-data-content');
+    if(skel)skel.classList.add('hidden');
+    if(data)data.classList.remove('hidden');
+  });
 }
 
 function toggleLang(){var isRtl=document.body.dir==='rtl';document.body.dir=isRtl?'ltr':'rtl';document.documentElement.lang=isRtl?'en':'ar';}
