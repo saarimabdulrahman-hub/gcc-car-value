@@ -637,6 +637,24 @@ body.has-sidebar { display: flex; }
   min-height: 16px;
 }
 
+/* ── Field Error State ── */
+.form-group.error input,
+.form-group.error select {
+  border-color: var(--red) !important;
+  box-shadow: 0 0 0 3px var(--red-bg) !important;
+}
+.form-group.error .field-error {
+  display: block !important;
+}
+.field-error {
+  display: none;
+  font-size: 0.68rem;
+  color: var(--red);
+  font-weight: 500;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
 /* ══════════════════════════════════════════════════════════════════
    BUTTONS
    ══════════════════════════════════════════════════════════════════ */
@@ -2665,15 +2683,15 @@ var h='';
 if(isBuy){
 h+='<div class="form-section" style="background:linear-gradient(135deg,var(--gold-glow),rgba(200,169,81,0.03));border-radius:14px;padding:var(--space-4);margin-bottom:0;border:1px solid var(--gold-glow)">';
 h+='<div class="form-section-title" style="border-bottom:none;margin-bottom:var(--space-3);padding-bottom:0">A. Asking Price</div>';
-h+='<div style="display:flex;align-items:center;gap:14px"><input type="number" class="fm-asking" placeholder="Enter the asking price" style="flex:1;height:56px;padding:0 18px;border:1.5px solid rgba(255,255,255,0.06);border-radius:12px;font-size:1.2rem;font-weight:700;background:rgba(0,0,0,0.25);color:var(--text-primary);font-family:\'Inter\',sans-serif;transition:border-color var(--duration-base),box-shadow var(--duration-base)" onfocus="this.style.borderColor=\'var(--gold)\';this.style.boxShadow=\'0 0 0 3px var(--gold-glow)\'" onblur="this.style.borderColor=\'rgba(255,255,255,0.06)\';this.style.boxShadow=\'none\'"><span style="font-size:1rem;font-weight:700;color:var(--text-accent)">AED</span></div></div>';
+h+='<div style="display:flex;align-items:center;gap:14px"><div style="flex:1;display:flex;flex-direction:column;gap:2px"><input type="number" class="fm-asking" placeholder="Enter the asking price" style="height:56px;padding:0 18px;border:1.5px solid rgba(255,255,255,0.06);border-radius:12px;font-size:1.2rem;font-weight:700;background:rgba(0,0,0,0.25);color:var(--text-primary);font-family:\'Inter\',sans-serif;transition:border-color var(--duration-base),box-shadow var(--duration-base)" onfocus="this.style.borderColor=\'var(--gold)\';this.style.boxShadow=\'0 0 0 3px var(--gold-glow)\'" onblur="this.style.borderColor=\'rgba(255,255,255,0.06)\';this.style.boxShadow=\'none\'"><span class="field-error" style="display:none">Please enter the asking price</span></div><span style="font-size:1rem;font-weight:700;color:var(--text-accent);flex-shrink:0">AED</span></div></div>';
 h+='<hr class="form-divider">';
 }
 
 h+='<div class="form-section"><div class="form-section-title">B. Vehicle Details</div>';
 h+='<div class="form-row">';
-h+='<div class="form-group"><label>Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" placeholder="e.g. Toyota" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
-h+='<div class="form-group"><label>Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
-h+='<div class="form-group"><label>Year</label><input type="number" class="fm-year" placeholder="e.g. 2020" min="1990" max="2026" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"></div>';
+h+='<div class="form-group"><label>Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" placeholder="e.g. Toyota" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
+h+='<div class="form-group"><label>Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
+h+='<div class="form-group"><label>Year</label><input type="number" class="fm-year" placeholder="e.g. 2020" min="1990" max="2027" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error">Please enter a valid year (1990–2027)</span></div>';
 h+='<div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80000"></div>';
 h+='</div></div>';
 
@@ -2698,6 +2716,23 @@ mkEl.onchange=function(){
   smartDefaults(el);
 };
 mdEl.onchange=function(){smartDefaults(el);};
+
+// Clear field errors on user input
+el.querySelectorAll('input').forEach(function(input){
+  input.addEventListener('input', function(){
+    var group=this.closest('.form-group');
+    if(group)group.classList.remove('error');
+    var err=group?group.querySelector('.field-error'):null;
+    if(err)err.style.display='none';
+    // Also clear asking-price inline error styles
+    if(this.classList.contains('fm-asking')){
+      this.style.borderColor='';
+      this.style.boxShadow='';
+      var apWrapper=this.parentElement;
+      if(apWrapper){var apErr=apWrapper.querySelector('.field-error');if(apErr)apErr.style.display='none';}
+    }
+  });
+});
 }
 
 function autocompleteSmart(input){
@@ -2810,8 +2845,45 @@ return b;
 async function doValuation(mode){
 var el=document.getElementById(mode+'-form');
 if(mode==='buy'&&document.getElementById('buy-url-section').style.display==='block'){var urlEl=document.getElementById('fm-url');if(urlEl&&urlEl.value)return doUrlValuation(urlEl.value);}
-var body=readForm(el);if(!body)return showWarning('Please fill in make, model, and year');
-if(mode==='buy'&&!body.asking_price)return showWarning('Please enter the asking price');
+
+// Clear all previous field errors
+el.querySelectorAll('.form-group').forEach(function(g){g.classList.remove('error');});
+el.querySelectorAll('.field-error').forEach(function(e){e.style.display='none';});
+
+var body=readForm(el);
+
+// Validate each field individually — set inline red border + error text
+var errors=[];
+
+if(!body||!body.make){
+  errors.push({field:'make',msg:'Please select a make'});
+  var mkEl=el.querySelector('.fm-make');
+  if(mkEl){var mkGroup=mkEl.closest('.form-group');if(mkGroup)mkGroup.classList.add('error');}
+}
+if(!body||!body.model){
+  errors.push({field:'model',msg:'Please select a model'});
+  var mdEl=el.querySelector('.fm-model');
+  if(mdEl){var mdGroup=mdEl.closest('.form-group');if(mdGroup)mdGroup.classList.add('error');}
+}
+if(!body||!body.year||isNaN(body.year)||body.year<1990||body.year>2027){
+  errors.push({field:'year',msg:'Please enter a valid year (1990-2027)'});
+  var yrEl=el.querySelector('.fm-year');
+  if(yrEl){var yrGroup=yrEl.closest('.form-group');if(yrGroup){yrGroup.classList.add('error');var yrErr=yrGroup.querySelector('.field-error');if(yrErr)yrErr.textContent='Please enter a valid year (1990–2027)';}}
+}
+
+if(mode==='buy'&&(!body||!body.asking_price)){
+  errors.push({field:'asking',msg:'Please enter the asking price'});
+  var apEl=el.querySelector('.fm-asking');
+  if(apEl){
+    apEl.style.borderColor='var(--red)';
+    apEl.style.boxShadow='0 0 0 3px var(--red-bg)';
+    var apWrapper=apEl.parentElement; // the wrapper div
+    if(apWrapper){var apErr=apWrapper.querySelector('.field-error');if(apErr)apErr.style.display='block';}
+  }
+}
+
+if(errors.length>0)return;
+
 var ld=document.getElementById(mode+'-loading');if(ld)ld.classList.remove('hidden');
 var rs=document.getElementById(mode+'-results');if(rs)rs.classList.add('hidden');
 var er=document.getElementById(mode+'-error');if(er)er.classList.add('hidden');
