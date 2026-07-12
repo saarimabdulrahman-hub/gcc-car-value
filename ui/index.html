@@ -2558,11 +2558,11 @@ body.has-sidebar { display: flex; }
   <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:var(--space-3)">Or paste a listing URL from any GCC marketplace</p>
   <button class="btn-secondary" onclick="toggleUrlSection()" style="max-width:320px;margin:0 auto;display:block">&#128279; Paste a listing URL</button>
   <div id="buy-url-section" style="display:none;margin-top:var(--space-4)">
-    <div style="background:linear-gradient(135deg,var(--gold-glow),rgba(200,169,81,0.03));border-radius:14px;padding:var(--space-5) var(--space-6);border:1px dashed var(--border-hover);text-align:center">
-      <div style="font-size:1.4rem;margin-bottom:var(--space-1)">&#128279;</div>
-      <div style="font-weight:700;margin-bottom:4px;font-size:0.95rem;color:var(--text-primary)">Paste the listing URL</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--space-4)">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
-      <input type="url" id="fm-url" placeholder="https://uae.dubizzle.com/motors/used-cars/..." style="width:100%;max-width:560px;height:54px;padding:0 18px;border:1.5px solid var(--border-hover);border-radius:12px;font-size:0.9rem;font-family:'Inter',sans-serif;text-align:center;margin-bottom:var(--space-3);background:var(--bg-input);color:var(--text-primary);transition:border-color var(--duration-base)" onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px var(--gold-glow)'" onblur="this.style.borderColor='var(--border-hover)';this.style.boxShadow='none'">
+    <div class="url-import-card">
+      <div class="url-import-icon">&#128279;</div>
+      <div class="url-import-title">Paste the listing URL</div>
+      <div class="url-import-sub">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
+      <input type="url" id="fm-url" class="url-import-input" placeholder="https://uae.dubizzle.com/motors/used-cars/..." aria-label="Listing URL">
       <button class="btn" onclick="submitUrl()" style="max-width:320px;margin:0 auto">Analyze This URL</button>
     </div>
   </div>
@@ -2882,9 +2882,11 @@ var el=document.getElementById(id);
 var h='';
 
 if(isBuy){
-h+='<div class="form-section" style="background:linear-gradient(135deg,var(--gold-glow),rgba(200,169,81,0.03));border-radius:14px;padding:var(--space-4);margin-bottom:0;border:1px solid var(--gold-glow)">';
+h+='<div class="buy-asking-section">';
 h+='<div class="form-section-title" style="border-bottom:none;margin-bottom:var(--space-3);padding-bottom:0">A. Asking Price</div>';
-h+='<div style="display:flex;align-items:center;gap:14px"><div style="flex:1;display:flex;flex-direction:column;gap:2px"><input type="number" class="fm-asking" placeholder="Enter the asking price" style="height:56px;padding:0 18px;border:1.5px solid rgba(255,255,255,0.06);border-radius:12px;font-size:1.2rem;font-weight:700;background:rgba(0,0,0,0.25);color:var(--text-primary);font-family:\'Inter\',sans-serif;transition:border-color var(--duration-base),box-shadow var(--duration-base)" onfocus="this.style.borderColor=\'var(--gold)\';this.style.boxShadow=\'0 0 0 3px var(--gold-glow)\'" onblur="this.style.borderColor=\'rgba(255,255,255,0.06)\';this.style.boxShadow=\'none\'"><span class="field-error" style="display:none">Please enter the asking price</span></div><span style="font-size:1rem;font-weight:700;color:var(--text-accent);flex-shrink:0">AED</span></div></div>';
+h+='<div class="buy-asking-row"><input type="number" class="fm-asking buy-asking-input" placeholder="Enter the asking price" aria-label="Asking price in AED"><span class="buy-asking-currency">AED</span></div>';
+h+='<span class="field-error buy-asking-error">Please enter the asking price</span>';
+h+='</div>';
 h+='<hr class="form-divider">';
 }
 
@@ -2927,10 +2929,8 @@ el.querySelectorAll('input').forEach(function(input){
     if(err)err.style.display='none';
     // Also clear asking-price inline error styles
     if(this.classList.contains('fm-asking')){
-      this.style.borderColor='';
-      this.style.boxShadow='';
-      var apWrapper=this.parentElement;
-      if(apWrapper){var apErr=apWrapper.querySelector('.field-error');if(apErr)apErr.style.display='none';}
+      var askSection=this.closest('.buy-asking-section');
+      if(askSection){var apErr=askSection.querySelector('.field-error');if(apErr)apErr.style.display='none';}
     }
   });
 });
@@ -3078,8 +3078,8 @@ if(mode==='buy'&&(!body||!body.asking_price)){
   if(apEl){
     apEl.style.borderColor='var(--red)';
     apEl.style.boxShadow='0 0 0 3px var(--red-bg)';
-    var apWrapper=apEl.parentElement; // the wrapper div
-    if(apWrapper){var apErr=apWrapper.querySelector('.field-error');if(apErr)apErr.style.display='block';}
+    var askSection=apEl.closest('.buy-asking-section');
+    if(askSection){var apErr=askSection.querySelector('.field-error');if(apErr)apErr.style.display='block';}
   }
 }
 
