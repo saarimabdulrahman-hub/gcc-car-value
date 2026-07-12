@@ -983,8 +983,8 @@ body.has-sidebar { display: flex; }
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 800px;
-  margin: -28px auto var(--space-5);
+  max-width: 100%;
+  margin: -28px 56px var(--space-5);
   padding: var(--space-3) 0;
   background: var(--bg-stats);
   border: 1px solid rgba(200,169,81,0.10);
@@ -1042,6 +1042,7 @@ body.has-sidebar { display: flex; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  aspect-ratio: 1;
 }
 
 .choice-card:hover {
@@ -1066,11 +1067,11 @@ body.has-sidebar { display: flex; }
   border-radius: var(--radius-full);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  background: linear-gradient(135deg, #D4B85A 0%, var(--gold) 40%, var(--gold-dark) 100%);
   color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 700;
-  box-shadow: 0 0 16px var(--gold-glow);
+  box-shadow: 0 0 24px rgba(200,169,81,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
 .choice-card-text { flex: 1; min-width: 0; }
