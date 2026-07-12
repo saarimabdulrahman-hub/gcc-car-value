@@ -503,11 +503,11 @@ body.has-sidebar { display: flex; }
   background:
     linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 30%),
     var(--bg-card);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3) var(--space-4);
+  border-radius: 14px;
+  padding: var(--space-3);
   margin-bottom: var(--space-3);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-xs), var(--shadow-sm);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   transition: border-color var(--duration-base), box-shadow var(--duration-base);
   position: relative;
 }
@@ -516,7 +516,7 @@ body.has-sidebar { display: flex; }
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--radius-xl);
+  border-radius: 14px;
   padding: 1px;
   background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 50%, var(--gold-glow));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -531,7 +531,7 @@ body.has-sidebar { display: flex; }
   top: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  border-radius: 14px 14px 0 0;
   pointer-events: none;
 }
 
@@ -563,11 +563,11 @@ body.has-sidebar { display: flex; }
 
 /* ── Card Anatomy — Header / Body / Footer ── */
 .card-header {
-  padding: var(--space-2) var(--space-2) var(--space-1);
+  padding: var(--space-3) var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--border-subtle);
 }
-.card-body { padding: var(--space-2); }
-.card-footer { padding: 0 var(--space-2) var(--space-2); }
+.card-body { padding: var(--space-3); }
+.card-footer { padding: 0 var(--space-3) var(--space-3); }
 
 /* ══════════════════════════════════════════════════════════════════
    TYPOGRAPHY
