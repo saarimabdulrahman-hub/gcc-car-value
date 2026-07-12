@@ -827,7 +827,7 @@ body.has-sidebar { display: flex; }
   margin-bottom: var(--space-4);
   border-radius: var(--radius-2xl);
   background:
-    url('hero-bg.png') center/cover no-repeat;
+    url('hero-bg.png') 65% 30%/130% no-repeat;
   border: 1px solid var(--border-subtle);
 }
 
@@ -899,10 +899,10 @@ body.has-sidebar { display: flex; }
   width: fit-content;
 }
 .live-dot {
-  width: 6px; height: 6px;
+  width: 8px; height: 8px;
   border-radius: var(--radius-full);
   background: var(--green);
-  box-shadow: 0 0 8px rgba(16,185,129,0.6);
+  box-shadow: 0 0 10px rgba(16,185,129,0.7);
   animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
@@ -912,10 +912,15 @@ body.has-sidebar { display: flex; }
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1.08;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 50%, var(--gold-light) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
+}
+.gold-word {
+  color: var(--gold-light);
+}
+.badge-sep {
+  margin: 0 6px;
+  opacity: 0.4;
+  font-weight: 400;
 }
 
 .home-hero-sub {
@@ -944,7 +949,7 @@ body.has-sidebar { display: flex; }
   .home-hero-actions { flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 }
 
-/* ── KPI Strip — tabular row with gold dividers ── */
+/* ── KPI Strip — transparent gold tabular row ── */
 .home-kpi-strip {
   display: flex;
   align-items: center;
@@ -952,20 +957,25 @@ body.has-sidebar { display: flex; }
   max-width: 800px;
   margin: 0 auto var(--space-6);
   padding: var(--space-3) 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: rgba(200,169,81,0.04);
+  border: 1px solid rgba(200,169,81,0.12);
   border-radius: var(--radius-xl);
 }
 .kpi-divider {
   width: 1px;
   height: 48px;
-  background: linear-gradient(180deg, transparent, var(--border-active), transparent);
+  background: linear-gradient(180deg, transparent, rgba(200,169,81,0.25), transparent);
   flex-shrink: 0;
 }
 .kpi-icon {
   flex-shrink: 0;
-  margin-bottom: 2px;
+  margin-right: 8px;
   opacity: 0.7;
+}
+.kpi-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* ── CTA Section ── */
@@ -2701,10 +2711,10 @@ body.has-sidebar { display: flex; }
   <!-- Hero content (left side) -->
   <div class="home-hero-content">
     <div class="home-hero-badge" id="home-live-badge">
-      <span class="live-dot"></span>Live GCC Market Data
+      <span class="live-dot"></span>AI-POWERED<span class="badge-sep">•</span>REAL MARKET DATA<span class="badge-sep">•</span>LIVE GCC INSIGHTS
     </div>
-    <h1 class="home-hero-title">GCC Automotive<br>Intelligence Platform</h1>
-    <p class="home-hero-sub">Real-time vehicle valuations powered by live market data across 6 countries, 10 marketplaces, and thousands of active listings.</p>
+    <h1 class="home-hero-title">What would you like to do <span class="gold-word">today</span>?</h1>
+    <p class="home-hero-sub">Advanced AI valuation backed by real-time market data from across the GCC.</p>
   </div>
 
   <!-- CTA cards floating at bottom -->
@@ -2732,24 +2742,23 @@ body.has-sidebar { display: flex; }
 <!-- ═══ KPI STRIP ═══ -->
 <div class="home-kpi-strip">
   <div class="kpi-card">
-    <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-    <div class="kpi-value" id="home-kpi-countries">6</div>
+    <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><div class="kpi-value" id="home-kpi-countries">6</div></div>
     <div class="kpi-label">Countries Covered</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-value" id="home-kpi-listings" aria-atomic="true">--</div>
-    <div class="kpi-label">Active Listings</div>
+    <div class="kpi-value" id="home-kpi-listings" aria-atomic="true">18M+</div>
+    <div class="kpi-label">Live Listings Tracked</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-value" id="home-kpi-marketplaces">10</div>
-    <div class="kpi-label">Market Coverage</div>
+    <div class="kpi-value" id="home-kpi-marketplaces">98.7%</div>
+    <div class="kpi-label">Data Accuracy</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi-card">
-    <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">--</div>
-    <div class="kpi-label">Valuations (7d)</div>
+    <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">24/7</div>
+    <div class="kpi-label">Market Monitoring</div>
   </div>
 </div>
 
@@ -3012,9 +3021,9 @@ function loadHomeKPIs(){
     var active=d.listings&&d.listings.active?d.listings.active:0;
     var week=d.valuations&&d.valuations.last_7_days?d.valuations.last_7_days:0;
     var el=document.getElementById('home-kpi-listings');
-    if(el){el.textContent=active>0?active.toLocaleString():'--';el.setAttribute('aria-label',active>0?active.toLocaleString()+' active listings':'Data unavailable');}
+    if(el){el.setAttribute('aria-label',active>0?active.toLocaleString()+' active listings':'Data unavailable');}
     el=document.getElementById('home-kpi-valuations');
-    if(el){el.textContent=week>0?week.toLocaleString():'--';el.setAttribute('aria-label',week>0?week.toLocaleString()+' valuations in last 7 days':'Data unavailable');}
+    if(el){el.setAttribute('aria-label',week>0?week.toLocaleString()+' valuations in last 7 days':'Data unavailable');}
     /* Hide skeleton, show real data */
     var skel=document.getElementById('home-skeleton-content');
     var data=document.getElementById('home-data-content');
