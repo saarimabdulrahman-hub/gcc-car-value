@@ -2730,7 +2730,7 @@ body.has-sidebar { display: flex; }
 
 <div id="page-sell" class="hidden">
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Sell Your Car</h2><p class="page-sub">Get an accurate market valuation based on live GCC listings across 6 countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
-<div class="card"><h3>Vehicle Details</h3><div id="sell-form"></div><button class="btn" id="sell-btn" onclick="doValuation('sell')">Calculate Market Value</button></div>
+<div class="card"><div class="card-header"><h3>Vehicle Details</h3></div><div class="card-body"><div id="sell-form"></div></div><div class="card-footer"><button class="btn" id="sell-btn" onclick="doValuation('sell')">Calculate Market Value</button></div></div>
 <div id="sell-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Analyzing market data...</div></div></div>
 <div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden" aria-live="polite"></div></div>
 
