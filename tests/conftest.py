@@ -1,8 +1,18 @@
+import os
+# Set JWT_SECRET before any src imports — Settings() validates it on construction
+os.environ.setdefault("JWT_SECRET", "test-jwt-secret-" + "x" * 40)
+
 import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from src.config import Settings
+
+
+@pytest.fixture(autouse=True)
+def setup_test_jwt_secret(monkeypatch):
+    """Ensure every test has a valid JWT secret configured."""
+    monkeypatch.setenv("JWT_SECRET", "test-jwt-secret-" + "x" * 40)
 
 
 @pytest.fixture
@@ -11,6 +21,7 @@ def settings():
         database_url="postgresql+asyncpg://postgres:postgres@localhost:5432/gcc_car_value_test",
         environment="testing",
         s3_bucket="test-bucket",
+        jwt_secret="test-jwt-secret-" + "x" * 40,
     )
 
 

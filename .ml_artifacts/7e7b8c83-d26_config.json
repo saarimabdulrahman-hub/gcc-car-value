@@ -1,0 +1,9 @@
+{
+  "hyperparameters": {},
+  "feature_columns": [
+    "mileage_km",
+    "year",
+    "price"
+  ],
+  "random_seed": 42
+}

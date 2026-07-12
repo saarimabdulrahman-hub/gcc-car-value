@@ -1,0 +1,1 @@
+class MonitoringError(Exception): pass

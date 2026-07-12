@@ -1,11 +1,15 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, Boolean, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, Float, Text, Boolean, DateTime, ForeignKey, func, UniqueConstraint
 from src.db.base import UniversalUUID, UniversalJSONB
 from sqlalchemy.orm import relationship
 from src.db.base import Base, LineageMixin
 
 class Listing(Base, LineageMixin):
     __tablename__ = "listings"
+    __table_args__ = (
+        UniqueConstraint("source", "external_id",
+                         name="uq_listings_source_external_id"),
+    )
 
     id = Column(UniversalUUID, primary_key=True, default=uuid.uuid4)
     canonical_vehicle_id = Column(UniversalUUID, ForeignKey("canonical_vehicles.id"), nullable=True)

@@ -1,0 +1,31 @@
+"""OpenSooq CSS selectors."""
+from browser.selectors.group import create_selector
+
+OPENSOOQ_SELECTORS = [
+    create_selector("opensooq.card", "[class*='listing'], [class*='card'], article",
+                    fallbacks=["[class*='item']", "li"], marketplace="opensooq", group="listing"),
+    create_selector("opensooq.card.title", "[class*='title'], h2, h3",
+                    marketplace="opensooq", group="title"),
+    create_selector("opensooq.card.price", "[class*='price'], [class*='amount']",
+                    marketplace="opensooq", group="price", selector_type="currency"),
+    create_selector("opensooq.card.year", "[class*='year']",
+                    marketplace="opensooq", group="year", selector_type="year"),
+    create_selector("opensooq.card.mileage", "[class*='mileage'], [class*='km']",
+                    marketplace="opensooq", group="mileage", selector_type="integer"),
+    create_selector("opensooq.card.location", "[class*='location'], [class*='city']",
+                    marketplace="opensooq", group="location"),
+    create_selector("opensooq.detail.title", "h1, [class*='title']",
+                    marketplace="opensooq", group="title"),
+    create_selector("opensooq.detail.price", "[class*='price'], [class*='amount']",
+                    marketplace="opensooq", group="price", selector_type="currency"),
+    create_selector("opensooq.detail.spec", "[class*='spec']",
+                    marketplace="opensooq", group="spec"),
+    create_selector("opensooq.detail.transmission", "[class*='transmission']",
+                    marketplace="opensooq", group="transmission"),
+    create_selector("opensooq.detail.fuel", "[class*='fuel']",
+                    marketplace="opensooq", group="fuel"),
+    create_selector("opensooq.detail.seller", "[class*='seller'], [class*='dealer']",
+                    marketplace="opensooq", group="seller"),
+    create_selector("opensooq.detail.images", "[class*='gallery'] img, img[src*='opensooq']",
+                    marketplace="opensooq", group="images"),
+]

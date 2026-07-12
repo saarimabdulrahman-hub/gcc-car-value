@@ -143,16 +143,17 @@ async def train_and_register(
     feature_names = list(FeatureRegistry.all().keys())
     model, metrics, mae = train_model(df, feature_names)
 
-    import pickle, tempfile, os
-    with tempfile.NamedTemporaryFile(suffix=".pkl", delete=False) as f:
-        pickle.dump(model, f)
-        model_path = f.name
+    # Persist model to stable directory (not tempfile).
+    # Models are saved under src/ml/models/{model_name}.pkl
+    from src.ml.model_persistence import save_model
+    model_name = f"lightgbm_v{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M')}"
+    model_path = save_model(model, model_name)
 
     registry = ModelRegistry(
         trained_at=datetime.now(timezone.utc),
         model_type="lightgbm",
         model_path=model_path,
-        model_name=f"lightgbm_v{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M')}",
+        model_name=model_name,
         mae=metrics["mae"],
         mape=metrics["mape"],
         r2_score=metrics["r2"],

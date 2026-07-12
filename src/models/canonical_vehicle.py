@@ -1,10 +1,14 @@
 import uuid
-from sqlalchemy import Column, Integer, Text, DateTime, func
+from sqlalchemy import Column, Integer, Text, DateTime, func, UniqueConstraint
 from src.db.base import UniversalUUID
 from src.db.base import Base
 
 class CanonicalVehicle(Base):
     __tablename__ = "canonical_vehicles"
+    __table_args__ = (
+        UniqueConstraint("make", "model", "year", "generation",
+                         name="uq_canonical_vehicles_make_model_year_gen"),
+    )
 
     id = Column(UniversalUUID, primary_key=True, default=uuid.uuid4)
     make = Column(Text, nullable=False)

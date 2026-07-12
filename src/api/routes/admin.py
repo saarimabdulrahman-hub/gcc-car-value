@@ -1,8 +1,13 @@
-"""Admin endpoints — monitoring, health, pipeline stats."""
-from fastapi import APIRouter, Depends, HTTPException, Request
+"""Admin endpoints — monitoring, health, pipeline stats.
+
+All endpoints require authentication + admin-level permissions.
+"""
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from src.api.dependencies import get_db
+from src.auth.dependencies import require_permission
+from src.auth.roles import Permission
 from src.models.pipeline_run import PipelineRun
 from src.models.listing import Listing
 from src.models.valuation_query import ValuationQuery
@@ -16,7 +21,10 @@ logger = structlog.get_logger()
 
 
 @router.get("/admin/stats")
-async def platform_stats(db: AsyncSession = Depends(get_db)):
+async def platform_stats(
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),
+):
     """Overall platform statistics."""
     now = datetime.now(timezone.utc)
     week_ago = now - timedelta(days=7)
@@ -60,7 +68,10 @@ async def platform_stats(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/admin/scrapers")
-async def scraper_status(db: AsyncSession = Depends(get_db)):
+async def scraper_status(
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(require_permission(Permission.ADMIN_SCRAPERS)),
+):
     """Health status of all scrapers."""
     subquery = (select(
         ScraperHealth.source,
@@ -87,7 +98,10 @@ async def scraper_status(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/admin/quality")
-async def quality_metrics(db: AsyncSession = Depends(get_db)):
+async def quality_metrics(
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(require_permission(Permission.ADMIN_QUALITY)),
+):
     """Data quality metrics — quality score distribution, rejection rates."""
     total = (await db.execute(select(func.count()).select_from(Listing))).scalar()
     if not total:

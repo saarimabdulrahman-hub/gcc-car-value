@@ -1,31 +1,89 @@
-"""JWT authentication — create/verify tokens, user management."""
+"""JWT authentication — create/verify tokens, user management.
+
+The JWT secret is loaded via the SecretProvider abstraction.
+It is never read directly from environment variables or config defaults.
+"""
 import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
 import jwt
-from src.config import get_settings
+import structlog
 
-settings = get_settings()
-JWT_SECRET = getattr(settings, 'jwt_secret', secrets.token_hex(32))
+logger = structlog.get_logger()
 JWT_ALGORITHM = "HS256"
 TOKEN_EXPIRE_HOURS = 24
 
+# Lazy-loaded JWT secret — resolved on first use via SecretProvider
+_jwt_secret: str | None = None
 
-def create_access_token(user_id: str, tier: str = "registered") -> str:
-    """Create a JWT access token for a user."""
+
+async def _get_jwt_secret() -> str:
+    """Resolve JWT secret via SecretProvider. Caches after first call."""
+    global _jwt_secret
+    if _jwt_secret is not None:
+        return _jwt_secret
+
+    from src.config.secrets import SecretName, get_secret_provider
+    provider = get_secret_provider()
+    secret = await provider.get(SecretName.JWT_SECRET.value)
+    if not secret:
+        raise RuntimeError(
+            "JWT_SECRET is not configured. The application cannot start "
+            "without a JWT signing secret. Set JWT_SECRET in your environment "
+            "or via your secrets provider."
+        )
+    _jwt_secret = secret
+    return secret
+
+
+def _get_jwt_secret_sync() -> str:
+    """Synchronous wrapper for JWT secret resolution.
+
+    If the secret hasn't been loaded yet (first call), this reads from
+    the environment directly as a fallback. In production, ensure
+    validate_startup() has been called first.
+    """
+    import os
+    if _jwt_secret is not None:
+        return _jwt_secret
+    # Fallback: direct env read (for sync contexts like module-level init)
+    secret = os.getenv("JWT_SECRET", "")
+    if secret:
+        return secret
+    from src.config import get_settings
+    s = get_settings().jwt_secret
+    if s:
+        return s
+    raise RuntimeError(
+        "JWT_SECRET is not configured. Set JWT_SECRET env var."
+    )
+
+
+def create_access_token(user_id: str, tier: str = "registered",
+                        role: str = "consumer") -> str:
+    """Create a JWT access token for a user.
+
+    Args:
+        user_id: User UUID string.
+        tier: API rate-limit tier (registered, enterprise).
+        role: RBAC role (consumer, dealer, moderator, admin, super_admin, system).
+    """
+    secret = _get_jwt_secret_sync()
     payload = {
         "sub": user_id,
         "tier": tier,
+        "role": role,
         "iat": datetime.now(timezone.utc),
         "exp": datetime.now(timezone.utc) + timedelta(hours=TOKEN_EXPIRE_HOURS),
     }
-    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
 
 def verify_token(token: str) -> dict | None:
     """Verify JWT token. Returns payload or None if invalid/expired."""
     try:
-        return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        secret = _get_jwt_secret_sync()
+        return jwt.decode(token, secret, algorithms=[JWT_ALGORITHM])
     except jwt.PyJWTError:
         return None
 

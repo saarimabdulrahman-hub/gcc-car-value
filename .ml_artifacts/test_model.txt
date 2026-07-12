@@ -1,0 +1,2 @@
+Model: test_model
+Type: AvgModel

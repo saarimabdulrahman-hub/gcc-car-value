@@ -1,0 +1,42 @@
+# =============================================================================
+# GCC Car Value Platform — Example Terraform Variables
+# =============================================================================
+# Copy this file to terraform.tfvars and customize for each environment.
+
+# --- AWS ---
+aws_region = "me-central-1"
+
+# --- VPC ---
+vpc_cidr            = "10.0.0.0/16"
+availability_zones  = ["me-central-1a", "me-central-1b"]
+
+# --- RDS ---
+db_instance_class       = "db.t3.medium"
+db_allocated_storage    = 50
+db_name                 = "gcc_car_value"
+db_username             = "postgres"
+db_password             = null  # Set via TF_VAR_db_password env var or AWS Secrets Manager
+db_multi_az             = false
+db_backup_retention_days = 7
+
+# --- ECS ---
+ecs_api_cpu            = 512   # 0.5 vCPU
+ecs_api_memory         = 1024  # 1 GB
+ecs_api_desired_count  = 1
+ecs_api_max_count      = 4
+ecs_scraper_cpu        = 1024  # 1 vCPU
+ecs_scraper_memory     = 2048  # 2 GB
+
+# --- Containers ---
+api_container_image     = "000000000000.dkr.ecr.me-central-1.amazonaws.com/gcc-car-value-api:latest"
+scraper_container_image = "000000000000.dkr.ecr.me-central-1.amazonaws.com/gcc-car-value-scraper:latest"
+
+# --- Domain (optional, set for production) ---
+domain_name    = null
+certificate_arn = null
+
+# --- Additional Tags ---
+tags = {
+  Owner       = "platform-team"
+  CostCenter  = "engineering"
+}

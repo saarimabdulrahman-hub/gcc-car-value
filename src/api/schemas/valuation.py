@@ -54,3 +54,7 @@ class ValuationResponse(BaseModel):
     knowledge: Knowledge | None = None
     deal_indicator: str | None = None  # great_deal, fair_deal, above_market, or None
     deal_description: str | None = None
+    # ML integration fields
+    prediction_source: str = "statistical"  # "statistical" | "ml" | "ensemble"
+    model_version: str | None = None        # e.g. "lightgbm_v20260712_1400"
+    fallback_used: bool = False             # True if ML was tried but fell back
