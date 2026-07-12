@@ -525,23 +525,31 @@ body.has-sidebar { display: flex; }
   font-size: var(--text-base-sm);
   font-weight: 600;
   color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+/* Direct h3 in cards (not wrapped in .card-header) keeps the traditional look */
+.card > h3 {
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--border-subtle);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+}
+/* But h3 inside .card-header drops the bottom border */
+.card-header h3 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: var(--space-2);
 }
 
 /* ── Card Anatomy — Header / Body / Footer ── */
 .card-header {
-  padding: var(--space-3) var(--space-3) 0;
-}
-.card-body {
   padding: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
 }
-.card-footer {
-  padding: 0 var(--space-3) var(--space-3);
-}
+.card-body { padding: var(--space-3); }
+.card-footer { padding: 0 var(--space-3) var(--space-3); }
 
 /* ══════════════════════════════════════════════════════════════════
    TYPOGRAPHY
@@ -2828,25 +2836,25 @@ body.has-sidebar { display: flex; }
 
 <!-- ═══ MAKES GRID ═══ -->
 <div class="card" id="browse-makes-card">
-  <div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div>
+  <div class="card-body"><div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div></div>
 </div>
 
 <!-- ═══ MODELS LIST ═══ -->
 <div class="card" id="browse-models-card" style="display:none">
-  <div class="browse-level-header">
+  <div class="card-header browse-level-header">
     <button onclick="backToMakes()" class="back-btn">← All Manufacturers</button>
     <span class="browse-breadcrumb" id="browse-make-title"></span>
   </div>
-  <div id="browse-models-list"></div>
+  <div class="card-body"><div id="browse-models-list"></div></div>
 </div>
 
 <!-- ═══ YEARS LIST ═══ -->
 <div class="card" id="browse-years-card" style="display:none">
-  <div class="browse-level-header">
+  <div class="card-header browse-level-header">
     <button onclick="backToModels()" class="back-btn">← All Models</button>
     <span class="browse-breadcrumb" id="browse-model-title"></span>
   </div>
-  <div id="browse-years-list"></div>
+  <div class="card-body"><div id="browse-years-list"></div></div>
 </div>
 </div>
 
@@ -2868,17 +2876,17 @@ body.has-sidebar { display: flex; }
 <div class="market-layout">
 
   <!-- LEFT: Brand Rankings -->
-  <div class="card"><h3>Brand Rankings</h3><div id="mkt-brand-rankings">
+  <div class="card"><div class="card-header"><h3>Brand Rankings</h3></div><div class="card-body"><div id="mkt-brand-rankings">
     <div class="market-skeleton-kpi" style="margin-bottom:8px"><div class="skeleton skeleton-text" style="width:80%"></div><div class="skeleton skeleton-text" style="width:60%"></div></div>
-  </div></div>
+  </div></div></div>
 
   <!-- RIGHT: Country Coverage -->
-  <div class="card"><h3>Country Coverage</h3><div id="mkt-country-list">
+  <div class="card"><div class="card-header"><h3>Country Coverage</h3></div><div class="card-body"><div id="mkt-country-list">
     <div class="market-skeleton-kpi" style="margin-bottom:8px"><div class="skeleton skeleton-text" style="width:80%"></div><div class="skeleton skeleton-text" style="width:60%"></div></div>
-  </div></div>
+  </div></div></div>
 
   <!-- FULL WIDTH: Market Health + AI Insights -->
-  <div class="card market-full"><h3>Market Health</h3>
+  <div class="card market-full"><div class="card-header"><h3>Market Health</h3></div><div class="card-body">
     <div class="market-layout" style="margin-bottom:0">
       <div id="mkt-health-panel">
         <div class="market-skeleton-kpi"><div class="skeleton skeleton-text" style="width:80%"></div><div class="skeleton skeleton-text" style="width:50%"></div></div>
@@ -2887,7 +2895,7 @@ body.has-sidebar { display: flex; }
         <div class="market-skeleton-kpi"><div class="skeleton skeleton-text" style="width:80%"></div><div class="skeleton skeleton-text" style="width:50%"></div></div>
       </div>
     </div>
-  </div>
+  </div></div>
 
 </div>
 
