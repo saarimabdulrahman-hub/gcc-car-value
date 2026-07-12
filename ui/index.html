@@ -1934,6 +1934,76 @@ body.has-sidebar { display: flex; }
   padding: var(--space-4) 0;
 }
 
+/* ── Results: Better Deals ── */
+.result-alt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.result-alt-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.result-alt-meta {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.result-alt-save {
+  background: var(--green-bg);
+  color: var(--green);
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.result-alt-source {
+  font-size: 0.7rem;
+  color: var(--text-accent);
+  margin-top: 4px;
+}
+
+/* ── Results: Adjustment Row ── */
+.result-adj-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.result-adj-reason {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+.result-adj-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.result-adj-amount {
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+}
+
+/* ── Results: Better Deals Card ── */
+.result-better-deals {
+  border-left: 3px solid var(--green);
+}
+
+/* ── Results: Verdict Detail ── */
+.result-verdict-detail {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
 /* ══════════════════════════════════════════════════════════════════
    DEAL VERDICT
    ══════════════════════════════════════════════════════════════════ */
@@ -2935,9 +3005,9 @@ if(mode==='buy'&&ap){
   var diff=ap-d.estimate;var dpct=((diff/d.estimate)*100).toFixed(1);var isOver=diff>0;
   var vcls=isOver?'bad':'good';var vlabel=isOver?'ABOVE MARKET':'GOOD VALUE';
   var vpct=(isOver?'+':'-')+Math.abs(dpct)+'%';
-  h+='<div class="deal-verdict '+vcls+'"><div class="verdict-label">'+vlabel+'</div><div class="verdict-pct">'+vpct+'</div><div style="color:var(--text-muted);font-size:0.85rem;margin-top:4px">Asking: AED '+ap.toLocaleString()+' vs Market: AED '+d.estimate.toLocaleString()+'</div></div>';
+  h+='<div class="deal-verdict '+vcls+'"><div class="verdict-label">'+vlabel+'</div><div class="verdict-pct">'+vpct+'</div><div class="result-verdict-detail">Asking: AED '+ap.toLocaleString()+' vs Market: AED '+d.estimate.toLocaleString()+'</div></div>';
   var alts=(d.comps||[]).filter(function(x){return x.price_aed<ap;}).sort(function(a,b){return a.price_aed-b.price_aed;}).slice(0,3);
-  if(alts.length){h+='<div class="card" style="border-left:3px solid var(--green)"><h3>Better Deals Available</h3>'+alts.map(function(x){var save=ap-x.price_aed;return'<div class="alt-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:1.1rem;font-weight:700;font-family:\'JetBrains Mono\',monospace">AED '+x.price_aed.toLocaleString()+'</div><div style="font-size:0.76rem;color:var(--text-muted);margin-top:2px">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div style="background:var(--green-bg);color:var(--green);padding:5px 12px;border-radius:10px;font-size:0.68rem;font-weight:700;white-space:nowrap">SAVE AED '+save.toLocaleString()+'</div></div><div style="font-size:0.7rem;color:var(--text-accent);margin-top:4px">'+x.found_on+'</div></div>';}).join('')+'</div>';}
+  if(alts.length){h+='<div class="card result-better-deals"><h3>Better Deals Available</h3>'+alts.map(function(x){var save=ap-x.price_aed;return'<div class="alt-card"><div class="result-alt-header"><div><div class="result-alt-price">AED '+x.price_aed.toLocaleString()+'</div><div class="result-alt-meta">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div class="result-alt-save">SAVE AED '+save.toLocaleString()+'</div></div><div class="result-alt-source">'+x.found_on+'</div></div>';}).join('')+'</div>';}
 }
 
 /* ═══ COMPARABLE LISTINGS ═══ */
@@ -2950,7 +3020,7 @@ if (d.comps && d.comps.length) {
 /* ═══ AI EXPLANATION ═══ */
 if(d.adjustments&&d.adjustments.length){
   h+='<div class="card"><h3>How We Calculated This</h3><div style="display:flex;flex-direction:column;gap:10px">';
-  d.adjustments.forEach(function(a){h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle)"><div><div style="font-weight:600;font-size:0.85rem">'+esc(a.reason)+'</div><div style="font-size:0.75rem;color:var(--text-muted)">'+esc(a.detail)+'</div></div><div style="font-weight:700;font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;color:'+(a.amount>=0?'var(--green)':'var(--red)')+'">'+(a.amount>=0?'+':'')+'AED '+Math.abs(a.amount).toLocaleString()+'</div></div>';});
+  d.adjustments.forEach(function(a){h+='<div class="result-adj-row"><div><div class="result-adj-reason">'+esc(a.reason)+'</div><div class="result-adj-detail">'+esc(a.detail)+'</div></div><div class="result-adj-amount" style="color:'+(a.amount>=0?'var(--green)':'var(--red)')+'">'+(a.amount>=0?'+':'')+'AED '+Math.abs(a.amount).toLocaleString()+'</div></div>';});
   h+='</div></div>';
 } else {
   h+='<div class="card"><h3>How We Calculated This</h3><p style="font-size:var(--text-caption);color:var(--text-muted);text-align:center;padding:var(--space-3) 0">This valuation is based directly on comparable listings with no adjustments needed.</p></div>';
