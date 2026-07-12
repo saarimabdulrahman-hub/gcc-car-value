@@ -2918,7 +2918,7 @@ var h='';
 
 /* ═══ VALUATION HERO ═══ */
 h+='<div class="result-hero">';
-h+='<div class="result-amount" aria-label="Estimated value: '+d.estimate.toLocaleString()+' AED">AED '+d.estimate.toLocaleString()+'</div>';
+h+='<div class="result-amount"><span id="result-amount-value">AED 0</span></div>';
 h+='<div class="result-range">Market Range: AED '+d.price_low.toLocaleString()+' &ndash; AED '+d.price_high.toLocaleString()+'</div>';
 h+='<div class="result-confidence">';
 h+='<svg class="conf-ring" viewBox="0 0 64 64" role="img" aria-label="Confidence: '+d.confidence+', '+confPct+' percent"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--border-default)" stroke-width="4"/><circle cx="32" cy="32" r="28" fill="none" stroke="'+confColor+'" stroke-width="4" stroke-dasharray="'+Math.round(confPct/100*175.93)+' 175.93" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 32 32)" style="transition:stroke-dasharray 1s ease"/></svg>';
@@ -2941,19 +2941,44 @@ if(mode==='buy'&&ap){
 }
 
 /* ═══ COMPARABLE LISTINGS ═══ */
-h+='<div class="card"><h3>Comparable Listings</h3>'+(d.comps||[]).slice(0,8).map(function(x){return'<div class="comp-item"><div><div class="price">AED '+x.price_aed.toLocaleString()+'</div><div class="meta">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
+if (d.comps && d.comps.length) {
+  h+='<div class="card"><h3>Comparable Listings</h3>'+(d.comps||[]).slice(0,8).map(function(x){return'<div class="comp-item"><div><div class="price">AED '+x.price_aed.toLocaleString()+'</div><div class="meta">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
+} else {
+  h+='<div class="card"><h3>Comparable Listings</h3><div class="empty-state"><div class="empty-state-icon">📋</div><h3>No comparable listings found</h3><p>Try broadening your search criteria or checking a more common make/model combination.</p></div></div>';
+}
 
 /* ═══ AI EXPLANATION ═══ */
 if(d.adjustments&&d.adjustments.length){
   h+='<div class="card"><h3>How We Calculated This</h3><div style="display:flex;flex-direction:column;gap:10px">';
   d.adjustments.forEach(function(a){h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle)"><div><div style="font-weight:600;font-size:0.85rem">'+esc(a.reason)+'</div><div style="font-size:0.75rem;color:var(--text-muted)">'+esc(a.detail)+'</div></div><div style="font-weight:700;font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;color:'+(a.amount>=0?'var(--green)':'var(--red)')+'">'+(a.amount>=0?'+':'')+'AED '+Math.abs(a.amount).toLocaleString()+'</div></div>';});
   h+='</div></div>';
+} else {
+  h+='<div class="card"><h3>How We Calculated This</h3><p style="font-size:var(--text-caption);color:var(--text-muted);text-align:center;padding:var(--space-3) 0">This valuation is based directly on comparable listings with no adjustments needed.</p></div>';
 }
 
 /* ═══ ACTIONS ═══ */
 h+='<div class="result-actions"><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Watchlist</button></div>';
 
 c.innerHTML=h;
+
+/* Count-up animation for result amount */
+var amountEl = document.getElementById('result-amount-value');
+if (amountEl) {
+  var target = d.estimate;
+  var duration = 600;
+  var startTime = performance.now();
+  function animate(now) {
+    var elapsed = now - startTime;
+    var progress = Math.min(elapsed / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    var current = Math.round(eased * target);
+    amountEl.textContent = 'AED ' + current.toLocaleString();
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  }
+  requestAnimationFrame(animate);
+}
 }
 
 /* ════════════════════════════════════════════════════════════════
