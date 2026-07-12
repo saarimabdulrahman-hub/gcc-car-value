@@ -2924,8 +2924,8 @@ h+='<hr class="form-divider">';
 
 h+='<div class="form-section"><div class="form-section-title">B. Vehicle Details</div>';
 h+='<div class="form-row">';
-h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
 h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error">Please enter a valid year (1990–2027)</span></div>';
 h+='<div class="form-group"><label for="'+prefix+'-mileage">Mileage (km)</label><input type="number" class="fm-mileage" id="'+prefix+'-mileage" placeholder="e.g. 80000"></div>';
 h+='</div></div>';
@@ -2934,8 +2934,8 @@ h+='<hr class="form-divider">';
 h+='<div class="form-section"><div class="form-section-title">C. Market Details</div>';
 h+='<div class="form-row three-col">';
 h+='<div class="form-group"><label for="'+prefix+'-spec">Spec</label><input type="text" class="fm-spec" id="'+prefix+'-spec" value="GCC" readonly style="background:rgba(0,0,0,0.15);color:var(--text-muted);cursor:not-allowed"></div>';
-h+='<div class="form-group"><label for="'+prefix+'-city">City</label><div class="autocomplete-wrap"><input type="text" class="fm-city" id="'+prefix+'-city" placeholder="e.g. Dubai" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
-h+='<div class="form-group"><label for="'+prefix+'-country">Country</label><div class="autocomplete-wrap"><input type="text" class="fm-country" id="'+prefix+'-country" placeholder="e.g. UAE" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
+h+='<div class="form-group"><label for="'+prefix+'-city">City</label><div class="autocomplete-wrap"><input type="text" class="fm-city" id="'+prefix+'-city" placeholder="e.g. Dubai" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
+h+='<div class="form-group"><label for="'+prefix+'-country">Country</label><div class="autocomplete-wrap"><input type="text" class="fm-country" id="'+prefix+'-country" placeholder="e.g. UAE" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
 h+='</div></div>';
 
 h+='<div class="smart-hints chip-row" style="display:none;margin-top:var(--space-2)"></div>';
@@ -2968,6 +2968,45 @@ el.querySelectorAll('input').forEach(function(input){
 });
 }
 
+// Keyboard navigation for autocomplete comboboxes
+el.addEventListener('keydown', function(e){
+  var input = e.target;
+  if (!input.matches('.fm-make, .fm-model, .fm-city, .fm-country')) return;
+  var wrap = input.closest('.autocomplete-wrap');
+  if (!wrap) return;
+  var sug = wrap.querySelector('.autocomplete-suggestions');
+  if (!sug || !sug.classList.contains('show')) return;
+  var items = sug.querySelectorAll('[role="option"]');
+  if (!items.length) return;
+  var activeIdx = -1;
+  items.forEach(function(item, i){ if (item.getAttribute('aria-selected') === 'true') activeIdx = i; });
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    var next = (activeIdx + 1) % items.length;
+    items.forEach(function(item, i){
+      item.setAttribute('aria-selected', i === next ? 'true' : 'false');
+      item.style.background = i === next ? 'var(--gold-glow)' : '';
+      if (i === next) input.setAttribute('aria-activedescendant', item.id);
+    });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    var prev = activeIdx <= 0 ? items.length - 1 : activeIdx - 1;
+    items.forEach(function(item, i){
+      item.setAttribute('aria-selected', i === prev ? 'true' : 'false');
+      item.style.background = i === prev ? 'var(--gold-glow)' : '';
+      if (i === prev) input.setAttribute('aria-activedescendant', item.id);
+    });
+  } else if (e.key === 'Enter' && activeIdx >= 0) {
+    e.preventDefault();
+    items[activeIdx].click();
+  } else if (e.key === 'Escape') {
+    sug.classList.remove('show');
+    input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
+  }
+});
+}
+
 function autocompleteSmart(input){
 clearTimeout(DEBOUNCE_TIMER);
 var self=input;
@@ -2979,14 +3018,16 @@ var wrap=input.closest('.autocomplete-wrap');if(!wrap)return;
 var sug=wrap.querySelector('.autocomplete-suggestions');
 var formEl=input.closest('[id$="-form"]');
 var val=input.value.toLowerCase().trim();sug.innerHTML='';
-if(!val){sug.classList.remove('show');return;}
+if(!val){sug.classList.remove('show');input.setAttribute('aria-expanded','false');return;}
 
 if(input.classList.contains('fm-make')){
   var matches=ALL_MAKES.filter(function(m){return m.make.toLowerCase().indexOf(val)>=0;}).slice(0,8);
-  matches.forEach(function(m){
+  sug.setAttribute('role','listbox');
+  matches.forEach(function(m,i){
     var d=document.createElement('div');d.className='autocomplete-item';
+    d.setAttribute('role','option');d.setAttribute('aria-selected','false');d.id='ac-option-'+i;
     d.innerHTML='<span>'+m.make+'</span><span class="count">'+m.listing_count+' listings</span>';
-    d.onclick=function(){input.value=m.make;sug.classList.remove('show');
+    d.onclick=function(){input.value=m.make;sug.classList.remove('show');input.setAttribute('aria-expanded','false');
       if(formEl){var mdl=formEl.querySelector('.fm-model');if(mdl){mdl.disabled=false;mdl.value='';mdl.placeholder='Type model for '+m.make+'...';mdl.focus();}}
       smartDefaults(formEl);
     };
@@ -2995,13 +3036,13 @@ if(input.classList.contains('fm-make')){
   if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No makes found</div>';}
 }else if(input.classList.contains('fm-model')){
   var mk=formEl?formEl.querySelector('.fm-make').value:'';
-  if(!mk){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">Select a make first</div>';sug.classList.add('show');return;}
+  if(!mk){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">Select a make first</div>';sug.classList.add('show');input.setAttribute('aria-expanded','true');return;}
   var ck=mk;
   if(MODEL_CACHE[ck]){
     showModelResults(sug,MODEL_CACHE[ck],val,input,formEl);
   }else{
     sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)"><div class="spinner" style="width:14px;height:14px;border-width:2px;margin-right:8px"></div>Loading models...</div>';
-    sug.classList.add('show');
+    sug.classList.add('show');input.setAttribute('aria-expanded','true');
     fetch(API+'/models/'+encodeURIComponent(mk)).then(function(r){return r.json()}).then(function(d){
       MODEL_CACHE[ck]=d.models||[];
       showModelResults(sug,MODEL_CACHE[ck],val,input,formEl);
@@ -3013,20 +3054,24 @@ if(input.classList.contains('fm-make')){
   var matches=CITY_DATA.filter(function(c){return c.city.toLowerCase().indexOf(val)>=0;});
   if(countryVal){matches=matches.filter(function(c){return c.country.toLowerCase().indexOf(countryVal)>=0;});}
   matches.sort(function(a,b){var aMatch=a.country.toLowerCase().indexOf(countryVal)>=0?0:1;var bMatch=b.country.toLowerCase().indexOf(countryVal)>=0?0:1;return aMatch-bMatch;});
-  matches.slice(0,8).forEach(function(c){
+  sug.setAttribute('role','listbox');
+  matches.slice(0,8).forEach(function(c,i){
     var d=document.createElement('div');d.className='autocomplete-item';
+    d.setAttribute('role','option');d.setAttribute('aria-selected','false');d.id='ac-option-'+i;
     d.innerHTML='<span>'+c.city+'</span><span class="count">'+c.country+'</span>';
-    d.onclick=function(){input.value=c.city;sug.classList.remove('show');};
+    d.onclick=function(){input.value=c.city;sug.classList.remove('show');input.setAttribute('aria-expanded','false');};
     sug.appendChild(d);
   });
   if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No cities found</div>';}
 }else if(input.classList.contains('fm-country')){
   var matches=COUNTRY_LIST.filter(function(c){return c.toLowerCase().indexOf(val)>=0;});
-  matches.forEach(function(c){
+  sug.setAttribute('role','listbox');
+  matches.forEach(function(c,i){
     var cityCount=CITY_DATA.filter(function(x){return x.country===c;}).length;
     var d=document.createElement('div');d.className='autocomplete-item';
+    d.setAttribute('role','option');d.setAttribute('aria-selected','false');d.id='ac-option-'+i;
     d.innerHTML='<span>'+c+'</span><span class="count">'+cityCount+' cities</span>';
-    d.onclick=function(){input.value=c;sug.classList.remove('show');
+    d.onclick=function(){input.value=c;sug.classList.remove('show');input.setAttribute('aria-expanded','false');
       if(formEl){var cityEl=formEl.querySelector('.fm-city');if(cityEl&&!cityEl.value)cityEl.placeholder='e.g. '+CITY_DATA.filter(function(x){return x.country===c;}).slice(0,3).map(function(x){return x.city;}).join(', ');}
     };
     sug.appendChild(d);
@@ -3034,30 +3079,33 @@ if(input.classList.contains('fm-make')){
   if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No countries found</div>';}
 }else if(input.classList.contains('fm-spec')){
   var matches=SPEC_LIST.filter(function(s){return s.toLowerCase().indexOf(val)>=0;});
-  matches.forEach(function(s){
+  sug.setAttribute('role','listbox');
+  matches.forEach(function(s,i){
     var d=document.createElement('div');d.className='autocomplete-item';
+    d.setAttribute('role','option');d.setAttribute('aria-selected','false');d.id='ac-option-'+i;
     d.innerHTML='<span>'+s+'</span>';
-    d.onclick=function(){input.value=s;sug.classList.remove('show');};
+    d.onclick=function(){input.value=s;sug.classList.remove('show');input.setAttribute('aria-expanded','false');};
     sug.appendChild(d);
   });
   if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No specs found</div>';}
 }
-if(sug.children.length)sug.classList.add('show');
+if(sug.children.length)sug.classList.add('show');input.setAttribute('aria-expanded','true');
 else sug.classList.remove('show');
 
 setTimeout(function(){
-  document.addEventListener('click',function close(e){if(!wrap.contains(e.target)){sug.classList.remove('show');document.removeEventListener('click',close);}});
+  document.addEventListener('click',function close(e){if(!wrap.contains(e.target)){sug.classList.remove('show');input.setAttribute('aria-expanded','false');document.removeEventListener('click',close);}});
 },100);
 }
 
 function showModelResults(sug,models,val,input,formEl){
-sug.innerHTML='';
+sug.innerHTML='';sug.setAttribute('role','listbox');
 var matches=models.filter(function(m){return m.model.toLowerCase().indexOf(val)>=0;}).slice(0,8);
 if(!matches.length){sug.innerHTML='<div class="autocomplete-item" style="color:var(--text-muted)">No models found for "'+val+'"</div>';}
-matches.forEach(function(m){
+matches.forEach(function(m,i){
   var d=document.createElement('div');d.className='autocomplete-item';
+  d.setAttribute('role','option');d.setAttribute('aria-selected','false');d.id='ac-option-'+i;
   d.innerHTML='<span>'+m.model+'</span><span class="count">'+m.year_range+' &middot; '+m.listing_count+'</span>';
-  d.onclick=function(){input.value=m.model;sug.classList.remove('show');smartDefaults(formEl);};
+  d.onclick=function(){input.value=m.model;sug.classList.remove('show');input.setAttribute('aria-expanded','false');smartDefaults(formEl);};
   sug.appendChild(d);
 });
 }
