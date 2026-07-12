@@ -1011,6 +1011,92 @@ body.has-sidebar { display: flex; }
   .buy-rail { position: static; }
 }
 
+/* ── Buy Form: Asking Price Hero ── */
+.buy-asking-section {
+  background: linear-gradient(135deg, var(--gold-glow), rgba(200,169,81,0.03));
+  border-radius: 14px;
+  padding: var(--space-4);
+  margin-bottom: 0;
+  border: 1px solid var(--gold-glow);
+}
+.buy-asking-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.buy-asking-input {
+  flex: 1;
+  height: 56px;
+  padding: 0 18px;
+  border: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-lg);
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: rgba(0,0,0,0.25);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  transition: border-color var(--duration-base), box-shadow var(--duration-base);
+}
+.buy-asking-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+.buy-asking-currency {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-accent);
+}
+.buy-asking-error {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ── Buy Form: URL Import ── */
+.url-import-card {
+  background: linear-gradient(135deg, var(--gold-glow), rgba(200,169,81,0.03));
+  border-radius: 14px;
+  padding: var(--space-5) var(--space-6);
+  border: 1px dashed var(--border-hover);
+  text-align: center;
+}
+.url-import-icon {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-1);
+}
+.url-import-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+.url-import-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+.url-import-input {
+  width: 100%;
+  max-width: 560px;
+  height: 54px;
+  padding: 0 18px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  margin: 0 auto var(--space-3);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  transition: border-color var(--duration-base);
+  display: block;
+}
+.url-import-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+  outline: none;
+}
+
 .price-hero {
   text-align: center;
   padding: var(--space-3) 0;
@@ -2067,19 +2153,6 @@ body.has-sidebar { display: flex; }
   color: var(--text-primary);
 }
 
-/* ── Button: Icon ── */
-.btn-icon {
-  width: 40px; height: 40px; padding: 0;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all var(--duration-fast);
-}
-.btn-icon:hover { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--border-hover); }
-
 /* ── Skeleton Loader ── */
 .skeleton {
   background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
@@ -2149,31 +2222,6 @@ body.has-sidebar { display: flex; }
   line-height: 1.5;
 }
 
-/* ── Enterprise Table ── */
-.table-enterprise {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-caption);
-}
-.table-enterprise thead { position: sticky; top: 0; z-index: 1; }
-.table-enterprise th {
-  text-align: left;
-  padding: 12px 16px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.7rem;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-default);
-}
-.table-enterprise td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-}
-.table-enterprise tr:hover td { background: rgba(255,255,255,0.02); }
-
 /* ── KPI Card ── */
 .kpi-card {
   background: var(--bg-card);
@@ -2226,6 +2274,89 @@ body.has-sidebar { display: flex; }
   .live-dot { animation: none; }
   .skeleton { animation: none; background: var(--bg-elevated); }
   .spinner { animation: none; border-top-color: var(--border-default); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RTL SUPPORT — Arabic language mirroring
+   ══════════════════════════════════════════════════════════════════ */
+
+[dir="rtl"] .sidebar {
+  border-right: none;
+  border-left: 1px solid var(--border-subtle);
+}
+[dir="rtl"] .sidebar-nav a {
+  text-align: right;
+}
+[dir="rtl"] .sidebar-nav a::before {
+  left: auto;
+  right: -8px;
+  border-radius: 3px 0 0 3px;
+}
+[dir="rtl"] .nav-badge {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .header {
+  direction: rtl;
+}
+
+[dir="rtl"] .page-header {
+  direction: rtl;
+}
+[dir="rtl"] .page-header-left {
+  text-align: right;
+}
+
+[dir="rtl"] .form-group {
+  text-align: right;
+}
+[dir="rtl"] .form-group label {
+  text-align: right;
+}
+
+[dir="rtl"] .buy-layout {
+  direction: rtl;
+}
+[dir="rtl"] .buy-rail {
+  direction: ltr;
+}
+
+[dir="rtl"] .browse-toolbar {
+  direction: rtl;
+}
+
+[dir="rtl"] .market-layout {
+  direction: rtl;
+}
+
+[dir="rtl"] .toast-container {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .result-amount,
+[dir="rtl"] .price-hero .amount,
+[dir="rtl"] .stat .n,
+[dir="rtl"] .market-kpi-value,
+[dir="rtl"] .row-link-count,
+[dir="rtl"] .market-ranked-count,
+[dir="rtl"] .make-card-count {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* RTL slide animations */
+[dir="rtl"] .toast {
+  animation-name: slideInRtl, slideOutRtl;
+}
+@keyframes slideInRtl {
+  from { transform: translateX(-400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutRtl {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-400px); opacity: 0; }
 }
 </style>
 </head>
