@@ -120,6 +120,25 @@ body {
 
 body.has-sidebar { display: flex; }
 
+/* ── Skip Link ── */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-2);
+  background: var(--gold);
+  color: var(--text-inverse);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: var(--z-toast);
+  text-decoration: none;
+  transition: top var(--duration-fast);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}
+
 /* ══════════════════════════════════════════════════════════════════
    SCROLLBAR
    ══════════════════════════════════════════════════════════════════ */
@@ -2362,6 +2381,8 @@ body.has-sidebar { display: flex; }
 </head>
 <body id="body-el">
 
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <aside class="sidebar" aria-label="Main navigation">
 <nav class="sidebar-nav" aria-label="Primary">
 
@@ -2479,7 +2500,7 @@ body.has-sidebar { display: flex; }
   </div>
   <div class="kpi-card">
     <div class="kpi-label">Active Listings</div>
-    <div class="kpi-value" id="home-kpi-listings">--</div>
+    <div class="kpi-value" id="home-kpi-listings" aria-atomic="true">--</div>
     <div class="kpi-trend" id="home-kpi-listings-trend">Loading&hellip;</div>
   </div>
   <div class="kpi-card">
@@ -2489,7 +2510,7 @@ body.has-sidebar { display: flex; }
   </div>
   <div class="kpi-card">
     <div class="kpi-label">Valuations (7d)</div>
-    <div class="kpi-value" id="home-kpi-valuations">--</div>
+    <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">--</div>
     <div class="kpi-trend" id="home-kpi-valuations-trend">Loading&hellip;</div>
   </div>
 </div>
@@ -2541,7 +2562,7 @@ body.has-sidebar { display: flex; }
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Sell Your Car</h2><p class="page-sub">Get an accurate market valuation based on live GCC listings across 6 countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
 <div class="card"><h3>Vehicle Details</h3><div id="sell-form"></div><button class="btn" id="sell-btn" onclick="doValuation('sell')">Calculate Market Value</button></div>
 <div id="sell-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size:0.9rem">Analyzing market data...</div></div></div>
-<div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden"></div></div>
+<div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden" aria-live="polite"></div></div>
 
 <div id="page-buy" class="hidden">
 
@@ -2569,7 +2590,7 @@ body.has-sidebar { display: flex; }
 </div>
 
 <div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size:0.9rem">Searching for better deals...</div></div></div>
-<div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden"></div>
+<div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
 <!-- ═══ RIGHT INTELLIGENCE RAIL ═══ -->
@@ -2657,7 +2678,7 @@ body.has-sidebar { display: flex; }
 
 <!-- ═══ MAKES GRID ═══ -->
 <div class="card" id="browse-makes-card">
-  <div id="browse-makes-grid" class="browse-grid"></div>
+  <div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div>
 </div>
 
 <!-- ═══ MODELS LIST ═══ -->
@@ -2684,7 +2705,7 @@ body.has-sidebar { display: flex; }
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Market Trends</h2><p class="page-sub">Real-time GCC used car market intelligence across 6 countries and 10 marketplaces.</p></div><div class="page-header-badge" id="market-freshness-badge">GCC Live Market</div></div>
 
 <!-- ═══ KPI RIBBON ═══ -->
-<div class="market-kpi-grid" id="market-kpi-grid">
+<div class="market-kpi-grid" id="market-kpi-grid" aria-live="polite">
   <div class="market-skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%"></div><div class="skeleton skeleton-heading" style="width:35%"></div><div class="skeleton skeleton-text" style="width:60%"></div></div>
   <div class="market-skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%"></div><div class="skeleton skeleton-heading" style="width:35%"></div><div class="skeleton skeleton-text" style="width:60%"></div></div>
   <div class="market-skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%"></div><div class="skeleton skeleton-heading" style="width:35%"></div><div class="skeleton skeleton-text" style="width:60%"></div></div>
@@ -2879,12 +2900,13 @@ function showYearSuggestions(formEl,data){
 
 function buildForm(id,isBuy){
 var el=document.getElementById(id);
+var prefix=id==='sell-form'?'sell':'buy';
 var h='';
 
 if(isBuy){
 h+='<div class="buy-asking-section">';
 h+='<div class="form-section-title" style="border-bottom:none;margin-bottom:var(--space-3);padding-bottom:0">A. Asking Price</div>';
-h+='<div class="buy-asking-row"><input type="number" class="fm-asking buy-asking-input" placeholder="Enter the asking price" aria-label="Asking price in AED"><span class="buy-asking-currency">AED</span></div>';
+h+='<div class="buy-asking-row"><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in AED"><span class="buy-asking-currency">AED</span></div>';
 h+='<span class="field-error buy-asking-error">Please enter the asking price</span>';
 h+='</div>';
 h+='<hr class="form-divider">';
@@ -2892,18 +2914,18 @@ h+='<hr class="form-divider">';
 
 h+='<div class="form-section"><div class="form-section-title">B. Vehicle Details</div>';
 h+='<div class="form-row">';
-h+='<div class="form-group"><label>Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" placeholder="e.g. Toyota" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
-h+='<div class="form-group"><label>Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
-h+='<div class="form-group"><label>Year</label><input type="number" class="fm-year" placeholder="e.g. 2020" min="1990" max="2027" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error">Please enter a valid year (1990–2027)</span></div>';
-h+='<div class="form-group"><label>Mileage (km)</label><input type="number" class="fm-mileage" placeholder="e.g. 80000"></div>';
+h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error">Please enter a valid year (1990–2027)</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-mileage">Mileage (km)</label><input type="number" class="fm-mileage" id="'+prefix+'-mileage" placeholder="e.g. 80000"></div>';
 h+='</div></div>';
 
 h+='<hr class="form-divider">';
 h+='<div class="form-section"><div class="form-section-title">C. Market Details</div>';
 h+='<div class="form-row three-col">';
-h+='<div class="form-group"><label>Spec</label><input type="text" class="fm-spec" value="GCC" readonly style="background:rgba(0,0,0,0.15);color:var(--text-muted);cursor:not-allowed"></div>';
-h+='<div class="form-group"><label>City</label><div class="autocomplete-wrap"><input type="text" class="fm-city" placeholder="e.g. Dubai" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
-h+='<div class="form-group"><label>Country</label><div class="autocomplete-wrap"><input type="text" class="fm-country" placeholder="e.g. UAE" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
+h+='<div class="form-group"><label for="'+prefix+'-spec">Spec</label><input type="text" class="fm-spec" id="'+prefix+'-spec" value="GCC" readonly style="background:rgba(0,0,0,0.15);color:var(--text-muted);cursor:not-allowed"></div>';
+h+='<div class="form-group"><label for="'+prefix+'-city">City</label><div class="autocomplete-wrap"><input type="text" class="fm-city" id="'+prefix+'-city" placeholder="e.g. Dubai" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
+h+='<div class="form-group"><label for="'+prefix+'-country">Country</label><div class="autocomplete-wrap"><input type="text" class="fm-country" id="'+prefix+'-country" placeholder="e.g. UAE" autocomplete="off" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
 h+='</div></div>';
 
 h+='<div class="smart-hints chip-row" style="display:none;margin-top:var(--space-2)"></div>';
