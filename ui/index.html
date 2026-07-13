@@ -388,9 +388,9 @@ body.has-sidebar { display: flex; }
 
 .sidebar-nav a.active {
   color: var(--text-primary);
-  background: linear-gradient(90deg, rgba(200,148,53,0.18) 0%, rgba(200,148,53,0.08) 50%, transparent 100%);
+  background: linear-gradient(90deg, rgba(200,148,53,0.30) 0%, rgba(200,148,53,0.12) 60%, transparent 100%);
   font-weight: 600;
-  border: 1px solid rgba(200,148,53,0.15);
+  border: 1px solid rgba(200,148,53,0.25);
 }
 
 /* ── Nav Icons ── */
@@ -593,6 +593,9 @@ body.has-sidebar { display: flex; }
   padding-bottom: 0;
   margin-bottom: var(--space-2);
 }
+
+/* ── Form card — matches S/B card color ── */
+.card-form { background: var(--bg-stats); border-color: rgba(200,148,53,0.10); }
 
 /* ── Card Anatomy — Header / Body / Footer ── */
 .card-header {
@@ -1282,7 +1285,7 @@ body.has-sidebar { display: flex; }
   gap: 4px;
 }
 
-.rail-coverage-flag { font-size: 1rem; }
+.rail-coverage-flag { font-size: 1.3rem; flex: 1; }
 
 /* ── AI Feature List ── */
 .rail-feature-list {
@@ -2961,7 +2964,7 @@ body.has-sidebar { display: flex; }
 
 <div id="page-sell" class="hidden">
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Sell Your Car</h2><p class="page-sub">Get an accurate market valuation based on live GCC listings across 6 countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
-<div class="card"><div class="card-header"><h3>Vehicle Details</h3></div><div class="card-body"><div id="sell-form"></div></div><div class="card-footer"><button class="btn" id="sell-btn" onclick="doValuation('sell')">✨ Calculate Market Value →</button></div></div>
+<div class="card card-form"><div class="card-header"><h3>Vehicle Details</h3></div><div class="card-body"><div id="sell-form"></div></div><div class="card-footer"><button class="btn" id="sell-btn" onclick="doValuation('sell')">✨ Calculate Market Value →</button></div></div>
 <div id="sell-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Analyzing market data...</div></div></div>
 <div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden" aria-live="polite"></div></div>
 
@@ -2975,7 +2978,7 @@ body.has-sidebar { display: flex; }
   <!-- LEFT: Form Area -->
   <div class="buy-main">
 
-    <div class="card">
+    <div class="card card-form">
       <div class="card-header"><h3>Deal Analysis</h3></div>
       <div class="card-body"><div id="buy-form"></div></div>
       <div class="card-footer"><button class="btn" id="buy-btn" onclick="doValuation('buy')">✨ Analyze This Deal →</button></div>
@@ -3037,12 +3040,12 @@ body.has-sidebar { display: flex; }
     <div class="rail-panel rail-panel-coverage">
       <div class="rail-panel-title">MARKET COVERAGE</div>
       <div class="rail-coverage-list">
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇦🇪</span><span class="rail-coverage-country">UAE</span><span class="rail-coverage-count">3.2M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇸🇦</span><span class="rail-coverage-country">Saudi Arabia</span><span class="rail-coverage-count">4.1M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇶🇦</span><span class="rail-coverage-country">Qatar</span><span class="rail-coverage-count">1.2M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇰🇼</span><span class="rail-coverage-country">Kuwait</span><span class="rail-coverage-count">870K+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇧🇭</span><span class="rail-coverage-country">Bahrain</span><span class="rail-coverage-count">450K+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇴🇲</span><span class="rail-coverage-country">Oman</span><span class="rail-coverage-count">380K+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇦🇪</span><span class="rail-coverage-count">3.2M+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇸🇦</span><span class="rail-coverage-count">4.1M+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇶🇦</span><span class="rail-coverage-count">1.2M+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇰🇼</span><span class="rail-coverage-count">870K+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇧🇭</span><span class="rail-coverage-count">450K+</span></div>
+        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇴🇲</span><span class="rail-coverage-count">380K+</span></div>
       </div>
       <a class="rail-coverage-link" href="#" onclick="goPage('market',document.getElementById('nav-market'))">View all markets →</a>
     </div>
