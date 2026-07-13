@@ -378,16 +378,7 @@ body.has-sidebar { display: flex; }
 }
 
 .sidebar-nav a::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: var(--gold);
-  border-radius: 0 3px 3px 0;
-  transition: height var(--duration-fast);
+  display: none;
 }
 
 .sidebar-nav a:hover {
@@ -397,11 +388,10 @@ body.has-sidebar { display: flex; }
 
 .sidebar-nav a.active {
   color: var(--text-primary);
-  background: var(--gold-glow);
+  background: linear-gradient(90deg, rgba(200,148,53,0.18) 0%, rgba(200,148,53,0.08) 50%, transparent 100%);
   font-weight: 600;
+  border: 1px solid rgba(200,148,53,0.15);
 }
-
-.sidebar-nav a.active::before { height: 22px; }
 
 /* ── Nav Icons ── */
 .nav-icon {
@@ -702,8 +692,8 @@ body.has-sidebar { display: flex; }
 .form-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  gap: var(--space-2);
+  margin-bottom: 0;
 }
 
 .form-row.two-col { grid-template-columns: repeat(2, 1fr); }
