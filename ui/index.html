@@ -296,6 +296,49 @@ body.has-sidebar { display: flex; }
 
 .has-sidebar .sidebar { display: flex; }
 
+/* ── Sidebar Brand (visible on non-home pages) ── */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-1);
+}
+.sidebar-logo {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  box-shadow: 0 0 16px var(--gold-glow-strong);
+  flex-shrink: 0;
+}
+.sidebar-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.sidebar-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+.sidebar-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.45rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 /* ── Section Label ── */
 .sidebar-section-label {
   font-size: var(--text-xs);
@@ -2609,6 +2652,15 @@ body.has-sidebar { display: flex; }
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <aside class="sidebar" aria-label="Main navigation">
+
+<div class="sidebar-brand">
+  <div class="sidebar-logo">CV</div>
+  <div class="sidebar-titles">
+    <span class="sidebar-name">CAR VALUATOR</span>
+    <span class="sidebar-subtitle">GCC MARKET INTELLIGENCE</span>
+  </div>
+</div>
+
 <nav class="sidebar-nav" aria-label="Primary">
 
 <div class="sidebar-section-label">Main</div>
