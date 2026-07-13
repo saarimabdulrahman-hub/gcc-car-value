@@ -1326,6 +1326,16 @@ body.has-sidebar { display: flex; }
   box-shadow: 0 0 0 3px var(--gold-glow);
   outline: none;
 }
+.url-import-hint {
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+.url-import-toggle {
+  max-width: 320px;
+  margin: 0 auto;
+  display: block;
+}
 
 .price-hero {
   text-align: center;
@@ -2840,15 +2850,15 @@ body.has-sidebar { display: flex; }
     </div>
 
     <div class="card" style="text-align:center">
-      <p style="font-size: var(--text-md);color:var(--text-muted);margin-bottom:var(--space-3)">Or paste a listing URL from any GCC marketplace</p>
-      <button class="btn-secondary" onclick="toggleUrlSection()" style="max-width:320px;margin:0 auto;display:block">&#128279; Paste a listing URL</button>
-      <div id="buy-url-section" style="display:none;margin-top:var(--space-4)">
+      <p class="url-import-hint">Or paste a listing URL from any GCC marketplace</p>
+      <button class="btn-secondary url-import-toggle" onclick="toggleUrlSection()">🔗 Paste a listing URL</button>
+      <div id="buy-url-section" style="display:none;margin-top:var(--space-3)">
         <div class="url-import-card">
           <div class="url-import-icon">&#128279;</div>
           <div class="url-import-title">Paste the listing URL</div>
           <div class="url-import-sub">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
           <input type="url" id="fm-url" class="url-import-input" placeholder="https://uae.dubizzle.com/motors/used-cars/..." aria-label="Listing URL">
-          <button class="btn" onclick="submitUrl()" style="max-width:320px;margin:0 auto">✨ Analyze This URL →</button>
+          <button class="btn url-import-toggle" onclick="submitUrl()">✨ Analyze This URL →</button>
         </div>
       </div>
     </div>
