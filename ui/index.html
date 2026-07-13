@@ -665,7 +665,7 @@ body.has-sidebar { display: flex; }
 
 /* ── Form section divider ── */
 .form-section {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .form-section-title {
@@ -681,8 +681,8 @@ body.has-sidebar { display: flex; }
 
 .form-divider {
   border: none;
-  border-top: 1px solid rgba(255,255,255,0.04);
-  margin: var(--space-4) 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-3) 0;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -1367,10 +1367,10 @@ body.has-sidebar { display: flex; }
 /* ── Buy Form: Asking Price Hero ── */
 .buy-asking-section {
   background: var(--bg-elevated);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
   margin-bottom: 0;
-  border: 1px solid var(--border-hover);
+  border: 1px solid rgba(200,148,53,0.10);
 }
 .buy-asking-row {
   display: flex;
@@ -3301,7 +3301,7 @@ var h='';
 
 if(isBuy){
 h+='<div class="buy-asking-section">';
-h+='<div class="form-section-title" style="border-bottom:none;margin-bottom:var(--space-3);padding-bottom:0">A. Asking Price</div>';
+h+='<div class="form-section-title" style="border-bottom:none;padding-bottom:0">A. Asking Price</div>';
 h+='<div class="buy-asking-row"><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in AED"><span class="buy-asking-currency">AED</span></div>';
 h+='<span class="field-error buy-asking-error">Please enter the asking price</span>';
 h+='</div>';
