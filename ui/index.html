@@ -596,24 +596,13 @@ body.has-sidebar { display: flex; }
 
 /* ── Form card — matches S/B card color, golden top-left glow ── */
 .card-form {
-  background: var(--bg-stats);
+  background:
+    linear-gradient(135deg, rgba(200,148,53,0.10) 0%, rgba(200,148,53,0.03) 30%, transparent 55%),
+    var(--bg-stats);
   border-color: rgba(200,148,53,0.10);
   position: relative;
   overflow: hidden;
 }
-.card-form::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(200,148,53,0.12) 0%, rgba(200,148,53,0.04) 25%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-  border-radius: 14px;
-}
-.card-form .card-header,
-.card-form .card-body,
-.card-form .card-footer { position: relative; z-index: 1; }
-
 /* ── Card Anatomy — Header / Body / Footer ── */
 .card-header {
   padding: var(--space-3) var(--space-3) var(--space-2);
