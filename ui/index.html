@@ -1164,16 +1164,17 @@ body.has-sidebar { display: flex; }
 .rail-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3) var(--space-4);
+  border-radius: 14px;
+  padding: var(--space-3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
 .rail-panel-title {
-  font-size: var(--text-xs);
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   margin-bottom: var(--space-2);
   padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--border-subtle);
@@ -2857,7 +2858,7 @@ body.has-sidebar { display: flex; }
     <div class="buy-rail">
 
       <div class="rail-panel">
-        <div class="rail-panel-title">AI Features</div>
+        <div class="rail-panel-title">AI Capabilities</div>
         <div class="rail-status-row">
           <span class="rail-dot active"></span>
           <span class="rail-status-text" id="rail-ai-status">Live</span>
@@ -2870,7 +2871,7 @@ body.has-sidebar { display: flex; }
       </div>
 
       <div class="rail-panel">
-        <div class="rail-panel-title">Countries</div>
+        <div class="rail-panel-title">Market Coverage</div>
         <div class="rail-coverage-grid">
           <div class="rail-coverage-item"><span class="rail-coverage-flag">🇦🇪</span> UAE</div>
           <div class="rail-coverage-item"><span class="rail-coverage-flag">🇸🇦</span> Saudi</div>
