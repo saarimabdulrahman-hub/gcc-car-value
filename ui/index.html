@@ -687,12 +687,12 @@ body.has-sidebar { display: flex; }
 
 .form-group input,
 .form-group select {
-  padding: 14px 16px;
-  height: 54px;
-  border: 1.5px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
+  padding: 0 16px;
+  height: 48px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
   font-size: var(--text-input);
-  background: rgba(0,0,0,0.25);
+  background: var(--bg-input);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   width: 100%;
@@ -703,7 +703,7 @@ body.has-sidebar { display: flex; }
 
 .form-group input:hover,
 .form-group select:hover {
-  border-color: rgba(255,255,255,0.1);
+  border-color: var(--border-hover);
   background: rgba(0,0,0,0.3);
 }
 
@@ -711,8 +711,7 @@ body.has-sidebar { display: flex; }
 .form-group select:focus {
   outline: none;
   border-color: var(--gold);
-  background: rgba(0,0,0,0.35);
-  box-shadow: 0 0 0 3px var(--gold-glow), 0 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .form-group input::placeholder {
@@ -753,9 +752,9 @@ body.has-sidebar { display: flex; }
 .btn {
   width: 100%;
   padding: 0;
-  height: 56px;
+  height: 48px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   font-size: var(--text-h4);
   font-weight: 600;
   cursor: pointer;
@@ -1253,10 +1252,10 @@ body.has-sidebar { display: flex; }
 }
 .buy-asking-input {
   flex: 1;
-  height: 56px;
-  padding: 0 18px;
-  border: 1.5px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius-lg);
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
   font-size: 1.2rem;
   font-weight: 700;
   background: rgba(0,0,0,0.25);
@@ -1305,10 +1304,10 @@ body.has-sidebar { display: flex; }
 .url-import-input {
   width: 100%;
   max-width: 560px;
-  height: 54px;
-  padding: 0 18px;
+  height: 48px;
+  padding: 0 16px;
   border: 1.5px solid var(--border-hover);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   font-size: var(--text-base);
   font-family: 'Inter', sans-serif;
   text-align: center;
@@ -2385,7 +2384,7 @@ body.has-sidebar { display: flex; }
 }
 .skeleton-text   { height: 14px; margin-bottom: 10px; }
 .skeleton-heading { height: 22px; margin-bottom: 14px; width: 60%; }
-.skeleton-input  { height: 54px; border-radius: var(--radius-lg); }
+.skeleton-input  { height: 48px; border-radius: var(--radius-md); }
 .skeleton-card   { height: 180px; border-radius: var(--radius-xl); }
 .skeleton-circle { border-radius: var(--radius-full); }
 .skeleton-row    { display: flex; gap: var(--space-2); margin-bottom: var(--space-2); }
