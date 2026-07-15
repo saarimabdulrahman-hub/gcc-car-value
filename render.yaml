@@ -10,20 +10,14 @@ services:
     plan: free
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: gcc-car-value-db
-          property: connectionString
+        sync: false
+        value: postgresql+asyncpg://neondb_owner:YOUR_PASSWORD@ep-morning-darkness-123456.us-east-2.aws.neon.tech/gcc_car_value?sslmode=require
       - key: DATABASE_URL_SYNC
-        fromDatabase:
-          name: gcc-car-value-db
-          property: connectionString
+        sync: false
+        value: postgresql://neondb_owner:YOUR_PASSWORD@ep-morning-darkness-123456.us-east-2.aws.neon.tech/gcc_car_value?sslmode=require
       - key: JWT_SECRET
         generateValue: true
       - key: ENVIRONMENT
         value: production
       - key: LOG_LEVEL
         value: INFO
-
-databases:
-  - name: gcc-car-value-db
-    plan: free
