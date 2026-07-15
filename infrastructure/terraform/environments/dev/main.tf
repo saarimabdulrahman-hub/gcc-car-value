@@ -100,9 +100,10 @@ module "ecs" {
 module "cloudfront" {
   source = "../../modules/cloudfront"
 
-  environment     = var.environment
-  alb_dns_name    = module.ecs.alb_dns_name
-  domain_name     = var.domain_name
-  certificate_arn = var.certificate_arn
-  tags            = var.tags
+  environment          = var.environment
+  alb_dns_name         = module.ecs.alb_dns_name
+  frontend_s3_domain   = module.s3.frontend_bucket_regional_domain_name
+  domain_name          = var.domain_name
+  certificate_arn      = var.certificate_arn
+  tags                 = var.tags
 }

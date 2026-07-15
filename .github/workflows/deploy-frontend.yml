@@ -1,0 +1,44 @@
+name: Deploy Frontend to S3
+
+on:
+  push:
+    branches: [main, feature-url-valuation]
+    paths:
+      - 'ui/index.html'
+      - 'ui/img/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: me-central-1
+
+      - name: Deploy to S3 (dev)
+        if: github.ref != 'refs/heads/main'
+        run: |
+          aws s3 sync ui/ s3://gcc-car-value-dev-frontend/ --delete \
+            --cache-control "max-age=3600"
+
+      - name: Deploy to S3 (production)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync ui/ s3://gcc-car-value-production-frontend/ --delete \
+            --cache-control "max-age=3600"
+
+      - name: Invalidate CloudFront (production)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          DIST_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='gcc-car-value-production-cf'].Id" --output text)
+          if [ -n "$DIST_ID" ]; then
+            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          fi

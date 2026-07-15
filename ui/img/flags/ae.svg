@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Red vertical band at hoist (1/4 width) -->
+  <rect x="0" y="0" width="150" height="300" fill="#CE1126"/>
+  <!-- Green stripe -->
+  <rect x="150" y="0" width="450" height="100" fill="#00732F"/>
+  <!-- White stripe -->
+  <rect x="150" y="100" width="450" height="100" fill="#FFFFFF"/>
+  <!-- Black stripe -->
+  <rect x="150" y="200" width="450" height="100" fill="#000000"/>
+</svg>

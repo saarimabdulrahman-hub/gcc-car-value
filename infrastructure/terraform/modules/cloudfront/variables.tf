@@ -4,8 +4,14 @@ variable "environment" {
 }
 
 variable "alb_dns_name" {
-  description = "ALB DNS name (origin)"
+  description = "ALB DNS name (API origin)"
   type        = string
+}
+
+variable "frontend_s3_domain" {
+  description = "S3 bucket regional domain name for static frontend hosting"
+  type        = string
+  default     = null
 }
 
 variable "domain_name" {

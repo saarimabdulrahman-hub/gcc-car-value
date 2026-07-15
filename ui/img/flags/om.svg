@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Red vertical bar at hoist (1/4 width) -->
+  <rect x="0" y="0" width="150" height="300" fill="#DB161B"/>
+  <!-- White stripe (top) -->
+  <rect x="150" y="0" width="450" height="100" fill="#FFFFFF"/>
+  <!-- Red stripe (middle) -->
+  <rect x="150" y="100" width="450" height="100" fill="#DB161B"/>
+  <!-- Green stripe (bottom) -->
+  <rect x="150" y="200" width="450" height="100" fill="#008000"/>
+  <!-- National emblem in canton (top-left of red bar) — stylized khanjar dagger + crossed swords -->
+  <g transform="translate(75, 55)" fill="none" stroke="#FFFFFF" stroke-width="2">
+    <!-- Crossed swords (behind dagger) -->
+    <path d="M-25,15 L30,-20" />
+    <path d="M25,15 L-30,-20" />
+    <!-- Khanjar dagger (center) — curved blade with ornate hilt -->
+    <path d="M-2,10 C-4,2 -3,-8 0,-14 C3,-8 4,2 2,10" stroke-width="2.5"/>
+    <!-- Hilt cross-guard -->
+    <line x1="-6" y1="10" x2="6" y2="10" stroke-width="2"/>
+    <!-- Handle -->
+    <line x1="0" y1="10" x2="0" y2="20" stroke-width="2.5"/>
+    <!-- Pommel -->
+    <circle cx="0" cy="22" r="3" fill="#FFFFFF"/>
+    <!-- Belt/ornament detail -->
+    <path d="M-8,-6 C-10,-2 -8,2 -6,4" stroke-width="1.5"/>
+    <path d="M8,-6 C10,-2 8,2 6,4" stroke-width="1.5"/>
+  </g>
+</svg>

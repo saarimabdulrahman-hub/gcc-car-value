@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <!-- Green field -->
+  <rect width="600" height="400" fill="#006C35"/>
+  <!-- Upper Shahada text: "لا إله إلا الله" -->
+  <text x="300" y="120" text-anchor="middle" fill="#FFFFFF" font-size="52" font-family="'Traditional Arabic', 'Arabic Typesetting', 'Scheherazade New', 'Amiri', 'Arial Unicode MS', serif" font-weight="bold">لا إله إلا الله</text>
+  <!-- Sword pointing left (hoist) — curved scimitar -->
+  <g transform="translate(300, 240)">
+    <!-- Blade — curved, pointing left -->
+    <path d="M-180,-6 C-140,-8 -80,-10 20,-4 C60,-2 100,2 140,6 C100,10 40,18 -20,16 C-80,14 -140,8 -180,6 Z" fill="#FFFFFF"/>
+    <!-- Hilt -->
+    <rect x="140" y="-8" width="10" height="20" rx="1" fill="#FFFFFF"/>
+    <!-- Handle grip -->
+    <rect x="150" y="-5" width="30" height="12" rx="2" fill="#FFFFFF"/>
+    <!-- Pommel -->
+    <circle cx="182" cy="0" r="8" fill="#FFFFFF"/>
+  </g>
+  <!-- Lower Shahada text: "محمد رسول الله" -->
+  <text x="300" y="370" text-anchor="middle" fill="#FFFFFF" font-size="32" font-family="'Traditional Arabic', 'Arabic Typesetting', 'Scheherazade New', 'Amiri', 'Arial Unicode MS', serif" font-weight="bold">محمد رسول الله</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Red field -->
+  <rect width="600" height="300" fill="#CE1126"/>
+  <!-- 5-point white serrated band on hoist -->
+  <!-- 5 serrations over ~1/4 of width (~150px). Each point is ~30px wide -->
+  <polygon points="
+    0,0
+    30,30
+    60,0
+    90,30
+    120,0
+    150,30
+    150,0
+    150,300
+    150,270
+    120,300
+    90,270
+    60,300
+    30,270
+    0,300
+  " fill="#FFFFFF"/>
+</svg>

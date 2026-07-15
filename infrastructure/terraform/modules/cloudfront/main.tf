@@ -12,7 +12,20 @@ resource "aws_cloudfront_distribution" "main" {
   http_version    = "http2and3"
   price_class     = var.environment == "production" ? "PriceClass_100" : "PriceClass_200"
 
-  # --- Origin: ALB ---
+  # --- Origin 1: S3 Static Frontend ---
+  origin {
+    domain_name = var.frontend_s3_domain != null ? var.frontend_s3_domain : "placeholder.example.com"
+    origin_id   = "${local.name}-s3-frontend"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  # --- Origin 2: ALB (API) ---
   origin {
     domain_name = var.alb_dns_name
     origin_id   = "${local.name}-alb"
@@ -25,9 +38,52 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  # --- Default Cache Behavior ---
+  # --- Default Cache Behavior: Frontend (S3) ---
   default_cache_behavior {
+    target_origin_id       = "${local.name}-s3-frontend"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    compress               = true
+
+    min_ttl     = 0
+    default_ttl = 3600     # 1 hour
+    max_ttl     = 86400    # 24 hours
+
+    forwarded_values {
+      query_string = false
+      headers      = ["Origin"]
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # --- Cache Behavior: API (/v1/*) — no cache ---
+  ordered_cache_behavior {
+    path_pattern           = "/v1/*"
     target_origin_id       = "${local.name}-alb"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    compress               = true
+
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      headers      = ["Authorization", "Origin", "Accept", "Content-Type"]
+
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  # --- Cache Behavior: Static Assets ---
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]

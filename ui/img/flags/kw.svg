@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Green stripe (top) -->
+  <rect x="0" y="0" width="600" height="100" fill="#007A3D"/>
+  <!-- White stripe (middle) -->
+  <rect x="0" y="100" width="600" height="100" fill="#FFFFFF"/>
+  <!-- Red stripe (bottom) -->
+  <rect x="0" y="200" width="600" height="100" fill="#CE1126"/>
+  <!-- Black trapezoid at hoist — left edge = full height, right edge = slanted top and bottom -->
+  <!-- The trapezoid narrows as it goes right: top edge slopes down, bottom edge slopes up -->
+  <polygon points="
+    0,0
+    150,40
+    150,260
+    0,300
+  " fill="#000000"/>
+</svg>
