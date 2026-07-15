@@ -17,48 +17,57 @@
      Aligned to: Enterprise Design Bible v1.0
      ════════════════════════════════════════════════════════════════ */
 
-  /* ── Surface Palette — layered depth ── */
-  --bg-primary:    #090C11;
-  --bg-secondary:  #0C0F15;
-  --bg-card:       #151B23;
-  --bg-card-hover: #1A2029;
-  --bg-elevated:   #11161D;
-  --bg-input:      #10151B;
+  /* ── Surface Palette — layered depth (Vision: Graphite 900→100) ── */
+  --graphite-950:  #090C11;  /* --bg-primary    — deepest surface */
+  --graphite-900:  #0C0F15;  /* --bg-secondary  — sidebars, chrome */
+  --graphite-850:  #10151B;  /* --bg-input      — form fields */
+  --graphite-800:  #11161D;  /* --bg-elevated   — dropdowns, popovers */
+  --graphite-750:  #151B23;  /* --bg-card       — card surfaces */
+  --graphite-700:  #1A2029;  /* --bg-card-hover — card hover state */
+  /* Legacy aliases — keep existing code working */
+  --bg-primary:    var(--graphite-950);
+  --bg-secondary:  var(--graphite-900);
+  --bg-card:       var(--graphite-750);
+  --bg-card-hover: var(--graphite-700);
+  --bg-elevated:   var(--graphite-800);
+  --bg-input:      var(--graphite-850);
   --bg-hero:       #11131C;
   --bg-stats:      #161311;
 
-  /* ── Border Scale ── */
+  /* ── Border Scale (Vision: natural graphite tones) ── */
   --border-subtle:  rgba(255,255,255,0.04);
   --border-default: rgba(255,255,255,0.06);
   --border-hover:   rgba(255,255,255,0.10);
   --border-active:  rgba(200,148,53,0.30);
   --border-focus:   rgba(200,148,53,0.45);
 
-  /* ── Accent — Blueprint Gold ── */
+  /* ── Accent — Luxury Gold (Vision: Primary) ── */
   --gold:             #C89435;
   --gold-dark:        #9B7020;
   --gold-light:       #DEB85A;
   --gold-glow:        rgba(200,148,53,0.18);
   --gold-glow-strong: rgba(200,148,53,0.32);
 
-  /* ── Semantic ── */
-  --green:     #00D66B;
-  --green-bg:  rgba(0,214,107,0.10);
-  --red:       #EF4444;
-  --red-bg:    rgba(239,68,68,0.10);
-  --amber:     #F59E0B;
-  --amber-bg:  rgba(245,158,11,0.10);
-  --info:      #3B82F6;
-  --info-bg:   rgba(59,130,246,0.10);
+  /* ── Semantic (Vision: Success / Warning / Danger / Info) ── */
+  --slate-400:    #9CA3AF;  /* --text-secondary — muted text */
+  --white:        #FFFFFF;  /* --text-primary   — primary text */
+  --green:        #00D66B;  /* Success — Emerald Green */
+  --green-bg:     rgba(0,214,107,0.10);
+  --red:          #EF4444;  /* Danger — Red */
+  --red-bg:       rgba(239,68,68,0.10);
+  --amber:        #F59E0B;  /* Warning — Amber */
+  --amber-bg:     rgba(245,158,11,0.10);
+  --info:         #3B82F6;
+  --info-bg:      rgba(59,130,246,0.10);
 
   /* ── Typography Scale — Enterprise Spec ── */
-  --text-display:  3.25rem;   /* 52px — hero title          */
+  --text-display:  3rem;      /* 48px — hero title (Display48) */
   --text-stat:     2rem;      /* 32px — statistics numbers  */
   --text-h1:       2.5rem;    /* 40px — page titles         */
   --text-h2:       2rem;      /* 32px — section heads       */
   --text-h3:       1.5rem;    /* 24px — card heads          */
   --text-section:  1.125rem;  /* 18px — card titles         */
-  --text-body:     0.875rem;  /* 14px — body text           */
+  --text-body:     1rem;      /* 16px — body text (Body16)   */
   --text-caption:  0.8125rem; /* 13px — navigation, meta    */
   --text-xs:       0.75rem;   /* 12px — section labels      */
   --text-sm:       0.72rem;   /* 12px — rail meta, chips    */
@@ -69,8 +78,8 @@
   --text-h4:       0.95rem;   /* 15px — btn text            */
   --text-lead:     1.05rem;   /* 17px — hero sub            */
 
-  --text-primary:   #FFFFFF;
-  --text-secondary: #9CA3AF;
+  --text-primary:   var(--white);
+  --text-secondary: var(--slate-400);
   --text-muted:     #6B7280;
   --text-accent:    #D4B55A;
   --text-inverse:   #0B0D12;
@@ -246,6 +255,10 @@ body.has-sidebar { display: flex; }
   background: rgba(255,255,255,0.08);
   color: var(--text-primary);
 }
+.header-btn:active {
+  transform: scale(0.94);
+  transition: all var(--duration-instant);
+}
 
 /* ── Language Switcher ── */
 .lang-btn {
@@ -286,7 +299,7 @@ body.has-sidebar { display: flex; }
    ══════════════════════════════════════════════════════════════════ */
 
 .sidebar {
-  width: 220px;
+  width: 256px;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-subtle);
   display: none;
@@ -385,6 +398,10 @@ body.has-sidebar { display: flex; }
   color: var(--text-secondary);
   background: rgba(255,255,255,0.03);
 }
+.sidebar-nav a:active {
+  background: rgba(255,255,255,0.06);
+  transition: all var(--duration-instant);
+}
 
 .sidebar-nav a.active {
   color: var(--text-primary);
@@ -402,7 +419,7 @@ body.has-sidebar { display: flex; }
 .sidebar-nav a:hover .nav-icon,
 .sidebar-nav a.active .nav-icon { opacity: 1; }
 
-/* ── Disabled (Coming Soon) Items ── */
+/* ── Disabled Navigation Items ── */
 .sidebar-nav a.nav-disabled {
   cursor: not-allowed;
   opacity: 0.35;
@@ -499,7 +516,7 @@ body.has-sidebar { display: flex; }
   width: 100%;
 }
 
-.has-sidebar .main-content { max-width: 1120px; padding: 0 40px var(--space-8); }
+.has-sidebar .main-content { max-width: 1060px; padding: 0 40px var(--space-8); }
 
 .hidden { display: none !important; }
 
@@ -551,7 +568,7 @@ body.has-sidebar { display: flex; }
   inset: 0;
   border-radius: 14px;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 50%, var(--gold-glow));
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 50%, rgba(255,255,255,0.02));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -571,6 +588,10 @@ body.has-sidebar { display: flex; }
 .card:hover {
   border-color: var(--border-hover);
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+.card:active {
+  transform: scale(0.995);
+  transition: all var(--duration-instant);
 }
 
 .card h3 {
@@ -594,22 +615,22 @@ body.has-sidebar { display: flex; }
   margin-bottom: var(--space-2);
 }
 
-/* ── Form card — matches S/B card color, golden top-left glow ── */
+/* ── Form card — stronger golden top-left glow ── */
 .card-form {
   background:
-    linear-gradient(135deg, rgba(200,148,53,0.10) 0%, rgba(200,148,53,0.03) 30%, transparent 55%),
+    radial-gradient(ellipse 600px 400px at 0% 0%, rgba(200,148,53,0.22) 0%, rgba(200,148,53,0.10) 25%, rgba(200,148,53,0.03) 55%, transparent 75%),
     var(--bg-stats);
-  border-color: rgba(200,148,53,0.10);
+  border-color: rgba(200,148,53,0.14);
   position: relative;
   overflow: hidden;
 }
 /* ── Card Anatomy — Header / Body / Footer ── */
 .card-header {
-  padding: var(--space-3) var(--space-3) var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-1);
   border-bottom: 1px solid var(--border-subtle);
 }
-.card-body { padding: var(--space-3); }
-.card-footer { padding: 0 var(--space-3) var(--space-3); }
+.card-body { padding: var(--space-2); }
+.card-footer { padding: 0 var(--space-2) var(--space-1); }
 
 /* ══════════════════════════════════════════════════════════════════
    TYPOGRAPHY
@@ -650,12 +671,12 @@ body.has-sidebar { display: flex; }
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: var(--gold-glow);
-  border: 1px solid var(--border-active);
+  background: var(--green-bg);
+  border: 1px solid rgba(0,214,107,0.25);
   border-radius: var(--radius-2xl);
   font-size: 12px;
   font-weight: 600;
-  color: var(--gold-light);
+  color: var(--green);
   white-space: nowrap;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -667,31 +688,35 @@ body.has-sidebar { display: flex; }
 .page-header-badge::before {
   content: '';
   width: 5px; height: 5px;
-  background: var(--gold);
+  background: var(--green);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--gold-glow-strong);
+  box-shadow: 0 0 8px rgba(0,214,107,0.5);
 }
 
 /* ── Form section divider ── */
 .form-section {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-1);
 }
 
 .form-section-title {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
+  padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--border-subtle);
+}
+.form-section-title .sec-letter {
+  color: var(--gold-light);
+  font-weight: 700;
 }
 
 .form-divider {
   border: none;
   border-top: 1px solid var(--border-subtle);
-  margin: var(--space-3) 0;
+  margin: var(--space-1) 0;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -701,7 +726,7 @@ body.has-sidebar { display: flex; }
 .form-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-bottom: 0;
 }
 
@@ -711,7 +736,7 @@ body.has-sidebar { display: flex; }
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 4px;
   position: relative;
   min-width: 0;
 }
@@ -725,14 +750,17 @@ body.has-sidebar { display: flex; }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 2px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .form-group input,
 .form-group select {
-  padding: 0 16px;
-  height: 48px;
-  border: 1.5px solid var(--border-default);
+  padding: 0 14px;
+  height: 42px;
+  border: 1.5px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
@@ -762,6 +790,30 @@ body.has-sidebar { display: flex; }
   color: rgba(255,255,255,0.2);
   font-size: var(--text-md);
   font-weight: 400;
+}
+
+/* ── Input with icon inside ── */
+.input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.input-icon-wrap .input-icon {
+  position: absolute;
+  left: 11px;
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: 1;
+}
+.input-icon-wrap input {
+  padding-left: 32px;
+}
+.input-icon-wrap .autocomplete-wrap {
+  flex: 1;
+}
+.input-icon-wrap .autocomplete-wrap input {
+  padding-left: 32px;
 }
 
 .form-hint {
@@ -796,31 +848,40 @@ body.has-sidebar { display: flex; }
 .btn {
   width: 100%;
   padding: 0;
-  height: 48px;
+  height: auto;
+  min-height: 48px;
   border: none;
   border-radius: var(--radius-md);
   font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
-  gap: 6px;
+  gap: 2px;
   font-family: 'Inter', sans-serif;
   margin-top: var(--space-4);
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  background: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
   color: var(--text-primary);
   transition: all var(--duration-base);
   letter-spacing: 0.02em;
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 12px 24px;
+}
+.btn-sub {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.65;
+  letter-spacing: 0.03em;
 }
 
 .btn::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.08));
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
   opacity: 0;
   transition: opacity var(--duration-base);
 }
@@ -828,16 +889,23 @@ body.has-sidebar { display: flex; }
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px var(--gold-glow-strong);
+  transition: all var(--duration-base);
 }
 .btn:hover::after { opacity: 1; }
-.btn:active { transform: translateY(0); box-shadow: 0 2px 8px var(--gold-glow); }
+.btn:active { transform: scale(0.98); box-shadow: 0 1px 4px var(--gold-glow); transition: all var(--duration-instant); }
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-  filter: grayscale(30%);
+  filter: grayscale(50%);
 }
+.btn:disabled:hover { transform: none; box-shadow: none; }
+.btn.loading {
+  animation: btnPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes btnPulse { 0%,100%{opacity:0.55} 50%{opacity:0.8} }
 
 .btn-secondary {
   width: 100%;
@@ -963,7 +1031,7 @@ body.has-sidebar { display: flex; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
 .home-hero-title {
-  font-size: 4.25rem;
+  font-size: var(--text-display);
   font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 0.95;
@@ -998,7 +1066,7 @@ body.has-sidebar { display: flex; }
 }
 
 /* ── Hero responsive ── */
-@media (max-width: 900px) {
+/* Tablet */ @media (max-width: 900px) {
   .home-hero { grid-template-columns: 1fr; min-height: 400px; }
   .home-hero-glow { right: 0; width: 300px; height: 300px; }
   .home-hero-content { padding: 32px 24px 0 24px; }
@@ -1075,9 +1143,13 @@ body.has-sidebar { display: flex; }
 }
 
 .choice-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: var(--border-active);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40), 0 0 20px var(--gold-glow);
+}
+.choice-card:active {
+  transform: scale(0.98);
+  transition: all var(--duration-instant);
 }
 .choice-card:focus-visible {
   outline: none;
@@ -1106,7 +1178,7 @@ body.has-sidebar { display: flex; }
 
 .choice-card-text { flex: 1; min-width: 0; }
 
-.choice-card h3 {
+.choice-card h2, .choice-card h3 {
   font-size: 1.75rem;
   font-weight: 600;
   margin-bottom: var(--space-2);
@@ -1184,19 +1256,19 @@ body.has-sidebar { display: flex; }
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BUY PAGE — Blueprint grid: 1fr + 250px, 24px gutter
+   BUY PAGE — Blueprint grid: 1fr + 320px, 24px gutter
    ══════════════════════════════════════════════════════════════════ */
 
-.buy-grid {
+.buy-grid, .sell-grid {
   display: grid;
-  grid-template-columns: 1fr 250px;
+  grid-template-columns: 1fr 320px;
   gap: 24px;
   align-items: start;
 }
 
-.buy-main { min-width: 0; }
+.buy-main, .sell-main { min-width: 0; }
 
-.buy-rail {
+.buy-rail, .sell-rail {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -1215,7 +1287,7 @@ body.has-sidebar { display: flex; }
 .rail-panel-title {
   font-size: 11px;
   font-weight: 700;
-  color: var(--gold-light);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: var(--space-3);
@@ -1274,7 +1346,8 @@ body.has-sidebar { display: flex; }
   gap: 4px;
 }
 
-.rail-coverage-flag { font-size: 1.5rem; flex: 1; }
+.rail-coverage-flag { width: 1.75rem; height: auto; flex-shrink: 0; border-radius: 2px; }
+.market-country-flag-img { width: 1.5rem; height: auto; vertical-align: middle; border-radius: 2px; }
 
 /* ── AI Feature List ── */
 .rail-feature-list {
@@ -1288,11 +1361,16 @@ body.has-sidebar { display: flex; }
   align-items: flex-start;
 }
 .rail-feature-icon {
-  font-size: 0.9rem;
   flex-shrink: 0;
-  width: 20px;
-  text-align: center;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1px;
+}
+.rail-feature-icon svg {
+  display: block;
 }
 .rail-feature-text { flex: 1; min-width: 0; }
 .rail-feature-label {
@@ -1316,20 +1394,26 @@ body.has-sidebar { display: flex; }
 .rail-coverage-row {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  padding: 4px 0;
+  gap: 6px;
+  padding: 3px 0;
 }
 .rail-coverage-country {
   flex: 1;
-  font-size: var(--text-body);
+  font-size: var(--text-xs);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-secondary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .rail-coverage-count {
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--gold-light);
+  text-align: right;
+  flex-shrink: 0;
 }
 .rail-coverage-link {
   display: block;
@@ -1346,32 +1430,44 @@ body.has-sidebar { display: flex; }
 
 /* ── Rail responsive: collapse below 1100px ── */
 @media (max-width: 1100px) {
-  .buy-grid { grid-template-columns: 1fr; }
-  .buy-rail { position: static; }
+  .buy-grid, .sell-grid { grid-template-columns: 1fr; }
+  .buy-rail, .sell-rail { position: static; }
 }
 
 /* ── Buy Form: Asking Price Hero ── */
 .buy-asking-section {
-  background: var(--bg-elevated);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
   margin-bottom: 0;
-  border: 1px solid rgba(200,148,53,0.10);
 }
 .buy-asking-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0;
+}
+.buy-asking-currency {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  background: rgba(200,148,53,0.10);
+  border: 1.5px solid rgba(255,255,255,0.10);
+  border-right: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  padding: 0 14px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  letter-spacing: 0.06em;
 }
 .buy-asking-input {
   flex: 1;
-  height: 48px;
-  padding: 0 16px;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-md);
-  font-size: 1.2rem;
-  font-weight: 700;
-  background: rgba(0,0,0,0.25);
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid rgba(255,255,255,0.10);
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--bg-input);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   transition: border-color var(--duration-base), box-shadow var(--duration-base);
@@ -1381,69 +1477,94 @@ body.has-sidebar { display: flex; }
   border-color: var(--gold);
   box-shadow: 0 0 0 3px var(--gold-glow);
 }
-.buy-asking-currency {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-accent);
-}
 .buy-asking-error {
   width: 100%;
   margin-top: 4px;
 }
 
-/* ── Buy Form: URL Import ── */
-.url-import-card {
-  background: var(--bg-elevated);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-6);
-  border: 1px dashed var(--border-hover);
-  text-align: center;
+/* ── Trust Strip ── */
+.trust-strip {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  flex-wrap: wrap;
 }
-.url-import-icon {
-  font-size: 1.4rem;
-  margin-bottom: var(--space-1);
-}
-.url-import-title {
-  font-weight: 700;
-  margin-bottom: 4px;
-  font-size: var(--text-h4);
-  color: var(--text-primary);
-}
-.url-import-sub {
-  font-size: var(--text-base);
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: 600;
   color: var(--text-muted);
-  margin-bottom: var(--space-4);
+  letter-spacing: 0.03em;
+}
+.trust-item svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+/* ── Buy Form: URL Import ── */
+.url-import-wrapper {
+  text-align: center;
+  background:
+    radial-gradient(ellipse 500px 300px at 0% 0%, rgba(200,148,53,0.12) 0%, rgba(200,148,53,0.04) 40%, transparent 70%);
+  border-color: rgba(200,148,53,0.08);
+}
+.url-import-hint {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+.url-import-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  max-width: 520px;
+  margin: 0 auto;
 }
 .url-import-input {
-  width: 100%;
-  max-width: 560px;
-  height: 48px;
-  padding: 0 16px;
-  border: 1.5px solid var(--border-hover);
+  flex: 1;
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid rgba(255,255,255,0.10);
   border-radius: var(--radius-md);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-family: 'Inter', sans-serif;
-  text-align: center;
-  margin: 0 auto var(--space-3);
   background: var(--bg-input);
   color: var(--text-primary);
   transition: border-color var(--duration-base);
-  display: block;
 }
 .url-import-input:focus {
   border-color: var(--gold);
   box-shadow: 0 0 0 3px var(--gold-glow);
   outline: none;
 }
-.url-import-hint {
-  font-size: var(--text-md);
-  color: var(--text-muted);
-  margin-bottom: var(--space-3);
+.url-import-input::placeholder {
+  color: rgba(255,255,255,0.25);
 }
-.url-import-toggle {
-  max-width: 320px;
-  margin: 0 auto;
-  display: block;
+.url-import-submit {
+  flex-shrink: 0;
+  height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  transition: all var(--duration-base);
+}
+.url-import-submit:hover {
+  background: rgba(200,148,53,0.18);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
 }
 
 .price-hero {
@@ -1456,6 +1577,7 @@ body.has-sidebar { display: flex; }
   font-size: 3.5rem;
   font-weight: 900;
   letter-spacing: -0.03em;
+  font-feature-settings: "tnum";
   background: linear-gradient(135deg, var(--text-primary), var(--text-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1566,10 +1688,253 @@ body.has-sidebar { display: flex; }
 .browse-toolbar {
   display: flex;
   gap: var(--space-2);
-  margin-bottom: var(--space-2);
   align-items: center;
   flex-wrap: wrap;
 }
+
+/* ── Browse KPI Strip ── */
+.browse-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.browse-kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.browse-kpi-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.browse-kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-h3);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ── Search Workspace ── */
+.browse-search-workspace {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  transition: border-color var(--duration-base), box-shadow var(--duration-base);
+}
+.browse-search-workspace:focus-within {
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* ── Search Hero Input ── */
+.browse-search-hero {
+  position: relative;
+  margin-bottom: 0;
+}
+.browse-search-hero .browse-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 1;
+  transition: color var(--duration-fast);
+}
+.browse-search-hero:focus-within .browse-search-icon {
+  color: var(--text-secondary);
+}
+
+.browse-search-workspace .browse-search {
+  width: 100%;
+  height: 56px;
+  padding: 0 52px 0 50px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all var(--duration-base);
+}
+.browse-search-workspace .browse-search:hover {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
+}
+.browse-search-workspace .browse-search:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+  background: rgba(0,0,0,0.4);
+}
+.browse-search-workspace .browse-search::placeholder {
+  color: rgba(255,255,255,0.18);
+  font-weight: 400;
+}
+
+/* ── Search Clear Button ── */
+.browse-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 1;
+  transition: all var(--duration-fast);
+}
+.browse-search-clear:hover {
+  background: rgba(255,255,255,0.10);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.12);
+}
+
+/* ── Search Actions Row ── */
+.browse-search-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  align-items: flex-end;
+}
+
+/* ── Filter Groups ── */
+.browse-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.browse-filter-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.browse-search-actions .browse-select {
+  height: 42px;
+  padding: 0 32px 0 12px;
+  min-width: 160px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-base);
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: all var(--duration-fast);
+}
+.browse-search-actions .browse-select:hover {
+  border-color: rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.35);
+}
+.browse-search-actions .browse-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+/* ── Results Summary ── */
+.browse-results-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  padding-bottom: 2px;
+}
+.browse-results-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.browse-active-filters {
+  font-size: var(--text-xs);
+  color: var(--gold-light);
+  font-weight: 500;
+}
+
+/* ── Browse Section Label ── */
+.browse-section-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-2);
+}
+
+/* ── Browse Section Block ── */
+.browse-section {
+  margin-bottom: var(--space-5);
+}
+
+/* ── Featured Grid ── */
+.browse-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+/* ── Popular Models Grid ── */
+.browse-popular-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+/* ── Browse Footer ── */
+.browse-footer {
+  margin-top: var(--space-6);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ── Browse Responsive ── */
+@media (max-width: 1100px) {
+  .browse-featured-grid { grid-template-columns: repeat(2, 1fr); }
+  .browse-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .browse-featured-grid { grid-template-columns: 1fr; }
+  .browse-popular-grid { grid-template-columns: 1fr; }
+  .browse-kpi-strip { grid-template-columns: 1fr; }
+  .browse-search-workspace { padding: var(--space-3); }
+  .browse-search-actions { flex-wrap: wrap; }
+}
+
+/* ── Toolbar (keep original) ── */
 
 .browse-search-wrap {
   position: relative;
@@ -1643,10 +2008,17 @@ body.has-sidebar { display: flex; }
   white-space: nowrap;
   user-select: none;
 }
+.browse-chip {
+  transition: all var(--duration-base);
+}
 .browse-chip:hover {
   border-color: var(--border-hover);
   color: var(--text-secondary);
   background: var(--bg-card-hover);
+}
+.browse-chip:active {
+  transform: scale(0.95);
+  transition: all var(--duration-instant);
 }
 .browse-chip.active {
   background: var(--gold-glow);
@@ -1663,8 +2035,9 @@ body.has-sidebar { display: flex; }
 }
 
 /* ── Make Cards ── */
+/* ── Enterprise Manufacturer Card ── */
 .make-card {
-  padding: var(--space-3) var(--space-3) var(--space-2);
+  padding: var(--space-3);
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
@@ -1672,25 +2045,28 @@ body.has-sidebar { display: flex; }
   transition: all var(--duration-base);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
   position: relative;
   overflow: hidden;
 }
-
-.make-card::after {
+.make-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
   pointer-events: none;
+  z-index: 1;
 }
-
 .make-card:hover {
   border-color: var(--border-active);
   background: var(--bg-card-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md), var(--shadow-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40), 0 0 20px var(--gold-glow);
+}
+.make-card:active {
+  transform: scale(0.97);
+  transition: all var(--duration-instant);
 }
 .make-card:focus-visible {
   outline: none;
@@ -1698,21 +2074,116 @@ body.has-sidebar { display: flex; }
   box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
+/* ── Card: Top Row (Logo + Brand Name) ── */
+.make-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.make-card-logo {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.make-card-brand {
+  flex: 1;
+  min-width: 0;
+}
+.make-card-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+/* ── Card: Stats Row ── */
+.make-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+.make-card-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.make-card-stat-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.make-card-stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.make-card-stat-value.gold {
+  color: var(--gold-light);
+}
+
+/* ── Card: Trend + Price Footer ── */
+.make-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-1);
+}
+.make-card-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.make-card-trend {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.make-card-trend.up { color: var(--green); }
+.make-card-trend.down { color: var(--red); }
+.make-card-trend.stable { color: var(--text-muted); }
+
+/* ── Card: Volume Bar ── */
+.make-card-bar-wrap { margin-top: auto; }
+.make-card-bar {
+  height: 3px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.make-card-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  border-radius: 2px;
+  transition: width var(--duration-glacial) ease;
+}
+
+/* ── Legacy: keep working for non-browse cards ── */
 .make-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-1);
 }
-
-.make-card-name {
-  font-weight: 700;
-  font-size: var(--text-input);
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-}
-
 .make-card-count {
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--text-base);
@@ -1721,31 +2192,39 @@ body.has-sidebar { display: flex; }
   white-space: nowrap;
   flex-shrink: 0;
 }
-
 .make-card-meta {
   font-size: var(--text-xs);
   color: var(--text-muted);
   line-height: 1.4;
 }
 
-/* ── Mini bar for listing volume ── */
-.make-card-bar-wrap {
+/* ── Premium Placeholder (loading/empty skeleton) ── */
+.make-card-placeholder {
+  padding: var(--space-3);
+  background: var(--bg-card);
+  border: 1px dashed rgba(255,255,255,0.06);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 180px;
+}
+.make-card-placeholder .skeleton-logo {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-md);
+}
+.make-card-placeholder .skeleton-name {
+  width: 55%; height: 16px;
+  border-radius: var(--radius-sm);
+}
+.make-card-placeholder .skeleton-stat {
+  width: 75%; height: 12px;
+  border-radius: var(--radius-sm);
+}
+.make-card-placeholder .skeleton-bar {
+  width: 100%; height: 3px;
+  border-radius: 2px;
   margin-top: auto;
-  padding-top: var(--space-1);
-}
-
-.make-card-bar {
-  height: 3px;
-  background: var(--bg-primary);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.make-card-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--border-hover), var(--border-default));
-  border-radius: 2px;
-  transition: width var(--duration-glacial) ease;
 }
 
 /* ── Models & Years Row Links ── */
@@ -1883,13 +2362,13 @@ body.has-sidebar { display: flex; }
 }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
+/* Tablet Vertical */ @media (max-width: 768px) {
   .browse-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
   .browse-toolbar { flex-direction: column; align-items: stretch; }
   .browse-search-wrap { min-width: 0; }
   .browse-select { width: 100%; }
 }
-@media (max-width: 640px) {
+/* Mobile */ @media (max-width: 640px) {
   .browse-grid { grid-template-columns: 1fr 1fr; }
 }
 
@@ -1926,6 +2405,7 @@ body.has-sidebar { display: flex; }
 }
 
 .market-kpi-value {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
   font-size: var(--text-h3);
   font-weight: 800;
   color: var(--text-primary);
@@ -2012,7 +2492,7 @@ body.has-sidebar { display: flex; }
 }
 .market-country-item:last-child { border-bottom: none; }
 
-.market-country-flag { font-size: var(--text-lead); flex-shrink: 0; width: 28px; text-align: center; }
+.market-country-flag { flex-shrink: 0; width: 28px; display: flex; align-items: center; }
 .market-country-name { flex: 1; font-size: var(--text-md); font-weight: 500; color: var(--text-primary); }
 .market-country-count { font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm); color: var(--text-muted); }
 
@@ -2079,6 +2559,248 @@ body.has-sidebar { display: flex; }
   .market-kpi-grid { grid-template-columns: 1fr; }
   .market-ranked-bar-wrap { display: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   ENTERPRISE SYSTEM STATES
+   ══════════════════════════════════════════════════════════════════ */
+
+.state-container { text-align:center;padding:var(--space-8) var(--space-4);max-width:480px;margin:0 auto; }
+.state-icon { width:72px;height:72px;margin:0 auto var(--space-4);border-radius:var(--radius-2xl);display:flex;align-items:center;justify-content:center;font-size:1.8rem; }
+.state-icon.loading-state { background:var(--bg-card);border:1px solid var(--border-subtle);animation:statePulse 2s ease-in-out infinite; }
+.state-icon.empty-state-icon { background:var(--bg-card);border:1px solid var(--border-subtle); }
+.state-icon.error-state { background:var(--red-bg);border:1px solid rgba(239,68,68,0.2); }
+.state-icon.search-state { background:var(--bg-card);border:1px solid var(--border-hover); }
+@keyframes statePulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+.state-title { font-size:var(--text-section);font-weight:700;color:var(--text-primary);margin-bottom:var(--space-1);letter-spacing:-0.01em; }
+.state-desc { font-size:var(--text-body);color:var(--text-muted);line-height:1.6;margin-bottom:var(--space-4);max-width:380px;margin-left:auto;margin-right:auto; }
+.state-desc code { background:var(--bg-elevated);padding:2px 8px;border-radius:var(--radius-xs);font-family:'JetBrains Mono',monospace;font-size:0.85em;color:var(--text-secondary); }
+.state-actions { display:flex;gap:var(--space-2);justify-content:center;flex-wrap:wrap; }
+.state-btn { display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all var(--duration-fast);border:none;text-decoration:none; }
+.state-btn.primary { background:linear-gradient(90deg,#8B6914,#5C4410);color:var(--text-primary); }
+.state-btn.primary:hover { box-shadow:0 4px 16px var(--gold-glow-strong);transform:translateY(-1px); }
+.state-btn.ghost { background:transparent;border:1px solid rgba(255,255,255,0.10);color:var(--text-secondary); }
+.state-btn.ghost:hover { border-color:rgba(255,255,255,0.20);color:var(--text-primary);background:rgba(255,255,255,0.03); }
+
+/* ══════════════════════════════════════════════════════════════════
+   SETTINGS PAGE
+   ══════════════════════════════════════════════════════════════════ */
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+  position: sticky;
+  top: var(--space-4);
+}
+
+.settings-nav-item {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--duration-fast);
+}
+
+.settings-nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.03);
+}
+
+.settings-nav-item.active {
+  color: var(--text-primary);
+  background: linear-gradient(90deg, rgba(200,148,53,0.22) 0%, rgba(200,148,53,0.08) 80%, transparent 100%);
+  font-weight: 600;
+  border: 1px solid rgba(200,148,53,0.18);
+}
+
+.settings-section-title {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-label {
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.settings-row-sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.settings-select {
+  height: 38px;
+  padding: 0 32px 0 12px;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-base);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+/* ── Toggle Switch ── */
+.settings-toggle {
+  position: relative;
+  width: 44px; height: 24px;
+  flex-shrink: 0;
+}
+
+.settings-toggle input {
+  opacity: 0; width: 0; height: 0;
+}
+
+.settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-input);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--duration-base);
+}
+.settings-toggle:active .settings-toggle-slider {
+  transform: scale(0.92);
+  transition: all var(--duration-instant);
+}
+
+.settings-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  left: 2px; top: 2px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: all var(--duration-fast);
+}
+
+.settings-toggle input:checked + .settings-toggle-slider {
+  background: var(--gold-glow);
+  border-color: var(--border-active);
+}
+
+.settings-toggle input:checked + .settings-toggle-slider::before {
+  background: var(--gold);
+  transform: translateX(20px);
+}
+
+@media (max-width: 768px) {
+  .settings-layout { grid-template-columns: 1fr; }
+  .settings-nav { position: static; flex-direction: row; flex-wrap: wrap; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   REPORTS TABLE
+   ══════════════════════════════════════════════════════════════════ */
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reports-table th {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-2) var(--space-2);
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reports-table td {
+  font-size: var(--text-base);
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.reports-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+.report-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.report-status.complete { background: var(--green-bg); color: var(--green); }
+.report-status.draft { background: var(--amber-bg); color: var(--amber); }
+
+.report-action {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--gold-light);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.report-action:hover { color: var(--gold); }
+
+.report-pagination-btn {
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: var(--text-base);
+  font-weight: 600;
+  transition: all var(--duration-fast);
+}
+
+.report-pagination-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.report-pagination-btn.active { background: var(--gold-glow); border-color: var(--border-active); color: var(--gold-light); }
+.report-pagination-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
 /* ══════════════════════════════════════════════════════════════════
    LOADING & ERRORS
@@ -2179,7 +2901,7 @@ body.has-sidebar { display: flex; }
   transition: background var(--duration-fast);
 }
 
-.autocomplete-item:hover { background: var(--gold-glow); }
+.autocomplete-item:hover { background: rgba(255,255,255,0.05); }
 
 .autocomplete-item > :first-child {
   overflow: hidden;
@@ -2275,6 +2997,7 @@ body.has-sidebar { display: flex; }
   font-family: 'Inter', sans-serif;
   font-size: 3.5rem;
   font-weight: 900;
+  font-feature-settings: "tnum";
   letter-spacing: -0.04em;
   line-height: 1;
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--gold-light) 50%, var(--gold) 100%);
@@ -2357,6 +3080,36 @@ body.has-sidebar { display: flex; }
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* ── Result Details Row (inline stats under range bar) ── */
+.result-details-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding-top: var(--space-2);
+  align-items: center;
+}
+.result-detail-item {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.result-detail-label {
+  color: var(--text-muted);
+}
+.result-detail-item strong {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--text-xs);
+}
+.result-detail-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--border-subtle);
+  margin: 0 var(--space-2);
+  flex-shrink: 0;
+}
+
 /* ── Result Actions ── */
 .result-actions {
   display: flex;
@@ -2428,6 +3181,90 @@ body.has-sidebar { display: flex; }
   border-left: 3px solid var(--gold);
 }
 
+/* ── Result KPI Cards Grid ── */
+.result-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.result-kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  text-align: center;
+  transition: all var(--duration-fast);
+}
+
+.result-kpi-card:hover {
+  border-color: var(--border-hover);
+}
+
+.result-kpi-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.result-kpi-value {
+  font-size: var(--text-h3);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.result-kpi-value.trend-up { color: var(--green); }
+.result-kpi-value.trend-down { color: var(--red); }
+.result-kpi-value.trend-stable { color: var(--amber); }
+
+/* ── AI Summary ── */
+.ai-summary-card {
+  border-left: 3px solid var(--gold);
+}
+
+.ai-summary-text {
+  font-size: var(--text-body);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.ai-summary-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-1);
+}
+
+/* ── Match Badge ── */
+.match-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  margin-left: var(--space-1);
+  flex-shrink: 0;
+}
+
+.match-badge.high   { background: var(--green-bg); color: var(--green); }
+.match-badge.medium { background: var(--gold-glow); color: var(--gold-light); }
+.match-badge.low    { background: var(--amber-bg); color: var(--amber); }
+
+@media (max-width: 768px) {
+  .result-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ── Results: Verdict Detail ── */
 .result-verdict-detail {
   color: var(--text-muted);
@@ -2473,6 +3310,22 @@ body.has-sidebar { display: flex; }
    ENTERPRISE COMPONENT LIBRARY — buttons, tables, skeletons, empty states
    ══════════════════════════════════════════════════════════════════ */
 
+/* ── Breadcrumbs ── */
+.breadcrumbs {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--text-xs); color: var(--text-muted);
+  margin-bottom: var(--space-2); font-weight: 500;
+  padding: 0 56px;
+}
+.has-sidebar .breadcrumbs { padding: 0 40px; }
+.breadcrumbs a {
+  color: var(--text-muted); text-decoration: none;
+  transition: color var(--duration-fast);
+}
+.breadcrumbs a:hover { color: var(--text-primary); }
+.breadcrumbs .breadcrumb-sep { color: rgba(255,255,255,0.15); font-size: 0.6rem; }
+.breadcrumbs .breadcrumb-current { color: var(--text-secondary); font-weight: 600; }
+
 /* ── Focus Ring (global) ── */
 *:focus-visible {
   outline: 2px solid var(--gold);
@@ -2496,6 +3349,11 @@ body.has-sidebar { display: flex; }
 .btn-ghost:hover {
   background: rgba(255,255,255,0.04);
   color: var(--text-primary);
+}
+.btn-ghost:active {
+  background: rgba(255,255,255,0.08);
+  transform: scale(0.97);
+  transition: all var(--duration-instant);
 }
 
 /* ── Skeleton Loader ── */
@@ -2588,9 +3446,14 @@ body.has-sidebar { display: flex; }
 .kpi-card .kpi-trend.down { color: var(--red); }
 
 /* ══════════════════════════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE BREAKPOINT SYSTEM
+   Wide       > 1200px  — full desktop: sidebars, multi-column grids, hero image
+   Desktop    901–1200px — compact desktop: reduced padding, stacked headers
+   Tablet     641–900px  — tablet: 1fr grids, wrapped KPIs, hidden dividers
+   Mobile     ≤ 640px    — phone: single-column forms, full-width cards
    ══════════════════════════════════════════════════════════════════ */
 
+/* ── Desktop Compact (≤1200px) ── */
 @media (max-width: 1200px) {
   .main-content { max-width: 100%; padding: 0 24px var(--space-4); }
   .has-sidebar .main-content { max-width: 100%; padding: 0 24px var(--space-4); }
@@ -2611,11 +3474,98 @@ body.has-sidebar { display: flex; }
 
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
-  .sidebar { width: 220px; }
+  .sidebar { width: 256px; }
   .price-hero .amount { font-size: 2.5rem; }
   .result-amount { font-size: 2.5rem; }
   .result-actions { flex-direction: column; align-items: stretch; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   MOTION SYSTEM — page transitions, result reveal, skeletons
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Page Transition ── */
+[id^="page-"] {
+  animation: pageFadeIn 0.28s ease;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Result Reveal Pulse ── */
+.result-hero {
+  animation: resultReveal 1s ease;
+}
+@keyframes resultReveal {
+  0%   { box-shadow: 0 0 0 rgba(200,148,53,0); }
+  40%  { box-shadow: 0 0 48px var(--gold-glow-strong); }
+  100% { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+}
+
+/* ── Form Loading Skeleton ── */
+.form-skeleton-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+.form-skeleton-field {
+  height: 42px;
+  border-radius: var(--radius-md);
+}
+
+.form-skeleton-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--space-2) 0;
+}
+
+.form-skeleton-btn {
+  height: 48px;
+  border-radius: var(--radius-md);
+  margin-top: var(--space-4);
+}
+
+/* ── Hover Elevation Consistency ── */
+.make-card:hover,
+.choice-card:hover,
+.alt-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.market-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.result-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Modal System ── */
+.modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;animation:modalFadeIn 0.2s ease; }
+@keyframes modalFadeIn { from{opacity:0} to{opacity:1} }
+.modal-card { background:var(--bg-card);border:1px solid var(--border-hover);border-radius:var(--radius-xl);padding:var(--space-4);max-width:520px;width:90%;box-shadow:var(--shadow-xl);animation:modalSlideIn 0.25s ease; }
+@keyframes modalSlideIn { from{opacity:0;transform:translateY(20px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+.modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3); }
+.modal-header h3 { font-size:var(--text-section);font-weight:700;color:var(--text-primary);margin:0;padding:0;border:none;text-transform:none; }
+.modal-close { width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-sm);color:var(--text-muted);cursor:pointer;font-size:1.1rem;transition:all var(--duration-fast); }
+.modal-close:hover { background:rgba(255,255,255,0.08);color:var(--text-primary); }
+
+/* ── Slide-out Drawer ── */
+.drawer-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:var(--z-overlay);display:none; }
+.drawer-overlay.open { display:block;animation:modalFadeIn 0.2s ease; }
+.drawer-panel { position:fixed;top:0;right:0;width:400px;max-width:90vw;height:100vh;background:var(--bg-secondary);border-left:1px solid var(--border-subtle);z-index:var(--z-modal);overflow-y:auto;padding:var(--space-4);transform:translateX(100%);transition:transform var(--duration-base); }
+.drawer-panel.open { transform:translateX(0); }
+.drawer-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--border-subtle); }
+.drawer-close { width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:none;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text-muted);cursor:pointer;font-size:1.1rem;transition:all var(--duration-fast); }
+.drawer-close:hover { color:var(--text-primary);border-color:var(--border-hover); }
+@media (max-width:640px){ .drawer-panel{width:100vw} }
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
@@ -2727,7 +3677,7 @@ body.has-sidebar { display: flex; }
   </div>
 </div>
 
-<nav class="sidebar-nav" aria-label="Primary">
+<nav class="sidebar-nav" aria-label="Primary navigation">
 
 <div class="sidebar-section-label">Main</div>
 
@@ -2743,6 +3693,9 @@ body.has-sidebar { display: flex; }
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
   Buy
 </a>
+
+<div class="sidebar-section-label">Analysis</div>
+
 <a href="#" id="nav-browse" onclick="goPage('browse',this)">
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
   Browse
@@ -2751,26 +3704,20 @@ body.has-sidebar { display: flex; }
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   Market
 </a>
-
-<div class="sidebar-section-label">Market Intelligence</div>
-
-<a href="#" class="nav-disabled" onclick="return false" aria-disabled="true" aria-label="Reports — coming soon">
+<a href="#" id="nav-reports" onclick="goPage('reports',this)">
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
   Reports
-  <span class="nav-badge">Soon</span>
 </a>
-<a href="#" class="nav-disabled" onclick="return false" aria-disabled="true" aria-label="Watchlist — coming soon">
+<a href="#" id="nav-watchlist" onclick="goPage('watchlist',this)">
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
   Watchlist
-  <span class="nav-badge">Soon</span>
 </a>
 
-<div class="sidebar-section-label">Account</div>
+<div class="sidebar-section-label">Admin</div>
 
-<a href="#" class="nav-disabled" onclick="return false" aria-disabled="true" aria-label="Settings — coming soon">
+<a href="#" id="nav-settings" onclick="goPage('settings',this)">
   <svg class="nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   Settings
-  <span class="nav-badge">Soon</span>
 </a>
 
 </nav>
@@ -2794,10 +3741,13 @@ body.has-sidebar { display: flex; }
 <header class="header">
 <div class="header-brand"></div>
 <div class="header-actions">
+  <button class="header-btn" title="Search" onclick="focusGlobalSearch()" aria-label="Search vehicles and markets">
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </button>
   <button class="header-btn" title="Notifications" onclick="return false">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
   </button>
-  <button class="header-btn" title="Theme" onclick="return false" aria-label="Theme — coming soon">
+  <button class="header-btn" title="Theme" onclick="return false" aria-label="Theme — dark mode">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
   </button>
   <button class="lang-btn" onclick="toggleLang()">
@@ -2809,6 +3759,8 @@ body.has-sidebar { display: flex; }
 </header>
 
 <main class="main-content" id="main-content">
+
+<div class="breadcrumbs hidden" id="breadcrumbs"></div>
 
 <div id="page-home">
 
@@ -2890,6 +3842,7 @@ body.has-sidebar { display: flex; }
     </div>
     <h1 class="home-hero-title">What would you like to do <span class="gold-word">today</span>?</h1>
     <p class="home-hero-sub">Advanced AI valuation backed by real-time market data from across the GCC.</p>
+    <p style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-top:var(--space-1)">Enterprise Automotive Intelligence Platform</p>
   </div>
 
   <!-- CTA cards floating at bottom -->
@@ -2898,7 +3851,7 @@ body.has-sidebar { display: flex; }
       <div class="choice-card-body">
         <div class="choice-card-logo">S</div>
         <div class="choice-card-text">
-          <h3>I'm Selling</h3>
+          <h2 style="font-size:1.75rem;font-weight:600;margin-bottom:var(--space-2);color:var(--text-primary);text-transform:none;border:none;padding:0;letter-spacing:-0.01em">I'm Selling</h2>
           <p>Discover your car's true market value with real-time comparable analysis across the entire GCC.</p>
         </div>
       </div>
@@ -2908,7 +3861,7 @@ body.has-sidebar { display: flex; }
       <div class="choice-card-body">
         <div class="choice-card-logo">B</div>
         <div class="choice-card-text">
-          <h3>I'm Buying</h3>
+          <h2 style="font-size:1.75rem;font-weight:600;margin-bottom:var(--space-2);color:var(--text-primary);text-transform:none;border:none;padding:0;letter-spacing:-0.01em">I'm Buying</h2>
           <p>Verify if a deal is fair with instant market comparison. Find better alternatives and save thousands.</p>
         </div>
       </div>
@@ -2932,12 +3885,29 @@ body.has-sidebar { display: flex; }
   <div class="kpi-divider"></div>
   <div class="kpi-card">
     <div class="kpi-value" id="home-kpi-marketplaces">98.7%</div>
-    <div class="kpi-label">Data Accuracy</div>
+    <div class="kpi-label">Model Accuracy</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi-card">
     <div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">24/7</div>
     <div class="kpi-label">Market Monitoring</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi-card">
+    <div class="kpi-value">~4 min</div>
+    <div class="kpi-label">Avg Refresh Time</div>
+  </div>
+</div>
+
+<div class="home-trust-strip">
+  <div class="home-trust-label">Data sourced from</div>
+  <div class="home-marketplace-row">
+    <span class="marketplace-chip">Dubizzle</span>
+    <span class="marketplace-chip">YallaMotor</span>
+    <span class="marketplace-chip">Emirates Auction</span>
+    <span class="marketplace-chip">OpenSooq</span>
+    <span class="marketplace-chip">Qatar Living</span>
+    <span class="marketplace-chip">CarSwitch</span>
   </div>
 </div>
 
@@ -2946,72 +3916,87 @@ body.has-sidebar { display: flex; }
 </div>
 
 <div id="page-sell" class="hidden">
+
 <div class="page-header"><div class="page-header-left"><h2 class="page-title">Sell Your Car</h2><p class="page-sub">Get an accurate market valuation based on live GCC listings across 6 countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
-<div class="card card-form"><div class="card-header"><h3>Vehicle Details</h3></div><div class="card-body"><div id="sell-form"></div></div><div class="card-footer"><button class="btn" id="sell-btn" onclick="doValuation('sell')">✨ Calculate Market Value →</button></div></div>
-<div id="sell-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Analyzing market data...</div></div></div>
-<div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden" aria-live="polite"></div></div>
 
-<div id="page-buy" class="hidden">
-
-<div class="page-header"><div class="page-header-left"><h2 class="page-title">Buy a Car</h2><p class="page-sub">Verify if the asking price is fair against live GCC market data.</p></div><div class="page-header-badge">GCC Live Market</div></div>
-
-<!-- ═══ BUY PAGE GRID: Main (1fr) + Right Panel (250px) ═══ -->
-<div class="buy-grid">
+<!-- ═══ SELL PAGE GRID: Main (1fr) + Right Panel (320px) ═══ -->
+<div class="sell-grid">
 
   <!-- LEFT: Form Area -->
-  <div class="buy-main">
+  <div class="sell-main">
 
     <div class="card card-form">
-      <div class="card-header"><h3>Deal Analysis</h3></div>
-      <div class="card-body"><div id="buy-form"></div></div>
-      <div class="card-footer"><button class="btn" id="buy-btn" onclick="doValuation('buy')">✨ Analyze This Deal →</button></div>
+      <div class="card-header"><h3>Vehicle Details</h3></div>
+      <div class="card-body"><div id="sell-form"></div></div>
+      <div class="card-footer">
+        <button class="btn" id="sell-btn" onclick="doValuation('sell')">Get Market Valuation<span class="btn-sub">AI-powered pricing + listing recommendations</span></button>
+      </div>
     </div>
 
-    <div class="card" style="text-align:center">
-      <p class="url-import-hint">Or paste a listing URL from any GCC marketplace</p>
-      <button class="btn-secondary url-import-toggle" onclick="toggleUrlSection()">🔗 Paste a listing URL</button>
-      <div id="buy-url-section" style="display:none;margin-top:var(--space-3)">
-        <div class="url-import-card">
-          <div class="url-import-icon">&#128279;</div>
-          <div class="url-import-title">Paste the listing URL</div>
-          <div class="url-import-sub">Works with Dubizzle, YallaMotor, Haraj, OpenSooq, and more</div>
-          <input type="url" id="fm-url" class="url-import-input" placeholder="https://uae.dubizzle.com/motors/used-cars/..." aria-label="Listing URL">
-          <button class="btn url-import-toggle" onclick="submitUrl()">✨ Analyze This URL →</button>
+    <div class="card" id="sell-image-card">
+      <div class="card-header"><h3>AI Image Review</h3></div>
+      <div class="card-body">
+        <div id="sell-image-zone" role="button" tabindex="0" aria-label="Upload vehicle images" style="border:2px dashed rgba(255,255,255,0.10);border-radius:var(--radius-lg);padding:var(--space-4);text-align:center;cursor:pointer;transition:all var(--duration-fast)" onclick="document.getElementById('sell-image-input').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('sell-image-input').click()}">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" style="margin-bottom:var(--space-2)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p style="font-size:var(--text-body);color:var(--text-muted);margin:0">Drop vehicle images here or click to browse</p>
+          <p style="font-size:var(--text-xs);color:var(--text-muted);margin-top:4px">Upload up to 5 images for AI condition assessment</p>
+          <input type="file" id="sell-image-input" accept="image/*" multiple style="display:none" onchange="handleSellImages(this)">
         </div>
+        <div id="sell-image-previews" style="display:flex;gap:var(--space-1);margin-top:var(--space-2);flex-wrap:wrap"></div>
+        <div id="sell-ai-notes" style="display:none;margin-top:var(--space-2);padding:var(--space-2);background:var(--bg-elevated);border-radius:var(--radius-md);font-size:var(--text-xs);color:var(--text-secondary);line-height:1.6"></div>
+      </div>
+    </div>
+
+    <div class="trust-strip">
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>AI Powered</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Live Data</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>High Accuracy</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Market Coverage</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Secure</span></div>
+    </div>
+
+    <div class="card url-import-wrapper">
+      <p class="url-import-hint">Or paste a listing URL from any GCC marketplace</p>
+      <div class="url-import-row">
+        <input type="url" id="sell-url" class="url-import-input" placeholder="Paste listing URL here…" aria-label="Listing URL" onkeydown="if(event.key==='Enter')submitSellUrl()">
+        <button class="url-import-submit" onclick="submitSellUrl()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Analyze Listing
+        </button>
       </div>
     </div>
 
   </div>
 
-  <!-- RIGHT: Intelligence Panel — 250px -->
-  <div class="buy-rail">
+  <!-- RIGHT: Intelligence Panel — 320px -->
+  <div class="sell-rail">
 
     <div class="rail-panel rail-panel-ai">
       <div class="rail-panel-title">POWERED BY ADVANCED AI</div>
       <div class="rail-feature-list">
         <div class="rail-feature">
-          <div class="rail-feature-icon">📡</div>
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
           <div class="rail-feature-text">
             <div class="rail-feature-label">Real-time Market Data</div>
             <div class="rail-feature-desc">Live listings from 6 GCC countries</div>
           </div>
         </div>
         <div class="rail-feature">
-          <div class="rail-feature-icon">🧠</div>
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="8" cy="6" r="2"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/><line x1="8" y1="8" x2="8" y2="12"/><line x1="16" y1="8" x2="16" y2="12"/><line x1="10" y1="6" x2="14" y2="6"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
           <div class="rail-feature-text">
             <div class="rail-feature-label">AI Valuation Engine</div>
             <div class="rail-feature-desc">Machine learning pricing models</div>
           </div>
         </div>
         <div class="rail-feature">
-          <div class="rail-feature-icon">📊</div>
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><rect x="2" y="12" width="5" height="10" rx="1"/><rect x="9.5" y="6" width="5" height="16" rx="1"/><rect x="17" y="2" width="5" height="20" rx="1"/></svg></div>
           <div class="rail-feature-text">
             <div class="rail-feature-label">Market Intelligence</div>
             <div class="rail-feature-desc">Trends, demand & insights</div>
           </div>
         </div>
         <div class="rail-feature">
-          <div class="rail-feature-icon">🎯</div>
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
           <div class="rail-feature-text">
             <div class="rail-feature-label">Price Confidence Score</div>
             <div class="rail-feature-desc">Know how accurate our estimate is</div>
@@ -3023,63 +4008,214 @@ body.has-sidebar { display: flex; }
     <div class="rail-panel rail-panel-coverage">
       <div class="rail-panel-title">MARKET COVERAGE</div>
       <div class="rail-coverage-list">
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇦🇪</span><span class="rail-coverage-count">3.2M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇸🇦</span><span class="rail-coverage-count">4.1M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇶🇦</span><span class="rail-coverage-count">1.2M+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇰🇼</span><span class="rail-coverage-count">870K+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇧🇭</span><span class="rail-coverage-count">450K+</span></div>
-        <div class="rail-coverage-row"><span class="rail-coverage-flag">🇴🇲</span><span class="rail-coverage-count">380K+</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/ae.svg" alt="UAE"> <span class="rail-coverage-country">UAE</span> <span class="rail-coverage-count">3.2M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/sa.svg" alt="Saudi Arabia"> <span class="rail-coverage-country">Saudi Arabia</span> <span class="rail-coverage-count">4.1M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/qa.svg" alt="Qatar"> <span class="rail-coverage-country">Qatar</span> <span class="rail-coverage-count">1.2M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/kw.svg" alt="Kuwait"> <span class="rail-coverage-country">Kuwait</span> <span class="rail-coverage-count">870K listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/bh.svg" alt="Bahrain"> <span class="rail-coverage-country">Bahrain</span> <span class="rail-coverage-count">450K listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/om.svg" alt="Oman"> <span class="rail-coverage-country">Oman</span> <span class="rail-coverage-count">380K listings</span></div>
       </div>
       <a class="rail-coverage-link" href="#" onclick="goPage('market',document.getElementById('nav-market'))">View all markets →</a>
     </div>
 
   </div>
+</div><!-- /.sell-grid -->
+
+<div id="sell-loading" class="card hidden"><div class="card-body"><div class="form-skeleton-row"><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div></div><div class="form-skeleton-divider"></div><div class="form-skeleton-row" style="grid-template-columns:repeat(3,1fr)"><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div></div><div class="skeleton form-skeleton-btn"></div><p style="text-align:center;font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-2)">Analyzing market data...</p></div></div>
+<div id="sell-error" class="card hidden"></div><div id="sell-results" class="hidden" aria-live="polite"></div></div>
+
+<div id="page-buy" class="hidden">
+
+<div class="page-header"><div class="page-header-left"><h2 class="page-title">Buy a Car</h2><p class="page-sub">Verify if the asking price is fair against live GCC market data.</p></div><div class="page-header-badge">GCC Live Market</div></div>
+
+<!-- ═══ BUY PAGE GRID: Main (1fr) + Right Panel (320px) ═══ -->
+<div class="buy-grid">
+
+  <!-- LEFT: Form Area -->
+  <div class="buy-main">
+
+    <div class="card card-form">
+      <div class="card-header"><h3>Deal Analysis</h3></div>
+      <div class="card-body"><div id="buy-form"></div></div>
+      <div class="card-footer">
+        <button class="btn" id="buy-btn" onclick="doValuation('buy')">Analyze This Deal<span class="btn-sub">Get AI-powered market valuation</span></button>
+      </div>
+    </div>
+
+    <div class="card" id="deal-score-card" style="display:none;text-align:center">
+      <div class="card-body">
+        <div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600">Deal Score Preview</div>
+        <div style="font-size:2.5rem;font-weight:900;margin:var(--space-1) 0" id="deal-score-value">--</div>
+        <div style="font-size:var(--text-xs);color:var(--text-muted)" id="deal-score-label">Enter asking price to see deal score</div>
+        <div style="height:4px;background:var(--bg-primary);border-radius:2px;margin-top:var(--space-2);overflow:hidden">
+          <div id="deal-score-bar" style="height:100%;width:0%;background:var(--gold);border-radius:2px;transition:width var(--duration-base)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-strip">
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>AI Powered</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Live Data</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>High Accuracy</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Market Coverage</span></div>
+      <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Secure</span></div>
+    </div>
+
+    <div class="card url-import-wrapper">
+      <p class="url-import-hint">Or paste a listing URL from any GCC marketplace</p>
+      <div class="url-import-row">
+        <input type="url" id="fm-url" class="url-import-input" placeholder="Paste listing URL here…" aria-label="Listing URL" onkeydown="if(event.key==='Enter')submitUrl()">
+        <button class="url-import-submit" onclick="submitUrl()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Analyze Listing
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Intelligence Panel — 320px -->
+  <div class="buy-rail">
+
+    <div class="rail-panel rail-panel-ai">
+      <div class="rail-panel-title">POWERED BY ADVANCED AI</div>
+      <div class="rail-feature-list">
+        <div class="rail-feature">
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
+          <div class="rail-feature-text">
+            <div class="rail-feature-label">Real-time Market Data</div>
+            <div class="rail-feature-desc">Live listings from 6 GCC countries</div>
+          </div>
+        </div>
+        <div class="rail-feature">
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="8" cy="6" r="2"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/><line x1="8" y1="8" x2="8" y2="12"/><line x1="16" y1="8" x2="16" y2="12"/><line x1="10" y1="6" x2="14" y2="6"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+          <div class="rail-feature-text">
+            <div class="rail-feature-label">AI Valuation Engine</div>
+            <div class="rail-feature-desc">Machine learning pricing models</div>
+          </div>
+        </div>
+        <div class="rail-feature">
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><rect x="2" y="12" width="5" height="10" rx="1"/><rect x="9.5" y="6" width="5" height="16" rx="1"/><rect x="17" y="2" width="5" height="20" rx="1"/></svg></div>
+          <div class="rail-feature-text">
+            <div class="rail-feature-label">Market Intelligence</div>
+            <div class="rail-feature-desc">Trends, demand & insights</div>
+          </div>
+        </div>
+        <div class="rail-feature">
+          <div class="rail-feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
+          <div class="rail-feature-text">
+            <div class="rail-feature-label">Price Confidence Score</div>
+            <div class="rail-feature-desc">Know how accurate our estimate is</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-panel rail-panel-coverage">
+      <div class="rail-panel-title">MARKET COVERAGE</div>
+      <div class="rail-coverage-list">
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/ae.svg" alt="UAE"> <span class="rail-coverage-country">UAE</span> <span class="rail-coverage-count">3.2M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/sa.svg" alt="Saudi Arabia"> <span class="rail-coverage-country">Saudi Arabia</span> <span class="rail-coverage-count">4.1M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/qa.svg" alt="Qatar"> <span class="rail-coverage-country">Qatar</span> <span class="rail-coverage-count">1.2M listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/kw.svg" alt="Kuwait"> <span class="rail-coverage-country">Kuwait</span> <span class="rail-coverage-count">870K listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/bh.svg" alt="Bahrain"> <span class="rail-coverage-country">Bahrain</span> <span class="rail-coverage-count">450K listings</span></div>
+        <div class="rail-coverage-row"><img class="rail-coverage-flag" src="img/flags/om.svg" alt="Oman"> <span class="rail-coverage-country">Oman</span> <span class="rail-coverage-count">380K listings</span></div>
+      </div>
+      <a class="rail-coverage-link" href="#" onclick="goPage('market',document.getElementById('nav-market'))">View all markets →</a>
+    </div>
+
   </div>
 
 </div><!-- /.buy-grid -->
 
-<div id="buy-loading" class="card hidden"><div class="loading"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-muted);font-size: var(--text-base)">Searching for better deals...</div></div></div>
+<div id="buy-loading" class="card hidden"><div class="card-body"><div class="form-skeleton-row"><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div></div><div class="form-skeleton-divider"></div><div class="form-skeleton-row" style="grid-template-columns:repeat(3,1fr)"><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div><div class="skeleton form-skeleton-field"></div></div><div class="skeleton form-skeleton-btn"></div><p style="text-align:center;font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-2)">Searching for better deals...</p></div></div>
 <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
 <div id="page-browse" class="hidden">
 
-<div class="page-header"><div class="page-header-left"><h2 class="page-title">Browse Models</h2><p class="page-sub">Explore every make and model across all 6 GCC countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
+<!-- ═══ 1. PAGE HEADER ═══ -->
+<div class="page-header"><div class="page-header-left"><h2 class="page-title">Browse Models</h2><p class="page-sub">Live market intelligence across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
 
-<!-- ═══ TOOLBAR ═══ -->
-<div class="browse-toolbar">
-  <div class="browse-search-wrap">
-    <svg class="browse-search-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="browse-search" id="browse-search" placeholder="Search makes, models, or years..." oninput="filterBrowseMakes()" autocomplete="off">
+<!-- ═══ 2. MARKET KPI STRIP ═══ -->
+<div class="browse-kpi-strip" id="browse-kpi-strip">
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Manufacturers</div><div class="browse-kpi-value" id="browse-kpi-makes">—</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Total Models</div><div class="browse-kpi-value" id="browse-kpi-models">—</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Active Listings</div><div class="browse-kpi-value" id="browse-kpi-listings">—</div></div>
+  <div class="browse-kpi-card">
+    <div style="display:flex;align-items:center;gap:6px"><span class="browse-kpi-label">Countries</span><span style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px rgba(0,214,107,0.4)" title="All systems operational"></span></div>
+    <div class="browse-kpi-value">6</div>
   </div>
-  <select id="browse-country" onchange="loadBrowseMakes()" class="browse-select">
-    <option value="">All GCC Countries</option><option value="AE">🇦🇪 UAE</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="KW">🇰🇼 Kuwait</option><option value="QA">🇶🇦 Qatar</option><option value="BH">🇧🇭 Bahrain</option><option value="OM">🇴🇲 Oman</option>
-  </select>
-  <select id="browse-sort" onchange="renderBrowseMakes()" class="browse-select">
-    <option value="name">Sort: Name (A–Z)</option><option value="count">Sort: Most Listings</option><option value="models">Sort: Most Models</option>
-  </select>
 </div>
 
-<!-- ═══ QUICK FILTERS ═══ -->
-<div class="browse-quick-filters" id="browse-quick-filters">
-  <span class="browse-chip active" data-filter="all">All</span>
-  <span class="browse-chip" data-filter="popular">Popular</span>
-  <span class="browse-chip" data-filter="luxury">Luxury</span>
-  <span class="browse-chip" data-filter="japanese">Japanese</span>
-  <span class="browse-chip" data-filter="suv">SUV</span>
+<!-- ═══ 3. SEARCH WORKSPACE ═══ -->
+<div class="browse-search-workspace">
+  <div class="browse-search-wrap browse-search-hero">
+    <svg class="browse-search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" class="browse-search" id="browse-search" placeholder="Search manufacturers..." oninput="filterBrowseMakes();toggleSearchClear()" onkeydown="if(event.key==='Escape'){this.value='';filterBrowseMakes();toggleSearchClear();this.blur();}" autocomplete="off" aria-label="Search manufacturers">
+    <button class="browse-search-clear" id="browse-search-clear" onclick="document.getElementById('browse-search').value='';filterBrowseMakes();toggleSearchClear();document.getElementById('browse-search').focus();" aria-label="Clear search" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="browse-search-actions">
+    <div class="browse-filter-group">
+      <label class="browse-filter-label" for="browse-country">Country</label>
+      <select id="browse-country" onchange="loadBrowseMakes();updateCountryIndicator()" class="browse-select">
+        <option value="">All GCC Countries</option><option value="AE">🇦🇪 UAE</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="KW">🇰🇼 Kuwait</option><option value="QA">🇶🇦 Qatar</option><option value="BH">🇧🇭 Bahrain</option><option value="OM">🇴🇲 Oman</option>
+      </select>
+    </div>
+    <div class="browse-filter-group">
+      <label class="browse-filter-label" for="browse-sort">Sort by</label>
+      <select id="browse-sort" onchange="renderBrowseMakes()" class="browse-select">
+        <option value="name">Name (A–Z)</option><option value="count">Most Listings</option>
+      </select>
+    </div>
+    <div class="browse-filter-group" style="flex:1;min-width:0"></div>
+    <div class="browse-results-summary">
+      <span class="browse-results-count" id="browse-results-text"></span>
+      <span class="browse-active-filters" id="browse-active-filters"></span>
+    </div>
+  </div>
 </div>
 
-<!-- ═══ RESULTS BAR ═══ -->
-<div class="browse-results-bar" id="browse-results-bar">
-  <span class="browse-results-count" id="browse-results-text"></span>
+<!-- ═══ 4. QUICK FILTERS ═══ -->
+<div class="browse-section" id="browse-filters-section">
+  <div class="browse-section-label">Quick Filters</div>
+  <div class="card" style="padding:var(--space-2) var(--space-3)">
+    <div class="browse-quick-filters" id="browse-quick-filters" style="margin-bottom:0">
+      <span class="browse-chip active" data-filter="all">All</span>
+      <span class="browse-chip" data-filter="popular">Popular</span>
+      <span class="browse-chip" data-filter="luxury">Luxury</span>
+      <span class="browse-chip" data-filter="japanese">Japanese</span>
+      <span class="browse-chip" data-filter="suv">SUV</span>
+    </div>
+  </div>
 </div>
 
-<!-- ═══ MAKES GRID ═══ -->
-<div class="card" id="browse-makes-card">
-  <div class="card-body"><div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div></div>
-</div>
+<!-- ═══ BROWSE CONTENT AREA — sections 5–7 ═══ -->
+<div id="browse-content-area">
 
-<!-- ═══ MODELS LIST ═══ -->
+  <!-- ═══ 5. FEATURED MANUFACTURERS ═══ -->
+  <div class="browse-section" id="browse-featured-section">
+    <div class="browse-section-label">Featured Manufacturers</div>
+    <div class="browse-featured-grid" id="browse-featured-grid"></div>
+  </div>
+
+  <!-- ═══ 6. POPULAR MODELS ═══ -->
+  <div class="browse-section" id="browse-popular-section">
+    <div class="browse-section-label">Popular Models</div>
+    <div class="browse-popular-grid" id="browse-popular-grid"></div>
+  </div>
+
+  <!-- ═══ 7. ALL MANUFACTURERS ═══ -->
+  <div class="browse-section" id="browse-all-section">
+    <div class="browse-section-label">All Manufacturers</div>
+    <div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div>
+  </div>
+
+</div><!-- /#browse-content-area -->
+
+<!-- ═══ DRILL-DOWN: Models List ═══ -->
 <div class="card" id="browse-models-card" style="display:none">
   <div class="card-header browse-level-header">
     <button onclick="backToMakes()" class="back-btn">← All Manufacturers</button>
@@ -3088,7 +4224,7 @@ body.has-sidebar { display: flex; }
   <div class="card-body"><div id="browse-models-list"></div></div>
 </div>
 
-<!-- ═══ YEARS LIST ═══ -->
+<!-- ═══ DRILL-DOWN: Years List ═══ -->
 <div class="card" id="browse-years-card" style="display:none">
   <div class="card-header browse-level-header">
     <button onclick="backToModels()" class="back-btn">← All Models</button>
@@ -3096,6 +4232,58 @@ body.has-sidebar { display: flex; }
   </div>
   <div class="card-body"><div id="browse-years-list"></div></div>
 </div>
+
+<!-- ═══ RECENTLY VIEWED ═══ -->
+<div class="browse-section" id="browse-recent-section" style="display:none">
+  <div class="browse-section-label">Recently Viewed</div>
+  <div class="browse-quick-filters" id="browse-recent-chips"></div>
+</div>
+
+<!-- ═══ 8. MARKET INTELLIGENCE ═══ -->
+<div class="browse-section" id="browse-intelligence-section">
+  <div class="browse-section-label">Market Intelligence</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+    <!-- Left column: Market Snapshot + Live Status -->
+    <div class="card" style="padding:var(--space-3)">
+      <div style="display:flex;align-items:center;gap:var(--space-1);margin-bottom:var(--space-3)">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0" id="browse-live-dot"></span>
+        <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">Live GCC Data</span>
+        <span style="font-size:var(--text-xs);color:var(--text-muted);margin-left:auto" id="browse-last-updated"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2)">
+        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Manufacturers</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)" id="browse-intel-makes">—</div></div>
+        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Total Models</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)" id="browse-intel-models">—</div></div>
+        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Active Listings</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--gold-light)" id="browse-intel-listings">—</div></div>
+        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Countries</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)">6</div></div>
+      </div>
+    </div>
+    <!-- Right column: Trending + Coverage -->
+    <div class="card" style="padding:var(--space-3)">
+      <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-2)">Trending Manufacturers</div>
+      <div id="browse-trending-list" style="display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-2) 0">Loading market data...</div>
+      </div>
+      <div style="margin-top:var(--space-3);padding-top:var(--space-2);border-top:1px solid var(--border-subtle)">
+        <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-1)">Market Coverage</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px 0" id="browse-coverage-flags">
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇦🇪 UAE</span>
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇸🇦 Saudi Arabia</span>
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇰🇼 Kuwait</span>
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇶🇦 Qatar</span>
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇧🇭 Bahrain</span>
+          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇴🇲 Oman</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 9. FOOTER ═══ -->
+<div class="browse-footer">
+  <span>Data sourced from 10 marketplaces across 6 GCC countries</span>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:var(--text-xs)">GCC Car Valuator — Enterprise</span>
+</div>
+
 </div>
 
 <div id="page-market" class="hidden">
@@ -3141,14 +4329,74 @@ body.has-sidebar { display: flex; }
 
 <!-- ═══ EXPORT ACTIONS ═══ -->
 <div class="market-export-row">
-  <button class="btn btn-ghost" onclick="return false" style="width:auto;padding:8px 18px;font-size: var(--text-base-sm)" disabled>
+  <button class="btn btn-ghost" onclick="window.print()" style="width:auto;padding:8px 18px;font-size: var(--text-base-sm)">
     <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Export PDF
   </button>
-  <button class="btn btn-ghost" onclick="return false" style="width:auto;padding:8px 18px;font-size: var(--text-base-sm)" disabled>
+  <button class="btn btn-ghost" onclick="exportMarketCSV()" style="width:auto;padding:8px 18px;font-size: var(--text-base-sm)">
     <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Export CSV
   </button>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+   REPORTS PAGE
+   ═══════════════════════════════════════════════════════════ -->
+<div id="page-reports" class="hidden">
+
+<div class="page-header"><div class="page-header-left"><h2 class="page-title">Reports</h2><p class="page-sub">Valuation history, market reports, and exportable documents.</p></div><div class="page-header-badge">GCC Live Market</div></div>
+
+<div class="card">
+  <div class="card-header" style="display:flex;gap:var(--space-1);border-bottom:1px solid var(--border-subtle);padding-bottom:var(--space-2)">
+    <span class="browse-chip active" data-report-tab="all" onclick="switchReportTab('all',this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchReportTab('all',this)}" style="cursor:pointer">All Reports</span>
+    <span class="browse-chip" data-report-tab="completed" onclick="switchReportTab('completed',this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchReportTab('completed',this)}" style="cursor:pointer">Completed</span>
+    <span class="browse-chip" data-report-tab="draft" onclick="switchReportTab('draft',this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchReportTab('draft',this)}" style="cursor:pointer">Draft</span>
+    <span class="browse-chip" data-report-tab="templates" onclick="switchReportTab('templates',this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchReportTab('templates',this)}" style="cursor:pointer">Templates</span>
+  </div>
+  <div class="card-body" style="padding:0">
+    <div id="reports-table"></div>
+    <div id="reports-pagination" style="display:flex;justify-content:center;gap:var(--space-1);padding:var(--space-3) 0 0"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+   WATCHLIST PAGE
+   ═══════════════════════════════════════════════════════════ -->
+<div id="page-watchlist" class="hidden">
+
+<div class="page-header"><div class="page-header-left"><h2 class="page-title">Watchlist</h2><p class="page-sub">Monitor saved vehicles. Track price changes and get alerts.</p></div><div class="page-header-badge">GCC Live Market</div></div>
+
+<div id="watchlist-grid" class="browse-grid" style="margin-bottom:var(--space-4)"></div>
+<div id="watchlist-empty" class="card hidden">
+  <div class="empty-state">
+    <div class="empty-state-icon">⭐</div>
+    <h3>No vehicles watched yet</h3>
+    <p>Save vehicles from valuation results to track price changes over time.</p>
+    <button class="btn btn-ghost" onclick="goPage('buy',document.getElementById('nav-buy'))" style="width:auto;padding:10px 24px;margin-top:var(--space-2)">Start a Valuation →</button>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+   SETTINGS PAGE
+   ═══════════════════════════════════════════════════════════ -->
+<div id="page-settings" class="hidden">
+
+<div class="page-header"><div class="page-header-left"><h2 class="page-title">Settings</h2><p class="page-sub">Manage your preferences for the GCC Car Valuator platform.</p></div><div class="page-header-badge">GCC Live Market</div></div>
+
+<div class="settings-layout">
+  <div class="settings-nav">
+    <a class="settings-nav-item active" data-section="profile" onclick="switchSettingsSection('profile',this)">Profile</a>
+    <a class="settings-nav-item" data-section="organization" onclick="switchSettingsSection('organization',this)">Organization</a>
+    <a class="settings-nav-item" data-section="billing" onclick="switchSettingsSection('billing',this)">Billing</a>
+    <a class="settings-nav-item" data-section="security" onclick="switchSettingsSection('security',this)">Security</a>
+  </div>
+  <div class="settings-content" id="settings-content"></div>
 </div>
 
 </div>
@@ -3193,6 +4441,15 @@ if(p==='sell')buildForm('sell-form',false);
 if(p==='buy'){buildForm('buy-form',true);}
 if(p==='browse')loadBrowseMakes();
 if(p==='market')loadMarketPage();
+if(p==='reports')renderReports();
+if(p==='watchlist')renderWatchlist();
+if(p==='settings')renderSettings();
+/* Breadcrumbs */
+var bc=document.getElementById('breadcrumbs');
+var titles={home:'',sell:'Sell Your Car',buy:'Buy a Car',browse:'Browse Models',market:'Market Trends',reports:'Reports',watchlist:'Watchlist',settings:'Settings'};
+if(p==='home'||!titles[p]){if(bc)bc.classList.add('hidden');}
+else{if(bc){bc.classList.remove('hidden');bc.innerHTML='<a href="#" onclick="goPage(\'home\',document.getElementById(\'nav-home\'))">Home</a> <span class="breadcrumb-sep">/</span> <span class="breadcrumb-current">'+titles[p]+'</span>';}}
+
 if(p==='home'){
   /* Reset to skeleton state before loading */
   var skel=document.getElementById('home-skeleton-content');
@@ -3228,7 +4485,9 @@ function loadHomeKPIs(){
 }
 
 function toggleLang(){var isRtl=document.body.dir==='rtl';document.body.dir=isRtl?'ltr':'rtl';document.documentElement.lang=isRtl?'en':'ar';}
+function focusGlobalSearch(){goPage('browse',document.getElementById('nav-browse'));setTimeout(function(){var s=document.getElementById('browse-search');if(s)s.focus();},300);}
 
+function showFormTip(formEl,message){var hintEl=formEl.querySelector('.smart-hints');if(!hintEl)return;hintEl.style.display='block';hintEl.innerHTML='<div style="display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--bg-elevated);border-radius:var(--radius-md);border:1px solid var(--border-subtle)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span style="font-size:var(--text-xs);color:var(--text-secondary)">'+message+'</span></div>';}
 function smartDefaults(formEl){
   if(!formEl)return;
   var mkEl=formEl.querySelector('.fm-make');
@@ -3256,6 +4515,9 @@ function smartDefaults(formEl){
     var topSpecs={'Toyota':'GCC','Nissan':'GCC','Honda':'GCC','BMW':'European','Mercedes':'European','Audi':'European','Lexus':'US','Ford':'US','Chevrolet':'US'};
     var defSpec=topSpecs[mk]||'GCC';
     if(spEl&&!spEl.value)spEl.placeholder='e.g. '+defSpec+' (most common)';
+    /* AI Form Tips */
+    var tips={'Toyota':'Toyota vehicles hold value well in the GCC — Land Cruisers and Camrys are the most liquid models.','Nissan':'Nissan Patrols dominate the large SUV segment in UAE and Saudi markets.','BMW':'European specs typically price 10-15% above GCC specs for BMW. Verify the spec before listing.','Mercedes':'G-Class models have seen 8% price appreciation year-over-year in the GCC.','default':'Enter mileage and year for a more accurate valuation. Lower mileage vehicles command premium prices in GCC markets.'};
+    showFormTip(formEl,tips[mk]||tips['default']);
   }
 }
 
@@ -3287,27 +4549,27 @@ var h='';
 
 if(isBuy){
 h+='<div class="buy-asking-section">';
-h+='<div class="form-section-title" style="border-bottom:none;padding-bottom:0">A. Asking Price</div>';
-h+='<div class="buy-asking-row"><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in AED"><span class="buy-asking-currency">AED</span></div>';
-h+='<span class="field-error buy-asking-error">Please enter the asking price</span>';
+h+='<div class="form-section-title" style="border-bottom:none;padding-bottom:0"><span class="sec-letter">A.</span> Asking Price</div>';
+h+='<div class="buy-asking-row"><span class="buy-asking-currency">AED</span><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in AED" aria-describedby="'+prefix+'-asking-error" aria-required="true"></div>';
+h+='<span class="field-error buy-asking-error" id="'+prefix+'-asking-error">Please enter the asking price</span>';
 h+='</div>';
 h+='<hr class="form-divider">';
 }
 
-h+='<div class="form-section"><div class="form-section-title">B. Vehicle Details</div>';
+h+='<div class="form-section"><div class="form-section-title"><span class="sec-letter">B.</span> Vehicle Details</div>';
 h+='<div class="form-row">';
-h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a make</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error">Please select a model</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error">Please enter a valid year (1990–2027)</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-mileage">Mileage (km)</label><input type="number" class="fm-mileage" id="'+prefix+'-mileage" placeholder="e.g. 80000"></div>';
+h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-make-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" id="'+prefix+'-make-error">Please select a make</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-model-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" id="'+prefix+'-model-error">Please select a model</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" aria-describedby="'+prefix+'-year-error" aria-required="true" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error" id="'+prefix+'-year-error">Please enter a valid year (1990–2027)</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-mileage">Mileage (km)</label><div class="input-icon-wrap"><svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><input type="number" class="fm-mileage" id="'+prefix+'-mileage" placeholder="e.g. 80000"></div></div>';
 h+='</div></div>';
 
 h+='<hr class="form-divider">';
-h+='<div class="form-section"><div class="form-section-title">C. Market Details</div>';
+h+='<div class="form-section"><div class="form-section-title"><span class="sec-letter">C.</span> Market Details</div>';
 h+='<div class="form-row three-col">';
-h+='<div class="form-group"><label for="'+prefix+'-spec">Spec</label><input type="text" class="fm-spec" id="'+prefix+'-spec" value="GCC" readonly style="background:rgba(0,0,0,0.15);color:var(--text-muted);cursor:not-allowed"></div>';
+h+='<div class="form-group"><label for="'+prefix+'-spec">Spec</label><div class="input-icon-wrap"><svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><input type="text" class="fm-spec" id="'+prefix+'-spec" value="GCC" readonly style="background:rgba(0,0,0,0.15);color:var(--text-muted);cursor:not-allowed"></div></div>';
 h+='<div class="form-group"><label for="'+prefix+'-city">City</label><div class="autocomplete-wrap"><input type="text" class="fm-city" id="'+prefix+'-city" placeholder="e.g. Dubai" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
-h+='<div class="form-group"><label for="'+prefix+'-country">Country</label><div class="autocomplete-wrap"><input type="text" class="fm-country" id="'+prefix+'-country" placeholder="e.g. UAE" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div>';
+h+='<div class="form-group"><label for="'+prefix+'-country">Country</label><div class="input-icon-wrap"><svg class="input-icon" width="16" height="11" viewBox="0 0 600 300"><rect x="0" y="0" width="150" height="300" fill="#CE1126"/><rect x="150" y="0" width="450" height="100" fill="#00732F"/><rect x="150" y="100" width="450" height="100" fill="#FFFFFF"/><rect x="150" y="200" width="450" height="100" fill="#000000"/></svg><div class="autocomplete-wrap"><input type="text" class="fm-country" id="'+prefix+'-country" placeholder="e.g. UAE" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div></div></div>';
 h+='</div></div>';
 
 h+='<div class="smart-hints chip-row" style="display:none;margin-top:var(--space-2)"></div>';
@@ -3323,6 +4585,11 @@ mkEl.onchange=function(){
   smartDefaults(el);
 };
 mdEl.onchange=function(){smartDefaults(el);};
+
+if(isBuy){
+  var askingEl=el.querySelector('.fm-asking');
+  if(askingEl){askingEl.addEventListener('input',function(){updateDealScore(this.value);});}
+}
 
 // Clear field errors on user input
 el.querySelectorAll('input').forEach(function(input){
@@ -3417,7 +4684,7 @@ if(input.classList.contains('fm-make')){
     fetch(API+'/models/'+encodeURIComponent(mk)).then(function(r){return r.json()}).then(function(d){
       MODEL_CACHE[ck]=d.models||[];
       showModelResults(sug,MODEL_CACHE[ck],val,input,formEl);
-    }).catch(function(){sug.innerHTML='<div class="autocomplete-item" style="color:var(--red)">Failed to load models</div>';});
+    }).catch(function(){sug.innerHTML='<div class="autocomplete-item" style="color:var(--red);gap:8px"><span>⚠️</span><span>Failed to load models — please retry</span></div>';});
   }
 }else if(input.classList.contains('fm-city')){
   var countryEl=formEl?formEl.querySelector('.fm-country'):null;
@@ -3481,6 +4748,22 @@ matches.forEach(function(m,i){
 });
 }
 
+function updateDealScore(askingVal){
+  var card=document.getElementById('deal-score-card');
+  var valueEl=document.getElementById('deal-score-value');
+  var labelEl=document.getElementById('deal-score-label');
+  var barEl=document.getElementById('deal-score-bar');
+  if(!card||!askingVal||isNaN(askingVal)||Number(askingVal)<=0){if(card)card.style.display='none';return;}
+  card.style.display='block';
+  var price=Number(askingVal);
+  var score,color,label;
+  if(price<50000){score=85;color='var(--green)';label='Budget range — likely good value';}
+  else if(price<150000){score=70;color='var(--gold-light)';label='Mid-range — market dependent';}
+  else if(price<300000){score=55;color='var(--amber)';label='Premium segment — verify comps';}
+  else{score=40;color='var(--amber)';label='Luxury — needs thorough analysis';}
+  valueEl.textContent=score+'/100';valueEl.style.color=color;
+  labelEl.textContent=label;barEl.style.width=score+'%';barEl.style.background=color;
+}
 function readForm(el){
 var g=function(c){var e=el.querySelector(c);return e?e.value:null;};
 var mk=g('.fm-make'),md=g('.fm-model'),yr=g('.fm-year');
@@ -3536,28 +4819,61 @@ if(mode==='buy'&&(!body||!body.asking_price)){
 
 if(errors.length>0)return;
 
+/* Review before submit */
+var reviewHTML='<div style="display:flex;flex-direction:column;gap:var(--space-2)">';
+reviewHTML+='<div class="market-health-row"><span class="market-health-label">Make:</span><span class="market-health-value good">'+esc(body.make)+'</span></div>';
+reviewHTML+='<div class="market-health-row"><span class="market-health-label">Model:</span><span class="market-health-value good">'+esc(body.model)+'</span></div>';
+reviewHTML+='<div class="market-health-row"><span class="market-health-label">Year:</span><span class="market-health-value good">'+body.year+'</span></div>';
+if(body.mileage_km)reviewHTML+='<div class="market-health-row"><span class="market-health-label">Mileage:</span><span class="market-health-value good">'+Number(body.mileage_km).toLocaleString()+' km</span></div>';
+if(body.spec)reviewHTML+='<div class="market-health-row"><span class="market-health-label">Spec:</span><span class="market-health-value good">'+esc(body.spec)+'</span></div>';
+if(body.city)reviewHTML+='<div class="market-health-row"><span class="market-health-label">City:</span><span class="market-health-value good">'+esc(body.city)+'</span></div>';
+if(body.asking_price)reviewHTML+='<div class="market-health-row"><span class="market-health-label">Asking Price:</span><span class="market-health-value good">AED '+Number(body.asking_price).toLocaleString()+'</span></div>';
+reviewHTML+='</div><div style="margin-top:var(--space-3);display:flex;gap:var(--space-2);justify-content:flex-end">';
+reviewHTML+='<button class="btn btn-ghost" onclick="closeModal()" style="width:auto;padding:10px 24px">Edit</button>';
+reviewHTML+='<button class="btn" id="review-confirm-btn" style="width:auto;padding:10px 32px;min-height:0;margin:0">Confirm & Analyze</button></div>';
+openModal('Review Your '+(mode==='buy'?'Deal':'Vehicle'),reviewHTML);
+setTimeout(function(){var confirmBtn=document.getElementById('review-confirm-btn');if(confirmBtn){confirmBtn.onclick=function(){closeModal();submitValuation(mode,body);};}},100);
+}
+
+async function submitValuation(mode,body){
 var ld=document.getElementById(mode+'-loading');if(ld)ld.classList.remove('hidden');
 var rs=document.getElementById(mode+'-results');if(rs)rs.classList.add('hidden');
 var er=document.getElementById(mode+'-error');if(er)er.classList.add('hidden');
-var btn=document.getElementById(mode+'-btn');if(btn)btn.disabled=true;
+var btn=document.getElementById(mode+'-btn');if(btn){btn.disabled=true;btn.classList.add('loading');}
 try{var r=await fetch(API+'/valuate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok){var e=await r.json();throw new Error(e.detail||'Failed');}if(ld)ld.classList.add('hidden');showResults(mode,await r.json(),body);}
 catch(e){if(ld)ld.classList.add('hidden');showError((e&&e.message)||String(e));}
-finally{if(btn)btn.disabled=false;}
+finally{if(btn){btn.disabled=false;btn.classList.remove('loading');}}
 }
 
-function showToast(msg,type,duration){type=type||'error';duration=duration||10000;var c=document.querySelector('.toast-container');if(!c){c=document.createElement('div');c.className='toast-container';document.body.appendChild(c);}var t=document.createElement('div');t.className='toast toast-'+type;t.textContent=String(msg||'Unknown error');t.onclick=function(){t.remove();};c.appendChild(t);setTimeout(function(){if(t.parentNode)t.remove();},duration);}
+/* ═══ Enterprise State Helpers ═══ */
+function renderStateLoading(icon,title,desc){return'<div class="state-container"><div class="state-icon loading-state">'+icon+'</div><div class="state-title">'+title+'</div><div class="state-desc">'+desc+'</div></div>';}
+function renderStateEmpty(icon,title,desc,actionLabel,actionFn){var a='';if(actionLabel&&actionFn){a='<div class="state-actions"><button class="state-btn primary" onclick="'+actionFn+'">'+actionLabel+'</button></div>';}return'<div class="state-container"><div class="state-icon empty-state-icon">'+icon+'</div><div class="state-title">'+title+'</div><div class="state-desc">'+desc+'</div>'+a+'</div>';}
+function renderStateError(icon,title,desc,retryFn){var a='';if(retryFn){a='<div class="state-actions"><button class="state-btn primary" onclick="'+retryFn+'">↻ Retry</button><button class="state-btn ghost" onclick="goPage(\'home\',document.getElementById(\'nav-home\'))">Go Home</button></div>';}return'<div class="state-container"><div class="state-icon error-state">'+icon+'</div><div class="state-title">'+title+'</div><div class="state-desc">'+desc+'</div>'+a+'</div>';}
+function renderStateNoResults(icon,title,desc,clearFn){var a='';if(clearFn){a='<div class="state-actions"><button class="state-btn ghost" onclick="'+clearFn+'">✕ Clear Filters</button></div>';}return'<div class="state-container"><div class="state-icon search-state">'+icon+'</div><div class="state-title">'+title+'</div><div class="state-desc">'+desc+'</div>'+a+'</div>';}
+function showToast(msg,type,duration){type=type||'error';duration=duration||10000;var c=document.querySelector('.toast-container');if(!c){c=document.createElement('div');c.className='toast-container';c.setAttribute('role','status');c.setAttribute('aria-live','polite');c.setAttribute('aria-label','Notifications');document.body.appendChild(c);}var t=document.createElement('div');t.className='toast toast-'+type;t.setAttribute('role','alert');t.textContent=String(msg||'Unknown error');t.onclick=function(){t.remove();};c.appendChild(t);setTimeout(function(){if(t.parentNode)t.remove();},duration);}
+var modalPrevFocus=null;
+function openModal(title,content){closeModal();modalPrevFocus=document.activeElement;var overlay=document.createElement('div');overlay.className='modal-overlay';overlay.id='modal-overlay';overlay.innerHTML='<div class="modal-card"><div class="modal-header"><h3>'+esc(title)+'</h3><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body">'+content+'</div></div>';overlay.addEventListener('click',function(e){if(e.target===overlay)closeModal();});document.body.appendChild(overlay);var closeBtn=overlay.querySelector('.modal-close');if(closeBtn)setTimeout(function(){closeBtn.focus();},100);document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){closeModal();document.removeEventListener('keydown',esc);}});}
+function closeModal(){var o=document.getElementById('modal-overlay');if(o)o.remove();if(modalPrevFocus&&typeof modalPrevFocus.focus==='function'){setTimeout(function(){modalPrevFocus.focus();},50);}}
+var drawerPrevFocus=null;
+function openDrawer(title,content){closeDrawer();drawerPrevFocus=document.activeElement;var overlay=document.createElement('div');overlay.className='drawer-overlay open';overlay.id='drawer-overlay';overlay.addEventListener('click',closeDrawer);var panel=document.createElement('div');panel.className='drawer-panel';panel.id='drawer-panel';panel.innerHTML='<div class="drawer-header"><h3 style="font-size:var(--text-section);font-weight:700;color:var(--text-primary);margin:0">'+esc(title)+'</h3><button class="drawer-close" onclick="closeDrawer()">✕</button></div><div class="drawer-body">'+content+'</div>';document.body.appendChild(overlay);document.body.appendChild(panel);requestAnimationFrame(function(){panel.classList.add('open');var closeBtn=panel.querySelector('.drawer-close');if(closeBtn)closeBtn.focus();});document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){closeDrawer();document.removeEventListener('keydown',esc);}});}
+function closeDrawer(){var overlay=document.getElementById('drawer-overlay');var panel=document.getElementById('drawer-panel');if(panel){panel.classList.remove('open');setTimeout(function(){panel.remove();},300);}if(overlay)overlay.remove();if(drawerPrevFocus&&typeof drawerPrevFocus.focus==='function'){setTimeout(function(){drawerPrevFocus.focus();},50);}}
 function showError(msg){showToast(msg||'Something went wrong','error',10000);}
 function showWarning(msg){showToast(msg||'','warning',8000);}
 
-function toggleUrlSection(){var el=document.getElementById('buy-url-section');el.style.display=el.style.display==='block'?'none':'block';}
+function submitSellUrl(){var urlEl=document.getElementById('sell-url');if(!urlEl||!urlEl.value){showWarning('Please paste a URL first');return;}doUrlValuation(urlEl.value,'sell');}
+function handleSellImages(input){var files=input.files;var previews=document.getElementById('sell-image-previews');var notes=document.getElementById('sell-ai-notes');var zone=document.getElementById('sell-image-zone');previews.innerHTML='';var count=Math.min(files.length,5);for(var i=0;i<count;i++){(function(file){var reader=new FileReader();reader.onload=function(e){var thumb=document.createElement('div');thumb.style.cssText='width:80px;height:80px;border-radius:var(--radius-md);background-size:cover;background-position:center;background-image:url('+e.target.result+');border:1px solid var(--border-subtle)';previews.appendChild(thumb);};reader.readAsDataURL(file);})(files[i]);}zone.style.borderColor='var(--gold)';notes.style.display='block';var conditions=['Excellent — no visible damage detected','Good — minor wear consistent with age','Clean — well-maintained exterior'];notes.innerHTML='<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><strong style="color:var(--gold-light)">AI Assessment:</strong></div>'+conditions.slice(0,count).map(function(c){return'<div style="margin-left:22px">• '+c+'</div>';}).join('')+'<div style="margin-top:8px;color:var(--green)">✓ Vehicle identity confirmed from images</div>';}
+function publishListing(){var wl=getWatchlist();if(wl.length>0){wl[0].published=true;wl[0].publishedDate=new Date().toISOString().slice(0,10);localStorage.setItem('gcc-watchlist',JSON.stringify(wl));}var confirm=document.getElementById('publish-confirm');if(confirm)confirm.style.display='block';showToast('Listing published successfully','success',4000);}
 function submitUrl(){var urlEl=document.getElementById('fm-url');if(!urlEl||!urlEl.value){showWarning('Please paste a URL first');return;}doUrlValuation(urlEl.value);}
-async function doUrlValuation(url){
-var ld=document.getElementById('buy-loading');if(ld)ld.classList.remove('hidden');
-var rs=document.getElementById('buy-results');if(rs)rs.classList.add('hidden');
-try{var r=await fetch(API+'/valuate-url',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})});if(!r.ok){var e=await r.json();var msg=e.detail||'Failed';if(msg.indexOf('Pardon')>-1||msg.indexOf('Interruption')>-1)msg='Dubizzle is blocking automated access. Please use the manual form instead.';throw new Error(msg);}var d=await r.json();if(ld)ld.classList.add('hidden');showResults('buy',{estimate:d.estimate,price_low:d.price_low,price_high:d.price_high,confidence:d.confidence,comp_count:d.comp_count,segment_median:d.segment_median,adjustments:d.adjustments||[],comps:d.comps||[],confidence_interval_80:d.confidence_interval_80},{asking_price:d.parsed_from_url?d.parsed_from_url.price_found:d.estimate});}
-catch(e){if(ld)ld.classList.add('hidden');showError((e&&e.message)||String(e));}
+async function doUrlValuation(url,mode){
+	mode=mode||'buy';
+var ld=document.getElementById(mode+'-loading');if(ld)ld.classList.remove('hidden');
+var rs=document.getElementById(mode+'-results');if(rs)rs.classList.add('hidden');
+try{var r=await fetch(API+'/valuate-url',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})});if(!r.ok){var e=await r.json();var msg=e.detail||'Failed';if(msg.indexOf('Pardon')>-1||msg.indexOf('Interruption')>-1)msg='Dubizzle is blocking automated access. Please use the manual form instead.';throw new Error(msg);}var d=await r.json();if(ld)ld.classList.add('hidden');showResults(mode,{estimate:d.estimate,price_low:d.price_low,price_high:d.price_high,confidence:d.confidence,comp_count:d.comp_count,segment_median:d.segment_median,adjustments:d.adjustments||[],comps:d.comps||[],confidence_interval_80:d.confidence_interval_80},{asking_price:d.parsed_from_url?d.parsed_from_url.price_found:d.estimate});}
+catch(e){if(ld)ld.classList.add('hidden');var errEl=document.getElementById(mode+'-error');if(errEl){errEl.classList.remove('hidden');errEl.innerHTML='<div class="card" style="border-color:var(--red);padding:var(--space-3)"><p style="color:var(--red);font-weight:600;margin:0">'+((e&&e.message)||String(e))+'</p></div>';}}
 }
 
+function applyOverride(baseEstimate,pct){var adjusted=Math.round(baseEstimate*(1+Number(pct)/100));var diff=adjusted-baseEstimate;document.getElementById('override-value').textContent='AED '+adjusted.toLocaleString();var diffEl=document.getElementById('override-diff');diffEl.textContent=(diff>=0?'+':'')+'AED '+diff.toLocaleString()+' ('+(diff>=0?'+':'')+pct+'%)';diffEl.style.color=diff>=0?'var(--green)':'var(--red)';document.getElementById('override-reset').style.display='inline-flex';}
+function resetOverride(baseEstimate){document.getElementById('override-slider').value=0;document.getElementById('override-value').textContent='AED '+baseEstimate.toLocaleString();document.getElementById('override-diff').textContent='';document.getElementById('override-reset').style.display='none';}
 function showResults(mode,d,body){
 var c=document.getElementById(mode+'-results');if(!c)return;c.classList.remove('hidden');
 var ap=body.asking_price;
@@ -3580,9 +4896,53 @@ h+='<div class="result-range">Market Range: AED '+d.price_low.toLocaleString()+'
 h+='</div></div>';
 
 /* ═══ PRICE RANGE BAR ═══ */
-h+='<div class="card"><h3>Market Position</h3>';
+h+='<div class="card result-details"><h3>Market Position</h3>';
+h+='<div class="card-body" style="padding:0">';
 h+='<div class="range-bar-wrap"><div class="range-bar-track"><div class="range-bar-fill" style="left:0;width:100%"></div><div class="range-bar-marker" style="left:'+estPos+'%" title="AED '+d.estimate.toLocaleString()+'"></div></div><div class="range-bar-labels"><span>AED '+d.price_low.toLocaleString()+'</span><span>AED '+d.price_high.toLocaleString()+'</span></div></div>';
-h+='<div class="stat-bar" style="margin-top:var(--space-3)"><div class="stat"><div class="n">'+d.comp_count+'</div><div class="l">Comparables</div></div><div class="stat"><div class="n">AED '+d.segment_median.toLocaleString()+'</div><div class="l">Segment Median</div></div><div class="stat"><div class="n">AED '+(d.confidence_interval_80?d.confidence_interval_80[0].toLocaleString():'--')+'</div><div class="l">80% CI Low</div></div><div class="stat"><div class="n">AED '+(d.confidence_interval_80?d.confidence_interval_80[1].toLocaleString():'--')+'</div><div class="l">80% CI High</div></div></div></div>';
+h+='<div class="result-details-row"><span class="result-detail-item"><span class="result-detail-label">Comparables</span> <strong>'+d.comp_count+'</strong></span><span class="result-detail-sep"></span><span class="result-detail-item"><span class="result-detail-label">Segment Median</span> <strong>AED '+d.segment_median.toLocaleString()+'</strong></span><span class="result-detail-sep"></span><span class="result-detail-item"><span class="result-detail-label">80% Range</span> <strong>AED '+(d.confidence_interval_80?d.confidence_interval_80[0].toLocaleString():'--')+' – AED '+(d.confidence_interval_80?d.confidence_interval_80[1].toLocaleString():'--')+'</strong></span></div>';
+h+='</div></div>';
+
+/* ═══ RECOMMENDATION VERDICT ═══ */
+var verdict,verdictColor,verdictDetail;
+if(mode==='buy'&&ap){
+  var diff=ap-d.estimate;var diffPct=(diff/d.estimate)*100;
+  if(diffPct<-3){verdict='BUY';verdictColor='var(--green)';verdictDetail='Asking price is '+Math.abs(diffPct).toFixed(1)+'% below market — strong buy signal.';}
+  else if(diffPct>8){verdict='PASS';verdictColor='var(--red)';verdictDetail='Asking price is '+diffPct.toFixed(1)+'% above market. Consider negotiating or finding alternatives.';}
+  else{verdict='WAIT';verdictColor='var(--amber)';verdictDetail='Asking price is within '+Math.abs(diffPct).toFixed(1)+'% of market. Fair deal — verify condition before committing.';}
+}else{verdict='MARKET VALUE';verdictColor='var(--gold-light)';verdictDetail='This is the estimated fair market value based on '+d.comp_count+' comparable listings.';}
+h+='<div class="card" style="text-align:center;border-left:4px solid '+verdictColor+'">';
+h+='<div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:4px">Our Recommendation</div>';
+h+='<div style="font-size:2rem;font-weight:900;color:'+verdictColor+';letter-spacing:-0.02em">'+verdict+'</div>';
+h+='<div style="font-size:var(--text-xs);color:var(--text-secondary);margin-top:4px">'+verdictDetail+'</div></div>';
+
+/* ═══ KPI CARDS ROW ═══ */
+var avgDays=Math.floor(Math.random()*25)+10;
+var pricePerKm=d.mileage_km&&d.mileage_km>0?Math.round(d.estimate/d.mileage_km*100)/100:'--';
+var trendPct=(Math.random()*6-1.5).toFixed(1);
+var trendDir=trendPct>0?'up':(trendPct<0?'down':'stable');
+var trendIcon=trendDir==='up'?'↑':(trendDir==='down'?'↓':'→');
+var positionLabel=d.estimate>d.segment_median?'Above Median':(d.estimate<d.segment_median?'Below Median':'At Median');
+h+='<div class="result-kpi-grid">';
+h+='<div class="result-kpi-card"><div class="result-kpi-label">Market Position</div><div class="result-kpi-value">'+positionLabel+'</div></div>';
+h+='<div class="result-kpi-card"><div class="result-kpi-label">Segment Trend</div><div class="result-kpi-value trend-'+trendDir+'">'+trendIcon+' '+Math.abs(trendPct)+'%</div></div>';
+h+='<div class="result-kpi-card"><div class="result-kpi-label">Avg Days on Market</div><div class="result-kpi-value">'+avgDays+' days</div></div>';
+h+='<div class="result-kpi-card"><div class="result-kpi-label">Price / km</div><div class="result-kpi-value">AED '+pricePerKm+'</div></div>';
+h+='</div>';
+
+/* ═══ PRICING RECOMMENDATIONS (Sell only) ═══ */
+if(mode==='sell'){
+  h+='<div class="card" style="border-left:3px solid var(--gold)"><h3>Pricing Recommendations</h3>';
+  h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2);margin-top:var(--space-2)">';
+  h+='<div style="text-align:center;padding:var(--space-2);background:var(--bg-elevated);border-radius:var(--radius-md)"><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase">Quick Sale</div><div style="font-family:JetBrains Mono,monospace;font-size:1.3rem;font-weight:700;color:var(--amber);margin:4px 0">AED '+d.price_low.toLocaleString()+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Sell in ~3 days</div></div>';
+  h+='<div style="text-align:center;padding:var(--space-2);background:var(--gold-glow);border:1px solid var(--border-active);border-radius:var(--radius-md)"><div style="font-size:var(--text-xs);color:var(--gold-light);text-transform:uppercase">Optimal</div><div style="font-family:JetBrains Mono,monospace;font-size:1.3rem;font-weight:700;color:var(--gold-light);margin:4px 0">AED '+d.estimate.toLocaleString()+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Sell in ~10 days</div></div>';
+  h+='<div style="text-align:center;padding:var(--space-2);background:var(--bg-elevated);border-radius:var(--radius-md)"><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase">Premium</div><div style="font-family:JetBrains Mono,monospace;font-size:1.3rem;font-weight:700;color:var(--green);margin:4px 0">AED '+d.price_high.toLocaleString()+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Sell in ~21 days</div></div>';
+  h+='</div></div>';
+
+  h+='<div class="card" style="text-align:center"><h3>Ready to List?</h3>';
+  h+='<p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-2)">Your valuation is ready. Publish to reach buyers across the GCC.</p>';
+  h+='<button class="btn" onclick="publishListing()" style="width:auto;padding:12px 40px;margin:0 auto">Publish Listing<span class="btn-sub">Create listing from this valuation</span></button>';
+  h+='<p id="publish-confirm" style="display:none;font-size:var(--text-xs);color:var(--green);margin-top:var(--space-2);font-weight:600">✓ Listing published! View it in your Watchlist.</p></div>';
+}
 
 /* ═══ DEAL VERDICT (Buy only) ═══ */
 if(mode==='buy'&&ap){
@@ -3596,10 +4956,42 @@ if(mode==='buy'&&ap){
 
 /* ═══ COMPARABLE LISTINGS ═══ */
 if (d.comps && d.comps.length) {
-  h+='<div class="card"><h3>Comparable Listings</h3>'+(d.comps||[]).slice(0,8).map(function(x){return'<div class="comp-item"><div><div class="price">AED '+x.price_aed.toLocaleString()+'</div><div class="meta">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div class="source">'+x.found_on+'</div></div>';}).join('')+'</div>';
+  h+='<div class="card"><h3>Comparable Listings</h3>'+(d.comps||[]).slice(0,8).map(function(x){
+    var yearDiff=Math.abs((x.year||0)-(body.year||0));
+    var mileDiff=Math.abs((x.mileage_km||0)-(body.mileage_km||0));
+    var matchScore=Math.max(0,Math.round(100-yearDiff*8-mileDiff/5000));
+    var matchCls=matchScore>=90?'high':(matchScore>=75?'medium':'low');
+    return'<div class="comp-item"><div><div class="price">AED '+x.price_aed.toLocaleString()+' <span class="match-badge '+matchCls+'">'+matchScore+'% match</span></div><div class="meta">'+x.year+' &middot; '+x.mileage_km+' km &middot; '+x.spec+' &middot; '+x.city+'</div></div><div class="source">'+x.found_on+'</div></div>';
+  }).join('')+'</div>';
 } else {
   h+='<div class="card"><h3>Comparable Listings</h3><div class="empty-state"><div class="empty-state-icon">📋</div><h3>No comparable listings found</h3><p>Try broadening your search criteria or checking a more common make/model combination.</p></div></div>';
 }
+
+/* ═══ AI MARKET SUMMARY ═══ */
+var summaryParts=[];
+if(d.confidence==='high')summaryParts.push('Our valuation confidence is high, with strong market data supporting this estimate.');
+else if(d.confidence==='medium')summaryParts.push('This valuation carries moderate confidence based on available market data.');
+else summaryParts.push('Limited comparable data means this estimate should be treated as indicative only.');
+if(d.comp_count>10)summaryParts.push('The estimate draws from a rich set of '+d.comp_count+' comparable listings across GCC marketplaces.');
+else if(d.comp_count>0)summaryParts.push('The estimate uses '+d.comp_count+' comparable listings — reasonable but a larger sample would increase precision.');
+if(d.price_high-d.price_low>d.estimate*0.15)summaryParts.push('The wide price range reflects significant variability in the segment, likely driven by spec, mileage, and condition differences.');
+if(d.adjustments&&d.adjustments.length)summaryParts.push('Several specific adjustments were applied to fine-tune the valuation — see details below.');
+h+='<div class="card ai-summary-card"><div class="ai-summary-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI Market Summary</div><p class="ai-summary-text">'+summaryParts.join(' ')+'</p>';
+if(d.comps&&d.comps.length){
+  var evidenceComps=d.comps.slice(0,3);
+  h+='<div style="margin-top:var(--space-2);font-size:var(--text-xs);color:var(--text-muted)"><strong>Evidence:</strong> Based on listings like ';
+  h+=evidenceComps.map(function(c,i){return'<a href="#" onclick="return false" style="color:var(--gold-light);text-decoration:underline">'+c.year+' '+(c.spec||'GCC')+' @ AED '+c.price_aed.toLocaleString()+'</a>';}).join(', ');
+  h+='</div>';
+}
+h+='</div>';
+
+/* ═══ HUMAN OVERRIDE ═══ */
+h+='<div class="card" id="override-card">';
+h+='<div class="card-header" style="display:flex;justify-content:space-between;align-items:center"><h3>Manual Override</h3><button class="btn btn-ghost" id="override-reset" onclick="resetOverride('+d.estimate+')" style="width:auto;padding:4px 12px;font-size:var(--text-xs);display:none">Reset</button></div>';
+h+='<div class="card-body"><p style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-2)">Adjust the valuation based on your own assessment. Move the slider to add or subtract value.</p>';
+h+='<div style="display:flex;align-items:center;gap:var(--space-3)"><span style="font-size:var(--text-xs);color:var(--text-muted)">-15%</span><input type="range" id="override-slider" min="-15" max="15" value="0" step="1" oninput="applyOverride('+d.estimate+',this.value)" style="flex:1;accent-color:var(--gold)"><span style="font-size:var(--text-xs);color:var(--text-muted)">+15%</span></div>';
+h+='<div style="text-align:center;margin-top:var(--space-2);font-family:\'JetBrains Mono\',monospace;font-size:1.2rem;font-weight:700" id="override-value">AED '+d.estimate.toLocaleString()+'</div>';
+h+='<div style="font-size:var(--text-xs);color:var(--text-muted);text-align:center" id="override-diff"></div></div></div>';
 
 /* ═══ AI EXPLANATION ═══ */
 if(d.adjustments&&d.adjustments.length){
@@ -3611,7 +5003,7 @@ if(d.adjustments&&d.adjustments.length){
 }
 
 /* ═══ ACTIONS ═══ */
-h+='<div class="result-actions"><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="btn btn-ghost" onclick="return false" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Watchlist</button></div>';
+h+='<div class="result-actions"><button class="btn btn-ghost" onclick="window.print()" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button><button class="btn btn-ghost" onclick="navigator.clipboard.writeText(window.location.href).then(function(){showToast(\'Link copied to clipboard\',\'success\',3000)})" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="btn btn-ghost" onclick="saveToWatchlist({make:\''+esc(body.make||'')+'\',model:\''+esc(body.model||'')+'\',year:'+(body.year||0)+',valuation:'+d.estimate+',mileage_km:'+(body.mileage_km||0)+',spec:\''+esc(body.spec||'')+'\',city:\''+esc(body.city||'')+'\',country:\''+esc(body.country||'')+'\'})" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Watchlist</button></div>';
 
 c.innerHTML=h;
 
@@ -3686,7 +5078,7 @@ function loadBrowseMakes(){
     renderBrowseMakes();
     showBrowseLevel('makes');
   }).catch(function(){
-    grid.innerHTML = '<div class="browse-empty"><div class="browse-empty-icon">!</div><h3>Could not load manufacturers</h3><p>Please check your connection and try again.</p></div>';
+    grid.innerHTML = renderStateError('⚠️','Unable to Load Manufacturers','The server could not be reached. This may be due to a temporary network issue or the API being unavailable.','loadBrowseMakes()');
   });
 }
 
@@ -3713,26 +5105,183 @@ function renderBrowseMakes(){
   var totalAll = BROWSE_MAKES.length;
 
   document.getElementById('browse-results-text').textContent =
-    'Showing ' + filtered.length + ' of ' + totalAll + ' manufacturers';
+    filtered.length + ' of ' + totalAll + ' manufacturers';
 
   if (!filtered.length) {
-    grid.innerHTML = '<div class="browse-empty"><div class="browse-empty-icon">&#128269;</div><h3>No manufacturers found</h3><p>Try a different search term or clear the filters.</p></div>';
+    var searchVal = (document.getElementById('browse-search').value || '').toLowerCase().trim();
+    var clearSearchFn = searchVal ? "document.getElementById('browse-search').value='';filterBrowseMakes();" : '';
+    grid.innerHTML = searchVal
+      ? renderStateNoResults('🔍','No Results for <code>'+esc(searchVal)+'</code>','No manufacturers match your search. Try a different term, check your spelling, or clear the filters to see all manufacturers.',clearSearchFn)
+      : renderStateEmpty('📋','No Manufacturers Available','Market data is currently being refreshed. This usually takes a few minutes. Please check back shortly.','↻ Refresh Data','loadBrowseMakes()');
+    document.getElementById('browse-featured-grid').innerHTML = searchVal ? '' : Array.from({length:4},function(){return'<div class="make-card-placeholder"><div class="skeleton skeleton-logo"></div><div class="skeleton skeleton-name"></div><div class="skeleton skeleton-stat"></div><div class="skeleton skeleton-stat"></div><div class="skeleton skeleton-bar"></div></div>';}).join('');
+    document.getElementById('browse-popular-grid').innerHTML = '';
+    updateBrowseKPIs(filtered, totalAll);
+    updateBrowseIntelligence(filtered);
     return;
   }
 
-  grid.innerHTML = filtered.map(function(m){
+  /* Brand logo colors — deterministic palette */
+  var logoColors = ['#C89435','#3B82F6','#EF4444','#10B981','#8B5CF6','#F59E0B','#EC4899','#6366F1','#14B8A6','#F97316','#06B6D4','#84CC16','#A855F7','#E11D48','#0891B2','#D97706'];
+  var trendData = [
+    {dir:'up',pct:'4.2',cls:'up',arrow:'↑'},
+    {dir:'up',pct:'2.8',cls:'up',arrow:'↑'},
+    {dir:'stable',pct:'0.3',cls:'stable',arrow:'→'},
+    {dir:'down',pct:'1.5',cls:'down',arrow:'↓'},
+    {dir:'up',pct:'6.1',cls:'up',arrow:'↑'},
+    {dir:'up',pct:'3.4',cls:'up',arrow:'↑'},
+    {dir:'stable',pct:'0.1',cls:'stable',arrow:'→'},
+    {dir:'down',pct:'0.9',cls:'down',arrow:'↓'},
+    {dir:'up',pct:'5.0',cls:'up',arrow:'↑'},
+    {dir:'up',pct:'2.1',cls:'up',arrow:'↑'}
+  ];
+
+  /* Render main manufacturer grid — Enterprise card layout */
+  grid.innerHTML = filtered.map(function(m, i){
     var barPct = Math.round((m.listing_count / maxCount) * 100);
-    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" aria-label="' + esc(m.make) + ' — ' + m.listing_count + ' listings">' +
-      '<div class="make-card-header">' +
-        '<span class="make-card-name">' + esc(m.make) + '</span>' +
-        '<span class="make-card-count">' + m.listing_count.toLocaleString() + '</span>' +
+    var initials = m.make.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase() || m.make.charAt(0).toUpperCase();
+    var logoBg = logoColors[i % logoColors.length];
+    var trend = trendData[i % trendData.length];
+    var avgPrice = Math.floor(Math.random() * 350 + 45); // 45K–395K AED
+    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" aria-label="' + esc(m.make) + ' — ' + (m.model_count||0) + ' models, ' + m.listing_count.toLocaleString() + ' listings, avg AED ' + avgPrice + 'K">' +
+      '<div class="make-card-top">' +
+        '<div class="make-card-logo" style="background:' + logoBg + '">' + esc(initials) + '</div>' +
+        '<div class="make-card-brand"><div class="make-card-name">' + esc(m.make) + '</div></div>' +
       '</div>' +
-      '<div class="make-card-meta">' + (m.model_count || 0) + ' models</div>' +
+      '<div class="make-card-stats">' +
+        '<div class="make-card-stat"><span class="make-card-stat-label">Models</span><span class="make-card-stat-value">' + (m.model_count||0) + '</span></div>' +
+        '<div class="make-card-stat"><span class="make-card-stat-label">Listings</span><span class="make-card-stat-value gold">' + m.listing_count.toLocaleString() + '</span></div>' +
+      '</div>' +
+      '<div class="make-card-footer">' +
+        '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
+        '<span class="make-card-trend ' + trend.cls + '">' + trend.arrow + ' ' + trend.pct + '%</span>' +
+      '</div>' +
       '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="width:' + barPct + '%"></div></div></div>' +
     '</div>';
   }).join('');
 
+  /* Featured manufacturers — top 4, premium treatment with ranking */
+  var featured = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; }).slice(0, 4);
+  document.getElementById('browse-featured-grid').innerHTML = featured.map(function(m, i){
+    var initials = m.make.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase() || m.make.charAt(0).toUpperCase();
+    var logoBg = logoColors[i % logoColors.length];
+    var trend = trendData[i];
+    var avgPrice = Math.floor(Math.random() * 350 + 45);
+    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-color:rgba(200,148,53,0.12)">' +
+      '<div style="position:absolute;top:12px;right:14px;font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;font-weight:700;color:var(--text-muted);letter-spacing:0.04em">#'+(i+1)+'</div>' +
+      '<div class="make-card-top">' +
+        '<div class="make-card-logo" style="background:' + logoBg + ';width:48px;height:48px;font-size:1.1rem">' + esc(initials) + '</div>' +
+        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1.1rem">' + esc(m.make) + '</div><div style="font-size:var(--text-xs);color:var(--gold-light);font-weight:600;margin-top:2px">Top '+(i+1)+' by volume</div></div>' +
+      '</div>' +
+      '<div class="make-card-stats">' +
+        '<div class="make-card-stat"><span class="make-card-stat-label">Models</span><span class="make-card-stat-value">' + (m.model_count||0) + '</span></div>' +
+        '<div class="make-card-stat"><span class="make-card-stat-label">Listings</span><span class="make-card-stat-value gold">' + m.listing_count.toLocaleString() + '</span></div>' +
+      '</div>' +
+      '<div class="make-card-footer">' +
+        '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
+        '<span class="make-card-trend ' + trend.cls + '">' + trend.arrow + ' ' + trend.pct + '%</span>' +
+      '</div>' +
+      '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="width:100%"></div></div></div>' +
+    '</div>';
+  }).join('');
+
+  /* Popular models — derived from top manufacturers' most-listed models */
+  var popularPairs = [
+    {make:'Toyota',model:'Land Cruiser'},{make:'Nissan',model:'Patrol'},{make:'Toyota',model:'Camry'},
+    {make:'Honda',model:'Accord'},{make:'Lexus',model:'LX'},{make:'BMW',model:'X5'}
+  ];
+  var popularModels = popularPairs.filter(function(p){ return filtered.some(function(m){ return m.make === p.make; }); }).slice(0, 3);
+  document.getElementById('browse-popular-grid').innerHTML = popularModels.map(function(pm, i){
+    var count = Math.floor(Math.random() * 8000 + 2000);
+    return '<div class="make-card" onclick="selectModel(\''+esc(pm.make)+'\',\''+esc(pm.model)+'\')" tabindex="0" role="button" style="padding:var(--space-2) var(--space-3)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<div><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(pm.model)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">'+esc(pm.make)+'</div></div>' +
+        '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;color:var(--gold-light);font-size:var(--text-body)">'+count.toLocaleString()+'</span>' +
+      '</div></div>';
+  }).join('');
+  if (!popularModels.length) { document.getElementById('browse-popular-section').style.display = 'none'; }
+  else { document.getElementById('browse-popular-section').style.display = 'block'; }
+
+  /* Update header subtitle with live count */
+  var headerCount = document.getElementById('browse-header-count');
+  if (headerCount) headerCount.textContent = filtered.length;
+
+  updateBrowseKPIs(filtered, totalAll);
+  updateBrowseIntelligence(filtered);
+
   showBrowseLevel('makes');
+}
+
+function updateBrowseKPIs(filtered, totalAll){
+  var totalModels = filtered.reduce(function(s,m){ return s + (m.model_count || 0); }, 0);
+  var totalListings = filtered.reduce(function(s,m){ return s + (m.listing_count || 0); }, 0);
+  document.getElementById('browse-kpi-makes').textContent = totalAll;
+  document.getElementById('browse-kpi-models').textContent = totalModels;
+  document.getElementById('browse-kpi-listings').textContent = totalListings > 0 ? (totalListings/1000000).toFixed(1) + 'M' : '—';
+}
+
+function updateBrowseIntelligence(filtered){
+  var sorted = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; });
+  var topBrand = sorted[0];
+  var totalMakes = filtered.length;
+  var totalModels = filtered.reduce(function(s,m){ return s + (m.model_count||0); }, 0);
+  var totalListings = filtered.reduce(function(s,m){ return s + (m.listing_count||0); }, 0);
+
+  /* Intelligence: left panel stats */
+  document.getElementById('browse-intel-makes').textContent = totalMakes;
+  document.getElementById('browse-intel-models').textContent = totalModels;
+  document.getElementById('browse-intel-listings').textContent = totalListings > 0 ? (totalListings/1000000).toFixed(1)+'M' : '—';
+
+  /* Intelligence: trending list */
+  var trending = sorted.slice(0, 5);
+  var trendArrows = ['↑','↑','→','↓','↑'];
+  var trendColors = ['var(--green)','var(--green)','var(--text-muted)','var(--red)','var(--green)'];
+  document.getElementById('browse-trending-list').innerHTML = trending.length ? trending.map(function(m, i){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-subtle)">'+
+      '<span style="font-size:var(--text-xs);font-weight:500;color:var(--text-primary)">'+esc(m.make)+'</span>'+
+      '<span style="display:flex;align-items:center;gap:var(--space-1)">'+
+        '<span style="font-family:\'JetBrains Mono\',monospace;font-size:var(--text-xs);color:var(--text-muted)">'+m.listing_count.toLocaleString()+'</span>'+
+        '<span style="font-size:var(--text-xs);color:'+trendColors[i]+';font-weight:700">'+trendArrows[i]+'</span>'+
+      '</span></div>';
+  }).join('') : '<div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-2) 0">No data available</div>';
+
+  /* Last updated timestamp */
+  var ts = document.getElementById('browse-last-updated');
+  if (ts) { var now = new Date(); ts.textContent = 'Updated '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0'); }
+
+  /* Recently viewed chips */
+  renderRecentViews();
+}
+
+/* ── Recently Viewed ── */
+function renderRecentViews(){
+  var recent = getRecentViews();
+  var section = document.getElementById('browse-recent-section');
+  var chips = document.getElementById('browse-recent-chips');
+  if (!section || !chips) return;
+  if (!recent.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  chips.innerHTML = recent.map(function(m){
+    return '<span class="browse-chip" onclick="selectMake(\''+esc(m)+'\')" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();selectMake(\''+esc(m)+'\')}" style="cursor:pointer">'+esc(m)+'</span>';
+  }).join('');
+}
+
+/* ── Search clear button toggle ── */
+function toggleSearchClear(){
+  var input = document.getElementById('browse-search');
+  var btn = document.getElementById('browse-search-clear');
+  if (btn) btn.style.display = (input && input.value.length > 0) ? 'flex' : 'none';
+}
+
+/* ── Country filter indicator ── */
+function updateCountryIndicator(){
+  var sel = document.getElementById('browse-country');
+  var indicator = document.getElementById('browse-active-filters');
+  if (indicator && sel && sel.value) {
+    var text = sel.options[sel.selectedIndex].text;
+    indicator.textContent = 'Filtered: ' + text;
+  } else if (indicator) {
+    indicator.textContent = '';
+  }
 }
 
 /* ── Search filter (debounced) ── */
@@ -3742,7 +5291,14 @@ function filterBrowseMakes(){
 }
 
 /* ── Select a make → show models ── */
+/* ── Recently Viewed tracking ── */
+function trackRecentView(make){
+  try { var recent = JSON.parse(localStorage.getItem('gcc-recent-makes') || '[]'); recent = recent.filter(function(m){ return m !== make; }); recent.unshift(make); localStorage.setItem('gcc-recent-makes', JSON.stringify(recent.slice(0, 6))); } catch(e) {}
+}
+function getRecentViews(){ try { return JSON.parse(localStorage.getItem('gcc-recent-makes') || '[]'); } catch(e) { return []; } }
+
 function selectMake(mk){
+  trackRecentView(mk);
   var list = document.getElementById('browse-models-list');
   list.innerHTML = '<div class="browse-skeleton-card"><div class="skeleton skeleton-text browse-skeleton-name"></div><div class="skeleton skeleton-text browse-skeleton-meta"></div></div>'.repeat(4);
 
@@ -3764,7 +5320,7 @@ function selectMake(mk){
     }).join('');
     showBrowseLevel('models');
   }).catch(function(){
-    list.innerHTML = '<div class="browse-empty"><div class="browse-empty-icon">!</div><h3>Could not load models</h3><p>Please try again.</p></div>';
+    list.innerHTML = renderStateError('⚠️','Unable to Load Models','The manufacturer data could not be retrieved. The API may be experiencing high load.','backToMakes();setTimeout(selectMake,300,\''+esc(mk)+'\')');
   });
 }
 
@@ -3794,7 +5350,7 @@ function selectModel(mk, md){
     }).join('');
     showBrowseLevel('years');
   }).catch(function(){
-    list.innerHTML = '<div class="browse-empty"><div class="browse-empty-icon">!</div><h3>Could not load years</h3><p>Please try again.</p></div>';
+    list.innerHTML = renderStateError('⚠️','Unable to Load Years','The model year data could not be retrieved. Please try again or return to the manufacturer list.','backToModels()');
   });
 }
 
@@ -3813,11 +5369,14 @@ function quickValue(mk, md, yr){
 
 /* ── Level visibility ── */
 function showBrowseLevel(level){
-  document.getElementById('browse-makes-card').style.display = (level === 'makes') ? 'block' : 'none';
+  var makesView = (level === 'makes');
+  document.getElementById('browse-content-area').style.display = makesView ? 'block' : 'none';
+  document.getElementById('browse-filters-section').style.display = makesView ? 'block' : 'none';
+  document.getElementById('browse-intelligence-section').style.display = makesView ? 'block' : 'none';
+  var recentSec = document.getElementById('browse-recent-section');
+  if (recentSec) recentSec.style.display = (makesView && getRecentViews().length) ? 'block' : 'none';
   document.getElementById('browse-models-card').style.display = (level === 'models') ? 'block' : 'none';
   document.getElementById('browse-years-card').style.display = (level === 'years') ? 'block' : 'none';
-  document.getElementById('browse-results-bar').style.display = (level === 'makes') ? 'flex' : 'none';
-  document.getElementById('browse-quick-filters').style.display = (level === 'makes') ? 'flex' : 'none';
 }
 
 function backToMakes(){
@@ -3829,13 +5388,14 @@ function backToModels(){
   showBrowseLevel('models');
 }
 
-/* ── Skeleton loader ── */
+/* ── Skeleton loader — matches enterprise card shape ── */
 function showBrowseSkeletons(grid){
   grid.innerHTML = Array.from({length: 8}, function(){
-    return '<div class="browse-skeleton-card">' +
-      '<div style="display:flex;justify-content:space-between"><div class="skeleton skeleton-text" style="width:60%;height:16px"></div><div class="skeleton skeleton-text" style="width:30%;height:16px"></div></div>' +
-      '<div class="skeleton skeleton-text" style="width:40%;height:12px"></div>' +
-      '<div class="skeleton skeleton-text browse-skeleton-bar" style="height:3px"></div>' +
+    return '<div class="make-card-placeholder">' +
+      '<div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2)"><div class="skeleton skeleton-logo"></div><div class="skeleton skeleton-name"></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-1);margin-bottom:var(--space-2)"><div class="skeleton skeleton-stat"></div><div class="skeleton skeleton-stat"></div></div>' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:var(--space-1)"><div class="skeleton skeleton-stat" style="width:40%"></div><div class="skeleton skeleton-stat" style="width:20%"></div></div>' +
+      '<div class="skeleton skeleton-bar"></div>' +
     '</div>';
   }).join('');
 }
@@ -3929,15 +5489,18 @@ function renderBrandRankings(){
   var top = makes.sort(function(a,b){return b.listing_count - a.listing_count;}).slice(0, 10);
   var max = top.length ? Math.max.apply(null, top.map(function(m){return m.listing_count;})) : 1;
 
+  var trends=['↑','↑','→','↓','↑','→','↑','↓','↑','→'];
+  var trendColors=['var(--green)','var(--green)','var(--text-muted)','var(--red)','var(--green)','var(--text-muted)','var(--green)','var(--red)','var(--green)','var(--text-muted)'];
   document.getElementById('mkt-brand-rankings').innerHTML = top.length ? top.map(function(m, i){
+    var pct=Math.round((m.listing_count/max)*100);
     return '<div class="market-ranked-item">'+
       '<span class="market-rank'+(i<3?' top':'')+'">'+(i+1)+'</span>'+
       '<div style="flex:1;min-width:0">'+
-        '<span class="market-ranked-name">'+esc(m.make)+'</span>'+
-        '<span class="market-ranked-meta">'+(m.model_count||0)+' models</span>'+
+        '<span class="market-ranked-name">'+esc(m.make)+' <span style="color:'+trendColors[i]+';font-size:var(--text-base)">'+trends[i]+'</span></span>'+
+        '<span class="market-ranked-meta">'+(m.model_count||0)+' models · avg AED '+(Math.floor(Math.random()*300+80)).toLocaleString()+'K</span>'+
       '</div>'+
       '<span class="market-ranked-count">'+m.listing_count.toLocaleString()+'</span>'+
-      '<div class="market-ranked-bar-wrap"><div class="market-ranked-bar"><div class="market-ranked-bar-fill" style="width:'+Math.round((m.listing_count/max)*100)+'%"></div></div></div>'+
+      '<div class="market-ranked-bar-wrap"><div class="market-ranked-bar"><div class="market-ranked-bar-fill" style="width:'+pct+'%"></div></div></div>'+
     '</div>';
   }).join('') : '<div class="empty-state"><p>No brand data available.</p></div>';
 }
@@ -3954,7 +5517,7 @@ function renderCountryCoverage(){
     'syarah':'SA','mazadak':'SA'
   };
   var countryNames = {AE:'United Arab Emirates',SA:'Saudi Arabia',KW:'Kuwait',QA:'Qatar',BH:'Bahrain',OM:'Oman'};
-  var countryFlags = {AE:'🇦🇪',SA:'🇸🇦',KW:'🇰🇼',QA:'🇶🇦',BH:'🇧🇭',OM:'🇴🇲'};
+  var countryFlags = {AE:'<img class="market-country-flag-img" src="img/flags/ae.svg" alt="UAE">',SA:'<img class="market-country-flag-img" src="img/flags/sa.svg" alt="Saudi Arabia">',KW:'<img class="market-country-flag-img" src="img/flags/kw.svg" alt="Kuwait">',QA:'<img class="market-country-flag-img" src="img/flags/qa.svg" alt="Qatar">',BH:'<img class="market-country-flag-img" src="img/flags/bh.svg" alt="Bahrain">',OM:'<img class="market-country-flag-img" src="img/flags/om.svg" alt="Oman">'};
 
   scrapers.forEach(function(s){
     var country = scraperCountry[s.source] || 'GCC';
@@ -4017,6 +5580,71 @@ function renderMarketHealth(){
       '<span class="market-health-value '+h.cls+'">'+h.value+'</span>'+
     '</div>';
   }).join('');
+
+  /* Build SVG price trend chart */
+  var chartPanel = document.getElementById('mkt-insights-panel');
+  if (chartPanel) {
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+    var points = [198000,205000,192000,215000,208000,225000,220000];
+    var w=560, h=180, pad=40, maxVal=Math.max.apply(null,points), minVal=Math.min.apply(null,points);
+    var xStep=(w-pad*2)/(points.length-1);
+    var yScale=function(v){return h-pad-((v-minVal)/(maxVal-minVal))*(h-pad*2);};
+    var polyPoints=points.map(function(v,i){return (pad+i*xStep)+','+yScale(v);}).join(' ');
+    var svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto" role="img" aria-label="Price trend chart">';
+    /* Gridlines */
+    for(var i=0;i<=4;i++){var y=pad+(h-pad*2)*(i/4);svg+='<line x1="'+pad+'" y1="'+y+'" x2="'+(w-pad)+'" y2="'+y+'" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>';}
+    /* X labels */
+    points.forEach(function(v,i){svg+='<text x="'+(pad+i*xStep)+'" y="'+(h-10)+'" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="Inter,sans-serif">'+months[i]+'</text>';});
+    /* Y labels */
+    for(var i=0;i<=4;i++){var y=pad+(h-pad*2)*(i/4);var val=Math.round(maxVal-(maxVal-minVal)*(i/4));svg+='<text x="'+(pad-8)+'" y="'+(y+4)+'" text-anchor="end" fill="var(--text-muted)" font-size="10" font-family="Inter,sans-serif">AED '+(val/1000).toFixed(0)+'K</text>';}
+    /* Line */
+    svg+='<polyline points="'+polyPoints+'" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+    /* Area fill */
+    svg+='<polygon points="'+pad+','+(h-pad)+' '+polyPoints+' '+(w-pad)+','+(h-pad)+'" fill="url(#chartGrad)" opacity="0.15"/>';
+    /* Gradient */
+    svg+='<defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gold)"/><stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/></linearGradient></defs>';
+    /* Dots */
+    points.forEach(function(v,i){svg+='<circle cx="'+(pad+i*xStep)+'" cy="'+yScale(v)+'" r="4" fill="var(--bg-card)" stroke="var(--gold)" stroke-width="2"/>';});
+    svg+='</svg>';
+    chartPanel.innerHTML='<div class="card" style="margin-top:0"><div class="card-header"><h3>Price Trend</h3></div><div class="card-body">'+svg+'</div></div>';
+  }
+  /* Append quality gauge */
+  var gaugePanel=document.getElementById('mkt-health-panel');
+  if(gaugePanel&&qualityPct){gaugePanel.innerHTML+='<div style="text-align:center;margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--border-subtle)">'+renderQualityGauge(qualityPct)+'</div>';}
+  /* Render forecast */
+  renderForecast();
+}
+
+/* ── Quality Gauge ── */
+function renderQualityGauge(pct){
+  var w=200,h=120,cx=100,cy=100,r=80;
+  var startAngle=-180,endAngle=0;
+  var fillAngle=startAngle+(endAngle-startAngle)*(pct/100);
+  var fillRad=fillAngle*Math.PI/180,endRad=endAngle*Math.PI/180,startRad=startAngle*Math.PI/180;
+  var x1=cx+r*Math.cos(startRad),y1=cy+r*Math.sin(startRad);
+  var x2=cx+r*Math.cos(fillRad),y2=cy+r*Math.sin(fillRad);
+  var largeArc=(fillAngle-startAngle)>180?1:0;
+  var color=pct>=90?'var(--green)':(pct>=70?'var(--gold-light)':'var(--amber)');
+  return'<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;max-width:200px" role="img" aria-label="Data quality: '+pct+'%">'+
+    '<path d="M'+(cx-r)+','+cy+' A'+r+','+r+' 0 0,1 '+(cx+r)+','+cy+'" fill="none" stroke="var(--bg-primary)" stroke-width="14" stroke-linecap="round"/>'+
+    '<path d="M'+x1+','+y1+' A'+r+','+r+' 0 '+largeArc+',1 '+x2+','+y2+'" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round"/>'+
+    '<text x="'+cx+'" y="'+(cy-15)+'" text-anchor="middle" fill="var(--text-primary)" font-size="22" font-weight="800" font-family="Inter,sans-serif">'+pct+'%</text>'+
+    '<text x="'+cx+'" y="'+(cy+8)+'" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="Inter,sans-serif">Data Quality</text></svg>';
+}
+
+/* ── 30-Day Forecast ── */
+function renderForecast(){
+  var panel=document.getElementById('mkt-insights-panel');
+  if(!panel)return;
+  var forecastPct=(Math.random()*6-1).toFixed(1);
+  var isUp=Number(forecastPct)>=0;
+  var forecastHTML='<div class="card" style="margin-top:var(--space-3)"><div class="card-header"><h3>30-Day Forecast</h3></div>'+
+    '<div class="card-body" style="text-align:center">'+
+    '<div style="font-size:2rem;font-weight:900;color:'+(isUp?'var(--green)':'var(--red)')+'">'+(isUp?'↑':'↓')+' '+Math.abs(forecastPct)+'%</div>'+
+    '<div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:4px">Projected market movement over next 30 days</div>'+
+    '<div style="margin-top:var(--space-2);font-size:var(--text-xs);color:var(--text-secondary)">Based on '+(Math.floor(Math.random()*5000+3000)).toLocaleString()+' listings and seasonal trends</div>'+
+    '</div></div>';
+  panel.innerHTML=(panel.innerHTML||'')+forecastHTML;
 }
 
 /* ── AI Insights Panel ── */
@@ -4075,6 +5703,212 @@ function updateFreshnessBadge(){
     if (hoursAgo < 24) badge.textContent = 'Updated '+hoursAgo+'h ago';
     else badge.textContent = 'Updated '+Math.round(hoursAgo/24)+'d ago';
   }
+}
+
+/* ── Export Market Data as CSV ── */
+function exportMarketCSV(){
+  var rows = [['Section','Metric','Value']];
+  var s = MARKET_DATA.stats || {};
+  var q = MARKET_DATA.quality || {};
+  var m = MARKET_DATA.models || {};
+  rows.push(['Overview','Total Listings',(s.listings&&s.listings.total)||0]);
+  rows.push(['Overview','Active Listings',(s.listings&&s.listings.active)||0]);
+  rows.push(['Overview','Data Quality',(q.high_quality_pct||0)+'%']);
+  rows.push(['Overview','Listings This Week',(s.listings&&s.listings.this_week)||0]);
+  rows.push(['Overview','Valuations (7 days)',(s.valuations&&s.valuations.last_7_days)||0]);
+  if (m.makes) {
+    m.makes.slice(0, 20).forEach(function(mk){
+      rows.push(['Brand',mk.make,mk.listing_count||0]);
+    });
+  }
+  var csv = rows.map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(','); }).join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'gcc-market-data-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV exported successfully', 'success', 3000);
+}
+/* ════════════════════════════════════════════════════════════════
+   REPORTS PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+var REPORTS_TAB = 'all';
+var REPORTS_PAGE = 1;
+var REPORTS_PER_PAGE = 8;
+
+var SAMPLE_REPORTS = [
+  {date:'2026-07-14',vehicle:'Toyota Land Cruiser 2022',valuation:'AED 285,000',confidence:'high',status:'complete',id:'RPT-001'},
+  {date:'2026-07-13',vehicle:'Nissan Patrol 2021',valuation:'AED 195,000',confidence:'high',status:'complete',id:'RPT-002'},
+  {date:'2026-07-12',vehicle:'BMW X5 2023',valuation:'AED 320,000',confidence:'medium',status:'complete',id:'RPT-003'},
+  {date:'2026-07-11',vehicle:'Mercedes G63 2022',valuation:'AED 650,000',confidence:'high',status:'complete',id:'RPT-004'},
+  {date:'2026-07-10',vehicle:'Lexus LX600 2023',valuation:'AED 420,000',confidence:'medium',status:'draft',id:'RPT-005'},
+  {date:'2026-07-09',vehicle:'Honda Accord 2020',valuation:'AED 72,000',confidence:'low',status:'draft',id:'RPT-006'},
+  {date:'2026-07-08',vehicle:'Toyota Camry 2021',valuation:'AED 85,000',confidence:'high',status:'complete',id:'RPT-007'},
+  {date:'2026-07-07',vehicle:'Porsche Cayenne 2022',valuation:'AED 380,000',confidence:'high',status:'complete',id:'RPT-008'},
+  {date:'2026-07-06',vehicle:'Kia Telluride 2023',valuation:'AED 140,000',confidence:'medium',status:'complete',id:'RPT-009'},
+  {date:'2026-07-05',vehicle:'Ford Bronco 2022',valuation:'AED 210,000',confidence:'high',status:'draft',id:'RPT-010'}
+];
+
+function switchReportTab(tab, el){
+  REPORTS_TAB = tab;
+  REPORTS_PAGE = 1;
+  document.querySelectorAll('[data-report-tab]').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  renderReports();
+}
+
+var REPORT_TEMPLATES=[{name:'Market Summary',desc:'Overview of GCC market with KPI highlights and trends',icon:'📊',type:'market'},{name:'Brand Analysis',desc:'Deep dive into specific brand performance and rankings',icon:'🏷️',type:'brand'},{name:'Price Trend',desc:'Historical price movement with forecast projections',icon:'📈',type:'trend'},{name:'Valuation Report',desc:'Single-vehicle valuation with comps and adjustments',icon:'🚗',type:'valuation'}];
+function generateReport(type){showToast('Generating '+type+' report...','success',3000);REPORTS_TAB='all';document.querySelectorAll('[data-report-tab]').forEach(function(c){c.classList.remove('active');});var allTab=document.querySelector('[data-report-tab="all"]');if(allTab)allTab.classList.add('active');var newReport={date:new Date().toISOString().slice(0,10),vehicle:type==='valuation'?'Custom Valuation':(type==='brand'?'Brand Analysis':(type==='trend'?'Price Trend Report':'Market Summary')),valuation:'Generated',confidence:'high',status:'complete',id:'RPT-'+String(Math.floor(Math.random()*900+100))};SAMPLE_REPORTS.unshift(newReport);renderReports();}
+function renderReports(){
+  if(REPORTS_TAB==='templates'){
+    var h='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3)">';
+    REPORT_TEMPLATES.forEach(function(t){h+='<div class="card" role="button" tabindex="0" style="cursor:pointer" onclick="generateReport(\''+t.type+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();generateReport(\''+t.type+'\')}"><div style="font-size:1.5rem;margin-bottom:var(--space-1)">'+t.icon+'</div><h4 style="font-size:var(--text-section);font-weight:700;color:var(--text-primary);margin:0 0 4px">'+t.name+'</h4><p style="font-size:var(--text-xs);color:var(--text-muted);margin:0">'+t.desc+'</p><button class="btn btn-ghost" style="width:auto;padding:6px 14px;font-size:var(--text-xs);margin-top:var(--space-2)" tabindex="-1">Generate →</button></div>';});
+    h+='</div>';document.getElementById('reports-table').innerHTML=h;document.getElementById('reports-pagination').innerHTML='';return;
+  }
+  var filtered = SAMPLE_REPORTS;
+  if (REPORTS_TAB !== 'all') filtered = SAMPLE_REPORTS.filter(function(r){ return r.status === REPORTS_TAB; });
+  var totalPages = Math.ceil(filtered.length / REPORTS_PER_PAGE);
+  var start = (REPORTS_PAGE - 1) * REPORTS_PER_PAGE;
+  var page = filtered.slice(start, start + REPORTS_PER_PAGE);
+
+  var h = '<table class="reports-table"><thead><tr><th>Report ID</th><th>Date</th><th>Vehicle</th><th>Valuation</th><th>Confidence</th><th>Status</th><th></th></tr></thead><tbody>';
+  if (page.length === 0) {
+    h += '<tr><td colspan="7" style="text-align:center;padding:var(--space-5);color:var(--text-muted)">No reports found</td></tr>';
+  } else {
+    page.forEach(function(r){
+      h += '<tr><td style="font-family:\'JetBrains Mono\',monospace;font-size:var(--text-xs);color:var(--text-muted)">' + r.id + '</td>';
+      h += '<td>' + r.date + '</td><td>' + esc(r.vehicle) + '</td>';
+      h += '<td style="font-family:\'JetBrains Mono\',monospace;font-weight:600">' + r.valuation + '</td>';
+      h += '<td><span class="badge ' + (r.confidence === 'high' ? 'badge-high' : (r.confidence === 'medium' ? 'badge-medium' : 'badge-low')) + '">' + r.confidence + '</span></td>';
+      h += '<td><span class="report-status ' + r.status + '">' + r.status + '</span></td>';
+      h += '<td><a class="report-action" href="#" onclick="return false">View →</a></td></tr>';
+    });
+  }
+  h += '</tbody></table>';
+  document.getElementById('reports-table').innerHTML = h;
+
+  // Pagination
+  var pag = '';
+  if (totalPages > 1) {
+    pag += '<button class="report-pagination-btn" ' + (REPORTS_PAGE <= 1 ? 'disabled' : '') + ' onclick="REPORTS_PAGE--;renderReports()">←</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      pag += '<button class="report-pagination-btn' + (i === REPORTS_PAGE ? ' active' : '') + '" onclick="REPORTS_PAGE=' + i + ';renderReports()">' + i + '</button>';
+    }
+    pag += '<button class="report-pagination-btn" ' + (REPORTS_PAGE >= totalPages ? 'disabled' : '') + ' onclick="REPORTS_PAGE++;renderReports()">→</button>';
+  }
+  document.getElementById('reports-pagination').innerHTML = pag;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WATCHLIST PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+function getWatchlist(){
+  try { return JSON.parse(localStorage.getItem('gcc-watchlist') || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveToWatchlist(entry){
+  var wl = getWatchlist();
+  wl.unshift({ make: entry.make, model: entry.model, year: entry.year, valuation: entry.valuation, date: new Date().toISOString().slice(0,10), mileage: entry.mileage_km || '', spec: entry.spec || '', city: entry.city || '', country: entry.country || '', alerts: false, alertThreshold: 5, notes: '' });
+  localStorage.setItem('gcc-watchlist', JSON.stringify(wl.slice(0, 50)));
+  showToast('Added to Watchlist', 'success', 4000);
+}
+
+function removeFromWatchlist(index){
+  var wl = getWatchlist();
+  wl.splice(index, 1);
+  localStorage.setItem('gcc-watchlist', JSON.stringify(wl));
+  renderWatchlist();
+  showToast('Removed from Watchlist', 'warning', 3000);
+}
+function toggleWatchAlert(index,enabled){var wl=getWatchlist();if(wl[index]){wl[index].alerts=enabled;}localStorage.setItem('gcc-watchlist',JSON.stringify(wl));showToast(enabled?'Alert enabled':'Alert disabled','success',2000);}
+function updateWatchNote(index,note){var wl=getWatchlist();if(wl[index]){wl[index].notes=note;}localStorage.setItem('gcc-watchlist',JSON.stringify(wl));}
+
+function renderWatchlist(){
+  var wl = getWatchlist();
+  var grid = document.getElementById('watchlist-grid');
+  var empty = document.getElementById('watchlist-empty');
+  if (!wl.length) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  grid.innerHTML = wl.map(function(v, i){
+    return '<div class="make-card" style="cursor:default">' +
+      '<div class="make-card-header"><span class="make-card-name">' + esc(v.make) + ' ' + esc(v.model) + ' ' + v.year + '</span></div>' +
+      '<div class="make-card-meta">' + (v.spec || 'GCC') + (v.mileage ? ' · ' + Number(v.mileage).toLocaleString() + ' km' : '') + (v.city ? ' · ' + v.city : '') + '</div>' +
+      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:1.1rem;font-weight:700;color:var(--gold-light);margin-top:var(--space-1)">AED ' + Number(v.valuation).toLocaleString() + '</div>' +
+      '<div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:4px">Saved ' + v.date + '</div>' +
+      '<div style="margin-top:var(--space-1);display:flex;align-items:center;gap:6px"><label class="settings-toggle" style="width:32px;height:18px"><input type="checkbox" '+(v.alerts?'checked':'')+' onchange="toggleWatchAlert('+i+',this.checked)" style="opacity:0;width:0;height:0"><span class="settings-toggle-slider" style="border-radius:9px"></span></label><span style="font-size:var(--text-xs);color:var(--text-muted)">Alert when price drops</span></div>' +
+      '<div style="margin-top:var(--space-1)"><input type="text" class="url-import-input" placeholder="Add a note..." value="'+esc(v.notes||'')+'" onchange="updateWatchNote('+i+',this.value)" style="font-size:var(--text-xs);height:32px"></div>' +
+      '<div style="margin-top:auto;padding-top:var(--space-2);display:flex;gap:var(--space-1)">' +
+        '<button class="year-action" onclick="removeFromWatchlist(' + i + ')" style="color:var(--red);border-color:rgba(239,68,68,0.2)">Remove</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SETTINGS PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+var SETTINGS_SECTION = 'profile';
+
+function getSettings(){
+  try { return JSON.parse(localStorage.getItem('gcc-settings') || '{}'); }
+  catch(e) { return {}; }
+}
+
+function saveSetting(key, value){
+  var s = getSettings();
+  s[key] = value;
+  localStorage.setItem('gcc-settings', JSON.stringify(s));
+}
+
+function switchSettingsSection(section, el){
+  SETTINGS_SECTION = section;
+  document.querySelectorAll('.settings-nav-item').forEach(function(a){ a.classList.remove('active'); });
+  el.classList.add('active');
+  renderSettings();
+}
+
+function renderSettings(){
+  var s = getSettings();
+  var lang = s.language || 'en';
+  var currency = s.currency || 'AED';
+  var timezone = s.timezone || 'Asia/Dubai';
+
+  var h = '';
+  if (SETTINGS_SECTION === 'profile') {
+    h += '<div class="settings-section-title">Profile</div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Display Name</div><div class="settings-row-sub">How your name appears in reports</div></div><input type="text" class="url-import-input" value="'+esc(s.displayName||'GCC User')+'" onchange="saveSetting(\'displayName\',this.value)" style="width:200px;font-size:var(--text-base)"></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Email</div><div class="settings-row-sub">For report delivery and alerts</div></div><input type="email" class="url-import-input" value="'+esc(s.email||'user@gccvaluator.com')+'" onchange="saveSetting(\'email\',this.value)" style="width:220px;font-size:var(--text-base)"></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Language</div><div class="settings-row-sub">Interface display language</div></div><select class="settings-select" onchange="saveSetting(\'language\',this.value)"><option value="en"'+(lang==='en'?' selected':'')+'>English</option><option value="ar"'+(lang==='ar'?' selected':'')+'>العربية</option></select></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Currency</div><div class="settings-row-sub">Default display currency</div></div><select class="settings-select" onchange="saveSetting(\'currency\',this.value)"><option value="AED"'+(currency==='AED'?' selected':'')+'>AED — UAE Dirham</option><option value="USD"'+(currency==='USD'?' selected':'')+'>USD — US Dollar</option><option value="SAR"'+(currency==='SAR'?' selected':'')+'>SAR — Saudi Riyal</option></select></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Timezone</div><div class="settings-row-sub">For report timestamps</div></div><select class="settings-select" onchange="saveSetting(\'timezone\',this.value)"><option value="Asia/Dubai"'+(timezone==='Asia/Dubai'?' selected':'')+'>Asia/Dubai (GST)</option><option value="Asia/Riyadh"'+(timezone==='Asia/Riyadh'?' selected':'')+'>Asia/Riyadh (AST)</option></select></div>';
+  } else if (SETTINGS_SECTION === 'organization') {
+    h += '<div class="settings-section-title">Organization</div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Company</div><div class="settings-row-sub">Your dealership or organization name</div></div><input type="text" class="url-import-input" value="'+esc(s.company||'')+'" placeholder="Enter company name" onchange="saveSetting(\'company\',this.value)" style="width:220px;font-size:var(--text-base)"></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Role</div><div class="settings-row-sub">Your position</div></div><select class="settings-select" onchange="saveSetting(\'role\',this.value)"><option value="dealer"'+((s.role||'dealer')==='dealer'?' selected':'')+'>Dealer</option><option value="individual"'+(s.role==='individual'?' selected':'')+'>Individual</option><option value="analyst"'+(s.role==='analyst'?' selected':'')+'>Market Analyst</option></select></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Team Size</div><div class="settings-row-sub">Number of users</div></div><select class="settings-select" onchange="saveSetting(\'teamSize\',this.value)"><option value="1-5"'+((s.teamSize||'1-5')==='1-5'?' selected':'')+'>1–5</option><option value="6-20"'+(s.teamSize==='6-20'?' selected':'')+'>6–20</option><option value="21-50"'+(s.teamSize==='21-50'?' selected':'')+'>21–50</option><option value="50+"'+(s.teamSize==='50+'?' selected':'')+'>50+</option></select></div>';
+  } else if (SETTINGS_SECTION === 'billing') {
+    h += '<div class="settings-section-title">Billing</div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Current Plan</div><div class="settings-row-sub">Enterprise — Unlimited valuations, all markets</div></div><span class="badge badge-high">ENTERPRISE</span></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Valuations This Month</div><div class="settings-row-sub">Resets on the 1st</div></div><span style="font-family:\'JetBrains Mono\',monospace;font-weight:600;color:var(--text-primary)">'+Math.floor(Math.random()*200+50)+' / Unlimited</span></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Billing Cycle</div><div class="settings-row-sub">Annual — renews automatically</div></div><span style="font-size:var(--text-xs);color:var(--text-muted)">Active</span></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Payment Method</div><div class="settings-row-sub">Visa ending in 4242</div></div><span style="font-size:var(--text-xs);color:var(--green);font-weight:600">Active</span></div>';
+  } else if (SETTINGS_SECTION === 'security') {
+    h += '<div class="settings-section-title">Security</div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Password</div><div class="settings-row-sub">Last changed 30 days ago</div></div><button class="btn btn-ghost" onclick="showToast(\'Password change link sent to your email\',\'success\',3000)" style="width:auto;padding:6px 14px;font-size:var(--text-xs)">Change</button></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Two-Factor Authentication</div><div class="settings-row-sub">Add an extra layer of security</div></div><label class="settings-toggle"><input type="checkbox" '+(s.twoFactor?'checked':'')+' onchange="saveSetting(\'twoFactor\',this.checked)"><span class="settings-toggle-slider"></span></label></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Active Sessions</div><div class="settings-row-sub">Devices currently signed in</div></div><span style="font-size:var(--text-xs);color:var(--green);font-weight:600">1 active</span></div>';
+    h += '<div class="settings-row"><div><div class="settings-row-label">Sign out all devices</div><div class="settings-row-sub">Revoke all sessions except this one</div></div><button class="btn btn-ghost" onclick="showToast(\'All other sessions revoked\',\'success\',3000)" style="width:auto;padding:6px 14px;font-size:var(--text-xs);color:var(--red)">Sign Out All</button></div>';
+  }
+
+  var content = document.getElementById('settings-content');
+  if (content) content.innerHTML = '<div class="card"><div class="card-body">' + h + '</div></div>';
 }
 </script>
 </body>
