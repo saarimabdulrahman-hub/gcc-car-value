@@ -4338,48 +4338,56 @@ body.has-sidebar { display: flex; }
 <div class="browse-insights-grid" id="browse-insights-section">
 
   <!-- Popular Models -->
-  <div class="card" style="padding:var(--space-3)">
+  <div class="card" style="padding:var(--space-4)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
       <div class="browse-section-label" style="margin-bottom:0">Popular Models</div>
       <a href="#" onclick="return false" style="font-size:var(--text-xs);color:var(--gold-light);text-decoration:none;font-weight:600">View all →</a>
     </div>
-    <div id="browse-popular-models-list" style="display:flex;flex-direction:column;gap:var(--space-2)"></div>
+    <div id="browse-popular-models-list" style="display:flex;flex-direction:column;gap:0"></div>
   </div>
 
   <!-- Market Insights -->
-  <div class="card" style="padding:var(--space-3)">
+  <div class="card" style="padding:var(--space-4)">
     <div class="browse-section-label" style="margin-bottom:var(--space-3)">Market Insights</div>
-    <div id="browse-market-insights" style="display:flex;flex-direction:column;gap:var(--space-3)">
-      <div style="display:flex;align-items:center;gap:var(--space-2)">
-        <span style="font-size:1.1rem">🔍</span>
-        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most searched brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-top-brand">—</div></div>
-        <span style="font-size:var(--text-xs);color:var(--green);font-weight:700">↑</span>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--border-subtle)">
+        <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--gold-glow);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div style="flex:1;min-width:0"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most searched brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-top-brand">—</div></div>
+        <span style="font-size:var(--text-xs);color:var(--green);font-weight:700;display:flex;align-items:center;gap:2px">▲</span>
       </div>
-      <div style="display:flex;align-items:center;gap:var(--space-2)">
-        <span style="font-size:1.1rem">📈</span>
-        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Fastest growing brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-growth">—</div></div>
+      <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--border-subtle)">
+        <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--green-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div style="flex:1;min-width:0"><div style="font-size:var(--text-xs);color:var(--text-muted)">Fastest growing brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-growth">—</div></div>
         <span style="font-size:var(--text-xs);color:var(--green);font-weight:700" id="browse-insight-growth-pct">—</span>
       </div>
-      <div style="display:flex;align-items:center;gap:var(--space-2)">
-        <span style="font-size:1.1rem">🏪</span>
-        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most active marketplace</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">Dubizzle</div></div>
-        <span style="font-size:var(--text-xs);color:var(--info);font-weight:700">●</span>
+      <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--border-subtle)">
+        <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--info-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <div style="flex:1;min-width:0"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most active marketplace</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">Dubizzle</div></div>
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--info);flex-shrink:0"></span>
       </div>
-      <div style="display:flex;align-items:center;gap:var(--space-2)">
-        <span style="font-size:1.1rem">🚙</span>
-        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Highest inventory</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">SUV</div></div>
-        <span style="font-size:var(--text-xs);color:var(--info);font-weight:700">●</span>
+      <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0">
+        <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div style="flex:1;min-width:0"><div style="font-size:var(--text-xs);color:var(--text-muted)">Highest inventory</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">SUV</div></div>
+        <span style="font-size:var(--text-xs);color:var(--text-secondary);font-weight:600">●</span>
       </div>
     </div>
   </div>
 
   <!-- Recently Viewed -->
-  <div class="card" style="padding:var(--space-3)">
+  <div class="card" style="padding:var(--space-4)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
       <div class="browse-section-label" style="margin-bottom:0">Recently Viewed</div>
       <a href="#" onclick="return false" style="font-size:var(--text-xs);color:var(--gold-light);text-decoration:none;font-weight:600">View all →</a>
     </div>
-    <div id="browse-recently-viewed-list" style="display:flex;flex-direction:column;gap:var(--space-2)"></div>
+    <div id="browse-recently-viewed-list" style="display:flex;flex-direction:column;gap:0"></div>
   </div>
 
 </div>
@@ -5307,30 +5315,37 @@ function renderBrowseMakes(){
     '</div>';
   }).join('');
 
-  /* Popular Models list */
-  var popularPairs = [{make:'Toyota',model:'Land Cruiser',icon:'🚙'},{make:'Nissan',model:'Patrol',icon:'🚗'},{make:'Toyota',model:'Camry',icon:'🚘'}];
+  /* Popular Models list with sub-labels */
+  var popularPairs = [
+    {make:'Toyota',model:'Land Cruiser',sub:'Full-Size SUV',icon:'🚙'},
+    {make:'Nissan',model:'Patrol',sub:'Full-Size SUV',icon:'🚗'},
+    {make:'Toyota',model:'Camry',sub:'Mid-Size Sedan',icon:'🚘'}
+  ];
   document.getElementById('browse-popular-models-list').innerHTML = popularPairs.map(function(pm){
     var count = Math.floor(Math.random() * 8000 + 2000);
     var price = Math.floor(Math.random() * 300 + 50);
-    return '<div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectModel(\''+esc(pm.make)+'\',\''+esc(pm.model)+'\')">' +
-      '<div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">'+pm.icon+'</div>' +
-      '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(pm.make)+' '+esc(pm.model)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">'+count.toLocaleString()+' listings</div></div>' +
-      '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;color:var(--gold-light);font-size:var(--text-xs);background:var(--gold-glow);padding:3px 8px;border-radius:var(--radius-sm)">AED '+price+'K avg</span>' +
+    return '<div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectModel(\''+esc(pm.make)+'\',\''+esc(pm.model)+'\')">' +
+      '<div style="width:42px;height:42px;border-radius:var(--radius-md);background:var(--bg-elevated);border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">'+pm.icon+'</div>' +
+      '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(pm.make)+' '+esc(pm.model)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:1px">'+pm.sub+' · '+count.toLocaleString()+' listings</div></div>' +
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;color:var(--gold-light);font-size:var(--text-xs);white-space:nowrap">AED '+price+'K</span>' +
     '</div>';
   }).join('');
 
-  /* Recently Viewed */
+  /* Recently Viewed with sub-labels */
   var recent = getRecentViews();
   var recentList = document.getElementById('browse-recently-viewed-list');
   if (recentList) {
-    var recentIcons = ['🚙','🏎️','🚗','🚘','🚐','🏍️'];
+    var recentSubs = {'Toyota':'Japanese Reliability','Nissan':'Japanese Performance','BMW':'German Engineering','Mercedes':'German Luxury','Lexus':'Japanese Luxury','Audi':'German Precision','Ford':'American Power','Chevrolet':'American Muscle','Honda':'Japanese Efficiency','Hyundai':'Korean Innovation','Kia':'Korean Value','Mitsubishi':'Japanese Durability'};
     recentList.innerHTML = recent.length ? recent.slice(0,3).map(function(r,i){
-      return '<div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectMake(\''+esc(r)+'\')">' +
-        '<div style="width:36px;height:36px;border-radius:var(--radius-md);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">'+recentIcons[i%6]+'</div>' +
-        '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(r)+'</div></div>' +
-        '<span style="color:var(--text-muted);font-size:var(--text-xs)">→</span>' +
+      var initials = r.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase() || r.charAt(0).toUpperCase();
+      var colors = ['#C89435','#3B82F6','#10B981'];
+      var sub = recentSubs[r] || 'Premium Manufacturer';
+      return '<div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectMake(\''+esc(r)+'\')">' +
+        '<div style="width:38px;height:38px;border-radius:var(--radius-md);background:'+colors[i]+';display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:#fff;flex-shrink:0">'+initials+'</div>' +
+        '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(r)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:1px">'+sub+'</div></div>' +
+        '<span style="width:24px;height:24px;border-radius:50%;border:1px solid var(--border-hover);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:0.7rem;flex-shrink:0">→</span>' +
       '</div>';
-    }).join('') : '<div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-2) 0">No recently viewed manufacturers</div>';
+    }).join('') : '<div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-3) 0;text-align:center">No recently viewed manufacturers</div>';
   }
 
   /* Market Insights */
