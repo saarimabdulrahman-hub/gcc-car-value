@@ -5273,6 +5273,13 @@ function renderBrowseMakes(){
   var headerCount = document.getElementById('browse-header-count');
   if (headerCount) headerCount.textContent = filtered.length;
 
+  /* Generate SVG sparkline */
+  function sparklineSVG(points, color){
+    var w=100, h=28, pad=2, max=Math.max.apply(null,points), min=Math.min.apply(null,points), range=max-min||1;
+    var pts=points.map(function(v,i){ return (pad+(i/(points.length-1))*(w-pad*2)) + ',' + (h-pad-((v-min)/range)*(h-pad*2)); }).join(' ');
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block"><polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg>';
+  }
+
   /* Featured slider — top 5 with ranking */
   var featured = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; }).slice(0, 5);
   document.getElementById('browse-featured-slider').innerHTML = featured.map(function(m, i){
@@ -5280,15 +5287,22 @@ function renderBrowseMakes(){
     var logoBg = logoColors[i % logoColors.length];
     var trend = trendData[i];
     var avgPrice = Math.floor(Math.random() * 350 + 45);
-    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-color:rgba(200,148,53,0.12)">' +
-      '<div style="position:absolute;top:12px;right:14px;font-family:\'JetBrains Mono\',monospace;font-size:0.7rem;font-weight:700;color:var(--gold-light);letter-spacing:0.04em;background:var(--gold-glow);padding:2px 8px;border-radius:var(--radius-sm)">#'+(i+1)+'</div>' +
+    var sparkColor = trend.dir==='up'?'var(--green)':(trend.dir==='down'?'var(--red)':'var(--text-muted)');
+    var sparkPoints = trend.dir==='up'?[3,5,4,7,6,9,8,11]:(trend.dir==='down'?[10,9,8,7,6,5,4,3]:[5,6,5,6,5,6,5,6]);
+    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-color:rgba(200,148,53,0.12);min-width:220px">' +
+      '<div style="position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0B0D12;font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;font-weight:800;padding:4px 10px 4px 14px;border-radius:0 var(--radius-xl) 0 var(--radius-lg)">#'+(i+1)+'</div>' +
       '<div class="make-card-top">' +
-        '<div class="make-card-logo" style="background:' + logoBg + ';width:48px;height:48px;font-size:1.1rem">' + esc(initials) + '</div>' +
-        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1.1rem">' + esc(m.make) + '</div><div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px">' + (m.model_count||0) + ' Models · ' + Math.floor(m.listing_count/1000) + 'K Listings</div></div>' +
+        '<div class="make-card-logo" style="background:' + logoBg + ';width:44px;height:44px;font-size:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.3)">' + esc(initials) + '</div>' +
+        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1rem">' + esc(m.make) + '</div></div>' +
       '</div>' +
-      '<div class="make-card-footer" style="margin-top:var(--space-2)">' +
+      '<div style="display:flex;gap:var(--space-3);margin:var(--space-2) 0">' +
+        '<div><div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Models</div><div style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:0.9rem;color:var(--text-primary)">'+(m.model_count||0)+'</div></div>' +
+        '<div><div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Listings</div><div style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:0.9rem;color:var(--gold-light)">'+Math.floor(m.listing_count/1000)+'K</div></div>' +
+        '<div style="flex:1;min-width:0">'+sparklineSVG(sparkPoints,sparkColor)+'</div>' +
+      '</div>' +
+      '<div class="make-card-footer" style="margin-top:auto">' +
         '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
-        '<span class="make-card-trend ' + trend.cls + '">' + trend.arrow + ' ' + trend.pct + '%</span>' +
+        '<span class="make-card-trend ' + trend.cls + '" style="font-size:0.75rem">' + trend.arrow + ' ' + trend.pct + '%</span>' +
       '</div>' +
     '</div>';
   }).join('');
