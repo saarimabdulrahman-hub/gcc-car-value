@@ -11,13 +11,9 @@ services:
     envVars:
       - key: DATABASE_URL
         sync: false
-        value: postgresql+asyncpg://neondb_owner:YOUR_PASSWORD@ep-morning-darkness-123456.us-east-2.aws.neon.tech/gcc_car_value?sslmode=require
       - key: DATABASE_URL_SYNC
         sync: false
-        value: postgresql://neondb_owner:YOUR_PASSWORD@ep-morning-darkness-123456.us-east-2.aws.neon.tech/gcc_car_value?sslmode=require
       - key: JWT_SECRET
         generateValue: true
       - key: ENVIRONMENT
         value: production
-      - key: LOG_LEVEL
-        value: INFO
