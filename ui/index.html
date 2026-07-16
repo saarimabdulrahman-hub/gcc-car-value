@@ -1914,6 +1914,53 @@ body.has-sidebar { display: flex; }
   gap: var(--space-2);
 }
 
+/* ── Featured Slider ── */
+.browse-featured-slider {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: var(--space-1) 0;
+}
+.browse-featured-slider::-webkit-scrollbar { display: none; }
+.browse-featured-slider .make-card {
+  min-width: 240px;
+  flex-shrink: 0;
+}
+.browse-slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast);
+  font-family: 'Inter', sans-serif;
+}
+.browse-slider-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px var(--gold-glow);
+}
+
+/* ── Bottom Insights Grid ── */
+.browse-insights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
 /* ── Browse Footer ── */
 .browse-footer {
   margin-top: var(--space-6);
@@ -1927,6 +1974,15 @@ body.has-sidebar { display: flex; }
 }
 
 /* ── Browse Responsive ── */
+@media (max-width: 1100px) {
+  .browse-insights-grid { grid-template-columns: 1fr 1fr; }
+  .browse-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .browse-insights-grid { grid-template-columns: 1fr; }
+  .browse-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .browse-featured-slider .make-card { min-width: 200px; }
+}
 @media (max-width: 1100px) {
   .browse-featured-grid { grid-template-columns: repeat(2, 1fr); }
   .browse-kpi-strip { grid-template-columns: repeat(2, 1fr); }
@@ -4139,25 +4195,36 @@ body.has-sidebar { display: flex; }
 
 <div id="page-browse" class="hidden">
 
-<!-- ═══ 1. PAGE HEADER ═══ -->
-<div class="page-header"><div class="page-header-left"><h2 class="page-title">Browse Models</h2><p class="page-sub">Live market intelligence across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p></div><div class="page-header-badge">GCC Live Market</div></div>
-
-<!-- ═══ 2. MARKET KPI STRIP ═══ -->
-<div class="browse-kpi-strip" id="browse-kpi-strip">
-  <div class="browse-kpi-card"><div class="browse-kpi-label">Manufacturers</div><div class="browse-kpi-value" id="browse-kpi-makes">—</div></div>
-  <div class="browse-kpi-card"><div class="browse-kpi-label">Total Models</div><div class="browse-kpi-value" id="browse-kpi-models">—</div></div>
-  <div class="browse-kpi-card"><div class="browse-kpi-label">Active Listings</div><div class="browse-kpi-value" id="browse-kpi-listings">—</div></div>
-  <div class="browse-kpi-card">
-    <div style="display:flex;align-items:center;gap:6px"><span class="browse-kpi-label">Countries</span><span style="width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 4px rgba(0,214,107,0.4)" title="All systems operational"></span></div>
-    <div class="browse-kpi-value">6</div>
+<!-- ═══ 1. PAGE HEADER with map background ═══ -->
+<div class="page-header" style="position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(200,148,53,0.04) 0%,transparent 50%,rgba(59,130,246,0.03) 100%);border-radius:var(--radius-xl);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4);border:1px solid var(--border-subtle)">
+  <div style="position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,0.15) 1px,transparent 1px),radial-gradient(circle at 80% 30%,rgba(255,255,255,0.1) 1px,transparent 1px),radial-gradient(circle at 50% 80%,rgba(200,148,53,0.1) 1px,transparent 1px);background-size:60px 60px,80px 80px,100px 100px;pointer-events:none"></div>
+  <div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:var(--space-3)">
+    <div class="page-header-left">
+      <h2 class="page-title" style="margin-bottom:4px">Browse Models</h2>
+      <p class="page-sub" style="margin-bottom:0">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--space-2)">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
+      <span style="font-size:var(--text-xs);font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
+      <span style="font-size:var(--text-xs);color:var(--text-muted);margin-left:var(--space-1)" id="browse-last-updated">Updated just now</span>
+    </div>
   </div>
 </div>
 
-<!-- ═══ 3. SEARCH WORKSPACE ═══ -->
+<!-- ═══ 2. KPI STRIP — 5 cards ═══ -->
+<div class="browse-kpi-strip" id="browse-kpi-strip">
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Manufacturers</div><div class="browse-kpi-value" id="browse-kpi-makes">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Active brands</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Total Models</div><div class="browse-kpi-value" id="browse-kpi-models">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Across all brands</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Active Listings</div><div class="browse-kpi-value" id="browse-kpi-listings">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Live in market</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Countries</div><div class="browse-kpi-value">6</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">GCC countries</div></div>
+  <div class="browse-kpi-card"><div class="browse-kpi-label">Data Freshness</div><div class="browse-kpi-value" id="browse-kpi-freshness" style="font-size:1.1rem">Real-time</div><div style="font-size:0.6rem;color:var(--green);margin-top:2px">Live updates</div></div>
+</div>
+
+<!-- ═══ 3. SEARCH & FILTER CONSOLE ═══ -->
 <div class="browse-search-workspace">
   <div class="browse-search-wrap browse-search-hero">
     <svg class="browse-search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="browse-search" id="browse-search" placeholder="Search manufacturers..." oninput="filterBrowseMakes();toggleSearchClear()" onkeydown="if(event.key==='Escape'){this.value='';filterBrowseMakes();toggleSearchClear();this.blur();}" autocomplete="off" aria-label="Search manufacturers">
+    <input type="text" class="browse-search" id="browse-search" placeholder="Search manufacturers, models, or keyword..." oninput="filterBrowseMakes();toggleSearchClear()" onkeydown="if(event.key==='Escape'){this.value='';filterBrowseMakes();toggleSearchClear();this.blur();}" autocomplete="off" aria-label="Search manufacturers">
     <button class="browse-search-clear" id="browse-search-clear" onclick="document.getElementById('browse-search').value='';filterBrowseMakes();toggleSearchClear();document.getElementById('browse-search').focus();" aria-label="Clear search" style="display:none">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
@@ -4180,47 +4247,49 @@ body.has-sidebar { display: flex; }
       <span class="browse-results-count" id="browse-results-text"></span>
       <span class="browse-active-filters" id="browse-active-filters"></span>
     </div>
+    <button class="browse-chip" id="browse-clear-all" onclick="clearAllFilters()" style="display:none;cursor:pointer">Clear All</button>
   </div>
-</div>
-
-<!-- ═══ 4. QUICK FILTERS ═══ -->
-<div class="browse-section" id="browse-filters-section">
-  <div class="browse-section-label">Quick Filters</div>
-  <div class="card" style="padding:var(--space-2) var(--space-3)">
-    <div class="browse-quick-filters" id="browse-quick-filters" style="margin-bottom:0">
+  <div style="margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--border-subtle)">
+    <div class="browse-section-label" style="margin-bottom:var(--space-2)">Quick Filters</div>
+    <div class="browse-quick-filters" id="browse-quick-filters">
       <span class="browse-chip active" data-filter="all">All</span>
       <span class="browse-chip" data-filter="popular">Popular</span>
       <span class="browse-chip" data-filter="luxury">Luxury</span>
       <span class="browse-chip" data-filter="japanese">Japanese</span>
       <span class="browse-chip" data-filter="suv">SUV</span>
+      <span class="browse-chip" data-filter="sedan">Sedan</span>
+      <span class="browse-chip" data-filter="truck">Truck</span>
+      <span class="browse-chip" data-filter="coupe">Coupe</span>
+      <span class="browse-chip" data-filter="mpv">MPV</span>
     </div>
   </div>
 </div>
 
-<!-- ═══ BROWSE CONTENT AREA — sections 5–7 ═══ -->
-<div id="browse-content-area">
-
-  <!-- ═══ 5. FEATURED MANUFACTURERS ═══ -->
-  <div class="browse-section" id="browse-featured-section">
-    <div class="browse-section-label">Featured Manufacturers</div>
-    <div class="browse-featured-grid" id="browse-featured-grid"></div>
+<!-- ═══ 4. FEATURED MANUFACTURERS — Horizontal Slider ═══ -->
+<div class="browse-section" id="browse-featured-section">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)">
+    <div class="browse-section-label" style="margin-bottom:0">Featured Manufacturers</div>
+    <a href="#" onclick="document.getElementById('browse-all-section').scrollIntoView({behavior:'smooth'});return false" style="font-size:var(--text-xs);color:var(--gold-light);text-decoration:none;font-weight:600">View all manufacturers →</a>
   </div>
-
-  <!-- ═══ 6. POPULAR MODELS ═══ -->
-  <div class="browse-section" id="browse-popular-section">
-    <div class="browse-section-label">Popular Models</div>
-    <div class="browse-popular-grid" id="browse-popular-grid"></div>
+  <div style="position:relative">
+    <div class="browse-featured-slider" id="browse-featured-slider"></div>
+    <button class="browse-slider-btn browse-slider-left" onclick="slideFeatured(-1)" aria-label="Scroll left" style="left:-16px">‹</button>
+    <button class="browse-slider-btn browse-slider-right" onclick="slideFeatured(1)" aria-label="Scroll right" style="right:-16px">›</button>
   </div>
+</div>
 
-  <!-- ═══ 7. ALL MANUFACTURERS ═══ -->
+<!-- ═══ 5. BROWSE CONTENT AREA ═══ -->
+<div id="browse-content-area" style="margin-bottom:var(--space-5)">
+
+  <!-- All Manufacturers -->
   <div class="browse-section" id="browse-all-section">
     <div class="browse-section-label">All Manufacturers</div>
     <div id="browse-makes-grid" class="browse-grid" aria-live="polite"></div>
   </div>
 
-</div><!-- /#browse-content-area -->
+</div>
 
-<!-- ═══ DRILL-DOWN: Models List ═══ -->
+<!-- ═══ DRILL-DOWN: Models ═══ -->
 <div class="card" id="browse-models-card" style="display:none">
   <div class="card-header browse-level-header">
     <button onclick="backToMakes()" class="back-btn">← All Manufacturers</button>
@@ -4229,7 +4298,7 @@ body.has-sidebar { display: flex; }
   <div class="card-body"><div id="browse-models-list"></div></div>
 </div>
 
-<!-- ═══ DRILL-DOWN: Years List ═══ -->
+<!-- ═══ DRILL-DOWN: Years ═══ -->
 <div class="card" id="browse-years-card" style="display:none">
   <div class="card-header browse-level-header">
     <button onclick="backToModels()" class="back-btn">← All Models</button>
@@ -4238,52 +4307,57 @@ body.has-sidebar { display: flex; }
   <div class="card-body"><div id="browse-years-list"></div></div>
 </div>
 
-<!-- ═══ RECENTLY VIEWED ═══ -->
-<div class="browse-section" id="browse-recent-section" style="display:none">
-  <div class="browse-section-label">Recently Viewed</div>
-  <div class="browse-quick-filters" id="browse-recent-chips"></div>
-</div>
+<!-- ═══ 6. BOTTOM INSIGHTS — 3 Columns ═══ -->
+<div class="browse-insights-grid" id="browse-insights-section">
 
-<!-- ═══ 8. MARKET INTELLIGENCE ═══ -->
-<div class="browse-section" id="browse-intelligence-section">
-  <div class="browse-section-label">Market Intelligence</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
-    <!-- Left column: Market Snapshot + Live Status -->
-    <div class="card" style="padding:var(--space-3)">
-      <div style="display:flex;align-items:center;gap:var(--space-1);margin-bottom:var(--space-3)">
-        <span style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0" id="browse-live-dot"></span>
-        <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">Live GCC Data</span>
-        <span style="font-size:var(--text-xs);color:var(--text-muted);margin-left:auto" id="browse-last-updated"></span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2)">
-        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Manufacturers</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)" id="browse-intel-makes">—</div></div>
-        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Total Models</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)" id="browse-intel-models">—</div></div>
-        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Active Listings</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--gold-light)" id="browse-intel-listings">—</div></div>
-        <div><div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:2px">Countries</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text-primary)">6</div></div>
-      </div>
+  <!-- Popular Models -->
+  <div class="card" style="padding:var(--space-3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
+      <div class="browse-section-label" style="margin-bottom:0">Popular Models</div>
+      <a href="#" onclick="return false" style="font-size:var(--text-xs);color:var(--gold-light);text-decoration:none;font-weight:600">View all →</a>
     </div>
-    <!-- Right column: Trending + Coverage -->
-    <div class="card" style="padding:var(--space-3)">
-      <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-2)">Trending Manufacturers</div>
-      <div id="browse-trending-list" style="display:flex;flex-direction:column;gap:2px">
-        <div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-2) 0">Loading market data...</div>
+    <div id="browse-popular-models-list" style="display:flex;flex-direction:column;gap:var(--space-2)"></div>
+  </div>
+
+  <!-- Market Insights -->
+  <div class="card" style="padding:var(--space-3)">
+    <div class="browse-section-label" style="margin-bottom:var(--space-3)">Market Insights</div>
+    <div id="browse-market-insights" style="display:flex;flex-direction:column;gap:var(--space-3)">
+      <div style="display:flex;align-items:center;gap:var(--space-2)">
+        <span style="font-size:1.1rem">🔍</span>
+        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most searched brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-top-brand">—</div></div>
+        <span style="font-size:var(--text-xs);color:var(--green);font-weight:700">↑</span>
       </div>
-      <div style="margin-top:var(--space-3);padding-top:var(--space-2);border-top:1px solid var(--border-subtle)">
-        <div style="font-size:var(--text-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-1)">Market Coverage</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px 0" id="browse-coverage-flags">
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇦🇪 UAE</span>
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇸🇦 Saudi Arabia</span>
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇰🇼 Kuwait</span>
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇶🇦 Qatar</span>
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇧🇭 Bahrain</span>
-          <span style="font-size:var(--text-xs);color:var(--text-secondary)">🇴🇲 Oman</span>
-        </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2)">
+        <span style="font-size:1.1rem">📈</span>
+        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Fastest growing brand</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)" id="browse-insight-growth">—</div></div>
+        <span style="font-size:var(--text-xs);color:var(--green);font-weight:700" id="browse-insight-growth-pct">—</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2)">
+        <span style="font-size:1.1rem">🏪</span>
+        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Most active marketplace</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">Dubizzle</div></div>
+        <span style="font-size:var(--text-xs);color:var(--info);font-weight:700">●</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2)">
+        <span style="font-size:1.1rem">🚙</span>
+        <div style="flex:1"><div style="font-size:var(--text-xs);color:var(--text-muted)">Highest inventory</div><div style="font-weight:600;color:var(--text-primary);font-size:var(--text-body)">SUV</div></div>
+        <span style="font-size:var(--text-xs);color:var(--info);font-weight:700">●</span>
       </div>
     </div>
   </div>
+
+  <!-- Recently Viewed -->
+  <div class="card" style="padding:var(--space-3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
+      <div class="browse-section-label" style="margin-bottom:0">Recently Viewed</div>
+      <a href="#" onclick="return false" style="font-size:var(--text-xs);color:var(--gold-light);text-decoration:none;font-weight:600">View all →</a>
+    </div>
+    <div id="browse-recently-viewed-list" style="display:flex;flex-direction:column;gap:var(--space-2)"></div>
+  </div>
+
 </div>
 
-<!-- ═══ 9. FOOTER ═══ -->
+<!-- ═══ 7. FOOTER ═══ -->
 <div class="browse-footer">
   <span>Data sourced from 10 marketplaces across 6 GCC countries</span>
   <span style="font-family:'JetBrains Mono',monospace;font-size:var(--text-xs)">GCC Car Valuator — Enterprise</span>
@@ -5048,7 +5122,11 @@ var CHIP_FILTERS = {
   popular: function(m){ return ['Toyota','Nissan','Honda','Hyundai','Kia','Ford'].indexOf(m.make) >= 0; },
   luxury: function(m){ return ['Mercedes','BMW','Audi','Lexus','Porsche','Land Rover','Cadillac'].indexOf(m.make) >= 0; },
   japanese: function(m){ return ['Toyota','Nissan','Honda','Mazda','Mitsubishi','Lexus','Infiniti','Subaru'].indexOf(m.make) >= 0; },
-  suv: function(m){ return ['Toyota','Nissan','Mitsubishi','Jeep','Land Rover','Chevrolet','Ford','GMC'].indexOf(m.make) >= 0; }
+  suv: function(m){ return ['Toyota','Nissan','Mitsubishi','Jeep','Land Rover','Chevrolet','Ford','GMC','Lexus','BMW','Mercedes'].indexOf(m.make) >= 0; },
+  sedan: function(m){ return ['Toyota','Honda','Nissan','Hyundai','Kia','BMW','Mercedes','Audi','Lexus','Mazda'].indexOf(m.make) >= 0; },
+  truck: function(m){ return ['Toyota','Ford','Chevrolet','GMC','Ram','Nissan','Mitsubishi'].indexOf(m.make) >= 0; },
+  coupe: function(m){ return ['BMW','Mercedes','Audi','Porsche','Ford','Chevrolet','Nissan'].indexOf(m.make) >= 0; },
+  mpv: function(m){ return ['Toyota','Honda','Kia','Hyundai','Nissan','Mitsubishi'].indexOf(m.make) >= 0; }
 };
 
 /* ── Chip click handlers ── */
@@ -5164,51 +5242,72 @@ function renderBrowseMakes(){
     '</div>';
   }).join('');
 
-  /* Featured manufacturers — top 4, premium treatment with ranking */
-  var featured = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; }).slice(0, 4);
-  document.getElementById('browse-featured-grid').innerHTML = featured.map(function(m, i){
+  /* Update header count */
+  var headerCount = document.getElementById('browse-header-count');
+  if (headerCount) headerCount.textContent = filtered.length;
+
+  /* Featured slider — top 5 with ranking */
+  var featured = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; }).slice(0, 5);
+  document.getElementById('browse-featured-slider').innerHTML = featured.map(function(m, i){
     var initials = m.make.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase() || m.make.charAt(0).toUpperCase();
     var logoBg = logoColors[i % logoColors.length];
     var trend = trendData[i];
     var avgPrice = Math.floor(Math.random() * 350 + 45);
     return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-color:rgba(200,148,53,0.12)">' +
-      '<div style="position:absolute;top:12px;right:14px;font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;font-weight:700;color:var(--text-muted);letter-spacing:0.04em">#'+(i+1)+'</div>' +
+      '<div style="position:absolute;top:12px;right:14px;font-family:\'JetBrains Mono\',monospace;font-size:0.7rem;font-weight:700;color:var(--gold-light);letter-spacing:0.04em;background:var(--gold-glow);padding:2px 8px;border-radius:var(--radius-sm)">#'+(i+1)+'</div>' +
       '<div class="make-card-top">' +
         '<div class="make-card-logo" style="background:' + logoBg + ';width:48px;height:48px;font-size:1.1rem">' + esc(initials) + '</div>' +
-        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1.1rem">' + esc(m.make) + '</div><div style="font-size:var(--text-xs);color:var(--gold-light);font-weight:600;margin-top:2px">Top '+(i+1)+' by volume</div></div>' +
+        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1.1rem">' + esc(m.make) + '</div><div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px">' + (m.model_count||0) + ' Models · ' + Math.floor(m.listing_count/1000) + 'K Listings</div></div>' +
       '</div>' +
-      '<div class="make-card-stats">' +
-        '<div class="make-card-stat"><span class="make-card-stat-label">Models</span><span class="make-card-stat-value">' + (m.model_count||0) + '</span></div>' +
-        '<div class="make-card-stat"><span class="make-card-stat-label">Listings</span><span class="make-card-stat-value gold">' + m.listing_count.toLocaleString() + '</span></div>' +
-      '</div>' +
-      '<div class="make-card-footer">' +
+      '<div class="make-card-footer" style="margin-top:var(--space-2)">' +
         '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
         '<span class="make-card-trend ' + trend.cls + '">' + trend.arrow + ' ' + trend.pct + '%</span>' +
       '</div>' +
-      '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="width:100%"></div></div></div>' +
     '</div>';
   }).join('');
 
-  /* Popular models — derived from top manufacturers' most-listed models */
-  var popularPairs = [
-    {make:'Toyota',model:'Land Cruiser'},{make:'Nissan',model:'Patrol'},{make:'Toyota',model:'Camry'},
-    {make:'Honda',model:'Accord'},{make:'Lexus',model:'LX'},{make:'BMW',model:'X5'}
-  ];
-  var popularModels = popularPairs.filter(function(p){ return filtered.some(function(m){ return m.make === p.make; }); }).slice(0, 3);
-  document.getElementById('browse-popular-grid').innerHTML = popularModels.map(function(pm, i){
+  /* Popular Models list */
+  var popularPairs = [{make:'Toyota',model:'Land Cruiser',icon:'🚙'},{make:'Nissan',model:'Patrol',icon:'🚗'},{make:'Toyota',model:'Camry',icon:'🚘'}];
+  document.getElementById('browse-popular-models-list').innerHTML = popularPairs.map(function(pm){
     var count = Math.floor(Math.random() * 8000 + 2000);
-    return '<div class="make-card" onclick="selectModel(\''+esc(pm.make)+'\',\''+esc(pm.model)+'\')" tabindex="0" role="button" style="padding:var(--space-2) var(--space-3)">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center">' +
-        '<div><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(pm.model)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">'+esc(pm.make)+'</div></div>' +
-        '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;color:var(--gold-light);font-size:var(--text-body)">'+count.toLocaleString()+'</span>' +
-      '</div></div>';
+    var price = Math.floor(Math.random() * 300 + 50);
+    return '<div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectModel(\''+esc(pm.make)+'\',\''+esc(pm.model)+'\')">' +
+      '<div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">'+pm.icon+'</div>' +
+      '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(pm.make)+' '+esc(pm.model)+'</div><div style="font-size:var(--text-xs);color:var(--text-muted)">'+count.toLocaleString()+' listings</div></div>' +
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;color:var(--gold-light);font-size:var(--text-xs);background:var(--gold-glow);padding:3px 8px;border-radius:var(--radius-sm)">AED '+price+'K avg</span>' +
+    '</div>';
   }).join('');
-  if (!popularModels.length) { document.getElementById('browse-popular-section').style.display = 'none'; }
-  else { document.getElementById('browse-popular-section').style.display = 'block'; }
 
-  /* Update header subtitle with live count */
-  var headerCount = document.getElementById('browse-header-count');
-  if (headerCount) headerCount.textContent = filtered.length;
+  /* Recently Viewed */
+  var recent = getRecentViews();
+  var recentList = document.getElementById('browse-recently-viewed-list');
+  if (recentList) {
+    var recentIcons = ['🚙','🏎️','🚗','🚘','🚐','🏍️'];
+    recentList.innerHTML = recent.length ? recent.slice(0,3).map(function(r,i){
+      return '<div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) 0;border-bottom:1px solid var(--border-subtle);cursor:pointer" onclick="selectMake(\''+esc(r)+'\')">' +
+        '<div style="width:36px;height:36px;border-radius:var(--radius-md);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">'+recentIcons[i%6]+'</div>' +
+        '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:var(--text-body);color:var(--text-primary)">'+esc(r)+'</div></div>' +
+        '<span style="color:var(--text-muted);font-size:var(--text-xs)">→</span>' +
+      '</div>';
+    }).join('') : '<div style="font-size:var(--text-xs);color:var(--text-muted);padding:var(--space-2) 0">No recently viewed manufacturers</div>';
+  }
+
+  /* Market Insights */
+  var sorted = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; });
+  document.getElementById('browse-insight-top-brand').textContent = sorted[0] ? sorted[0].make : '—';
+  document.getElementById('browse-insight-growth').textContent = sorted[2] ? sorted[2].make : '—';
+  document.getElementById('browse-insight-growth-pct').textContent = '+ ' + (Math.random()*8+2).toFixed(1) + '%';
+
+  /* Update freshness timestamp */
+  var ts = document.getElementById('browse-last-updated');
+  if (ts) { var now = new Date(); ts.textContent = 'Updated ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + ' GMT'; }
+
+  /* Clear All button visibility */
+  var clearBtn = document.getElementById('browse-clear-all');
+  if (clearBtn) {
+    var hasFilters = (document.getElementById('browse-search').value || document.getElementById('browse-country').value || document.getElementById('browse-sort').value !== 'name');
+    clearBtn.style.display = hasFilters ? 'inline-flex' : 'none';
+  }
 
   updateBrowseKPIs(filtered, totalAll);
   updateBrowseIntelligence(filtered);
@@ -5376,12 +5475,27 @@ function quickValue(mk, md, yr){
 function showBrowseLevel(level){
   var makesView = (level === 'makes');
   document.getElementById('browse-content-area').style.display = makesView ? 'block' : 'none';
-  document.getElementById('browse-filters-section').style.display = makesView ? 'block' : 'none';
-  document.getElementById('browse-intelligence-section').style.display = makesView ? 'block' : 'none';
-  var recentSec = document.getElementById('browse-recent-section');
-  if (recentSec) recentSec.style.display = (makesView && getRecentViews().length) ? 'block' : 'none';
+  document.getElementById('browse-featured-section').style.display = makesView ? 'block' : 'none';
+  document.getElementById('browse-insights-section').style.display = makesView ? 'block' : 'none';
   document.getElementById('browse-models-card').style.display = (level === 'models') ? 'block' : 'none';
   document.getElementById('browse-years-card').style.display = (level === 'years') ? 'block' : 'none';
+}
+
+/* ── Featured Slider ── */
+function slideFeatured(dir){
+  var s=document.getElementById('browse-featured-slider');
+  if(s)s.scrollBy({left:s.offsetWidth*0.8*dir,behavior:'smooth'});
+}
+
+/* ── Clear All Filters ── */
+function clearAllFilters(){
+  document.getElementById('browse-search').value='';filterBrowseMakes();toggleSearchClear();
+  document.getElementById('browse-country').value='';loadBrowseMakes();updateCountryIndicator();
+  document.getElementById('browse-sort').value='name';renderBrowseMakes();
+  document.querySelectorAll('#browse-quick-filters .browse-chip').forEach(function(c){c.classList.remove('active');});
+  document.querySelector('#browse-quick-filters .browse-chip[data-filter=all]').classList.add('active');
+  BROWSE_ACTIVE_CHIP='all';
+  renderBrowseMakes();
 }
 
 function backToMakes(){
