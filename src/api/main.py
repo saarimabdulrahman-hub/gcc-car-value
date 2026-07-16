@@ -22,16 +22,17 @@ from src.core.metrics import Metrics
 
 _start_time = time.time()
 
-Metrics.info("app.version", "Application version").set_info(
-    version=settings.api_version)
-Metrics.info("app.environment", "Deployment environment").set_info(
-    environment=settings.environment)
-Metrics.info("app.runtime", "Python runtime info").set_info(
-    python_version=sys.version.split()[0])
-Metrics.gauge("app.uptime_seconds", "Process uptime in seconds")
-
-# Set initial uptime (updated on each /metrics scrape via the gauge)
-Metrics.set_gauge("app.uptime_seconds", 0.0)
+try:
+    Metrics.info("app.version", "Application version").set_info(
+        version=settings.api_version)
+    Metrics.info("app.environment", "Deployment environment").set_info(
+        environment=settings.environment)
+    Metrics.info("app.runtime", "Python runtime info").set_info(
+        python_version=sys.version.split()[0])
+    Metrics.gauge("app.uptime_seconds", "Process uptime in seconds")
+    Metrics.set_gauge("app.uptime_seconds", 0.0)
+except Exception:
+    pass  # Metrics already registered (reload-safe)
 
 def _update_uptime() -> None:
     """Update the uptime gauge before each /metrics scrape."""
@@ -69,8 +70,12 @@ app.add_middleware(
 app.add_middleware(CorrelationMiddleware)
 
 # HTTP tracing middleware — auto-creates root spans (no-op when OTel disabled)
-from src.core.tracing.instrumentation.http import HTTPInstrumentation
-app.add_middleware(HTTPInstrumentation)
+try:
+    from src.core.tracing.instrumentation.http import HTTPInstrumentation
+except ImportError:
+    HTTPInstrumentation = None
+if HTTPInstrumentation is not None:
+    app.add_middleware(HTTPInstrumentation)
 
 app.include_router(health.router, prefix="/v1", tags=["health"])
 app.include_router(valuation.router, prefix="/v1", tags=["valuation"])
