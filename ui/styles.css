@@ -1,0 +1,61 @@
+/* ══════════════════════════════════════════════════════════════════
+   GCC Car Value — Premium Enterprise Design System
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surface Palette — layered depth (Vision: Graphite 900→100) ── */
+  --graphite-950:  #090C11;  --bg-primary:    var(--graphite-950);
+  --graphite-900:  #0C0F15;  --bg-secondary:  var(--graphite-900);
+  --graphite-850:  #10151B;  --bg-input:      var(--graphite-850);
+  --graphite-800:  #11161D;  --bg-elevated:   var(--graphite-800);
+  --graphite-750:  #151B23;  --bg-card:       var(--graphite-750);
+  --graphite-700:  #1A2029;  --bg-card-hover: var(--graphite-700);
+
+  /* ── Accent — Luxury Gold ── */
+  --gold:             #C89435;
+  --gold-glow:        rgba(200,148,53,0.18);
+
+  /* ── Semantic ── */
+  --slate-400:    #9CA3AF;
+  --white:        #FFFFFF;
+  --green:        #00D66B;
+  --red:          #EF4444;
+
+  /* ── Typography & Spacing ── */
+  --text-primary:   var(--white);
+  --text-secondary: var(--slate-400);
+  --text-muted:     #6B7280;
+  --space-1:  8px;   --space-2:  16px;  --space-3:  24px;
+  --space-4:  32px;  --space-5:  40px;
+  --radius-md:  10px; --radius-lg:  12px; --radius-xl:  16px;
+  --radius-2xl: 20px;
+  --duration-fast:    150ms ease;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar { width: 256px; background: var(--bg-secondary); border-right: 1px solid rgba(255,255,255,0.04); display: flex; flex-direction: column; height: 100vh; position: fixed; left: 0; top: 0; }
+.main-wrap { margin-left: 256px; width: calc(100% - 256px); min-height: 100vh; }
+.has-sidebar { display: flex; }
+
+/* Browse Specific Layout */
+.floating-header { position: fixed; top: 20px; right: 40px; z-index: 100; display: flex; gap: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; backdrop-filter: blur(10px); }
+.page-hero-container {
+        position: relative;
+        background: linear-gradient(to bottom, rgba(9, 12, 17, 0.4), var(--bg-primary)),
+                    url('img/hero-bg.png') no-repeat center bottom / cover;
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px 80px;
+    }
+.kpi-container { margin-top: -100px; position: relative; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 0 56px; }
+.card { background: var(--bg-card); border-radius: 14px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); }

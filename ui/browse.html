@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Browse Models — Car Valuator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+    /* Floating Header Style */
+    .floating-header {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        z-index: 100;
+        display: flex;
+        gap: 10px;
+        background: rgba(0,0,0,0.2);
+        padding: 10px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+    .page-hero-container {
+        position: relative;
+        background: linear-gradient(to bottom, rgba(9, 12, 17, 0.4), #090c11),
+                    url('img/browse-hero.png') no-repeat center bottom / cover;
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px 80px;
+        color: white;
+    }
+    .kpi-container {
+        margin-top: -100px;
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        padding: 0 56px;
+    }
+</style>
+</head>
+<body class="has-sidebar">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">CV</div>
+    <div class="sidebar-titles">
+      <div class="sidebar-name">CAR VALUATOR</div>
+      <div class="sidebar-subtitle">Enterprise</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav" style="padding: 20px;">
+    <a href="index.html" style="color:white; text-decoration:none; display:flex; gap:10px;">🏠 Home</a>
+    <a href="browse.html" class="active" style="color:white; text-decoration:none; display:flex; gap:10px; margin-top:20px;">🔍 Browse</a>
+  </nav>
+</aside>
+
+<div class="main-wrap">
+  <!-- Floating Header -->
+  <header class="floating-header">
+      <button style="background:none; border:none; color:white; cursor:pointer;">🔍</button>
+      <button style="background:none; border:none; color:white; cursor:pointer;">🔔</button>
+  </header>
+
+  <main class="main-content" style="padding:0;">
+    <!-- Full-page background hero feel -->
+    <section class="page-hero-container">
+        <h1 style="font-size: 3rem; font-weight: 900; color: white;">Browse Models</h1>
+        <p style="font-size: 1.1rem; color: #ccc;">Explore every make and model across 12 manufacturers in 6 GCC countries.</p>
+    </section>
+
+    <!-- KPI Grid positioned "over" the background -->
+    <div class="kpi-container">
+      <div class="card"><h3>Manufacturers</h3><div style="font-size: 2rem; font-weight: 800;">12</div></div>
+      <div class="card"><h3>Total Models</h3><div style="font-size: 2rem; font-weight: 800;">57</div></div>
+      <div class="card"><h3>Active Listings</h3><div style="font-size: 2rem; font-weight: 800;">0.0M+</div></div>
+      <div class="card"><h3>Countries</h3><div style="font-size: 2rem; font-weight: 800;">6</div></div>
+      <div class="card"><h3>Data Freshness</h3><div style="font-size: 2rem; font-weight: 800;">2 min</div></div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
