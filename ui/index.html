@@ -1806,6 +1806,34 @@ body.has-sidebar { display: flex; }
   font-weight: 400;
 }
 
+/* ── Advanced Filters Button ── */
+.browse-advanced-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 56px;
+  border: 1.5px solid rgba(200,148,53,0.25);
+  border-radius: var(--radius-lg);
+  background: rgba(200,148,53,0.06);
+  color: var(--gold-light);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-base);
+}
+.browse-advanced-btn:hover {
+  border-color: var(--gold);
+  background: rgba(200,148,53,0.12);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+.browse-advanced-btn:active {
+  transform: scale(0.97);
+  transition: all var(--duration-instant);
+}
+
 /* ── Search Clear Button ── */
 .browse-search-clear {
   position: absolute;
@@ -4249,11 +4277,17 @@ body.has-sidebar { display: flex; }
 
 <!-- ═══ 3. SEARCH & FILTER CONSOLE ═══ -->
 <div class="browse-search-workspace" style="background:transparent;border:none;box-shadow:none;padding-top:0">
-  <div class="browse-search-wrap browse-search-hero">
-    <svg class="browse-search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="browse-search" id="browse-search" placeholder="Search manufacturers, models, or keyword..." oninput="filterBrowseMakes();toggleSearchClear()" onkeydown="if(event.key==='Escape'){this.value='';filterBrowseMakes();toggleSearchClear();this.blur();}" autocomplete="off" aria-label="Search manufacturers">
-    <button class="browse-search-clear" id="browse-search-clear" onclick="document.getElementById('browse-search').value='';filterBrowseMakes();toggleSearchClear();document.getElementById('browse-search').focus();" aria-label="Clear search" style="display:none">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <div style="display:flex;gap:var(--space-3);align-items:stretch">
+    <div class="browse-search-wrap browse-search-hero" style="flex:1;margin-bottom:0">
+      <svg class="browse-search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="browse-search" id="browse-search" placeholder="Search manufacturers, models, or keyword..." oninput="filterBrowseMakes();toggleSearchClear()" onkeydown="if(event.key==='Escape'){this.value='';filterBrowseMakes();toggleSearchClear();this.blur();}" autocomplete="off" aria-label="Search manufacturers">
+      <button class="browse-search-clear" id="browse-search-clear" onclick="document.getElementById('browse-search').value='';filterBrowseMakes();toggleSearchClear();document.getElementById('browse-search').focus();" aria-label="Clear search" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <button class="browse-advanced-btn" onclick="return false" aria-label="Advanced Filters" style="flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      <span>Advanced Filters</span>
     </button>
   </div>
   <div class="browse-search-actions">
@@ -4274,7 +4308,7 @@ body.has-sidebar { display: flex; }
       <span class="browse-results-count" id="browse-results-text"></span>
       <span class="browse-active-filters" id="browse-active-filters"></span>
     </div>
-    <button class="browse-chip" id="browse-clear-all" onclick="clearAllFilters()" style="display:none;cursor:pointer">Clear All</button>
+    <button class="browse-chip" id="browse-clear-all" onclick="clearAllFilters()" style="display:none;cursor:pointer;white-space:nowrap">✕ Clear All</button>
   </div>
   <div style="margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--border-subtle)">
     <div class="browse-section-label" style="margin-bottom:var(--space-2)">Quick Filters</div>
