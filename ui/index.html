@@ -4205,10 +4205,26 @@ body.has-sidebar { display: flex; }
 <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
-<div id="page-browse" class="hidden" style="background-image:url('img/browse-hero.png');background-size:cover;background-position:center top;background-attachment:fixed">
+<div id="page-browse" class="hidden" style="background-image:url('img/browse-hero.png');background-size:cover;background-position:center top;background-attachment:fixed;position:relative">
 
-<!-- ═══ PAGE TITLE — floating over background ═══ -->
-<div style="padding:60px 0 30px;position:relative;z-index:1">
+<!-- ═══ HERO LAYER 1: Background gradient overlay ═══ -->
+<div style="position:absolute;inset:0;top:0;height:500px;background:linear-gradient(180deg,rgba(9,12,17,0.35) 0%,rgba(9,12,17,0.15) 50%,rgba(9,12,17,0.85) 100%);pointer-events:none;z-index:0"></div>
+
+<!-- ═══ HERO LAYER 2: Car illustration at bottom ═══ -->
+<div style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:500px;max-width:80%;z-index:1;pointer-events:none;opacity:0.35">
+  <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="240" cy="260" rx="180" ry="12" fill="rgba(0,0,0,0.4)"/>
+    <path d="M60 200 L60 175 L90 150 L180 145 L280 145 L340 140 L380 130 L420 130 L430 145 L430 200 L410 200 L400 210 L380 210 L370 200 L110 200 L100 210 L80 210 L70 200 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <path d="M150 145 L150 100 L200 90 L260 90 L320 100 L320 145" fill="rgba(200,180,140,0.12)" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <circle cx="160" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
+    <circle cx="160" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/>
+    <circle cx="360" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
+    <circle cx="360" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/>
+  </svg>
+</div>
+
+<!-- ═══ HERO LAYER 3: Text overlay ═══ -->
+<div style="padding:60px 0 120px;position:relative;z-index:2">
   <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-3)">
     <div>
       <h2 class="page-title" style="margin-bottom:4px">Browse Models</h2>
@@ -4222,8 +4238,8 @@ body.has-sidebar { display: flex; }
   </div>
 </div>
 
-<!-- ═══ FLOATING KPI STRIP ═══ -->
-<div class="browse-kpi-strip" id="browse-kpi-strip" style="position:relative;z-index:2">
+<!-- ═══ HERO LAYER 4: FLOATING KPI STRIP ═══ -->
+<div class="browse-kpi-strip" id="browse-kpi-strip" style="position:relative;z-index:3">
   <div class="browse-kpi-card"><div class="browse-kpi-label">Manufacturers</div><div class="browse-kpi-value" id="browse-kpi-makes">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Active brands</div></div>
   <div class="browse-kpi-card"><div class="browse-kpi-label">Total Models</div><div class="browse-kpi-value" id="browse-kpi-models">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Across all brands</div></div>
   <div class="browse-kpi-card"><div class="browse-kpi-label">Active Listings</div><div class="browse-kpi-value" id="browse-kpi-listings">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Live in market</div></div>
