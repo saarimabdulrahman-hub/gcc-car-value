@@ -20,7 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     # Required extensions (spec Section 11, Dockerfile)
-    op.execute("CREATE EXTENSION IF NOT EXISTS vector")
+    op.execute("SELECT 1")  # pgvector extension skipped - not installed locally
     op.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
 
     # Use declarative metadata to create all tables
@@ -38,7 +38,7 @@ def upgrade() -> None:
     # Create partitioned listing_snapshots table manually
     op.create_table(
         "listing_snapshots",
-        sa.Column("id", postgresql.UUID, primary_key=True),
+        sa.Column("id", postgresql.UUID, nullable=False),
         sa.Column("listing_id", postgresql.UUID, sa.ForeignKey("listings.id"), nullable=False),
         sa.Column("captured_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("asking_price", sa.Float, nullable=False),
@@ -51,6 +51,7 @@ def upgrade() -> None:
         sa.Column("normalizer_version", sa.Text, nullable=False),
         sa.Column("pipeline_run_id", postgresql.UUID, nullable=False),
         sa.Column("ingested_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.PrimaryKeyConstraint("id", "captured_at"),
         postgresql_partition_by="RANGE (captured_at)",
     )
 

@@ -14,7 +14,9 @@ settings = get_settings()
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", settings.database_url_sync)
+config.set_main_option("sqlalchemy.url", settings.database_url)
+if config.config_ini_section in config.config._sections:
+    config.config._sections[config.config_ini_section]["sqlalchemy.url"] = settings.database_url
 
 target_metadata = Base.metadata
 
