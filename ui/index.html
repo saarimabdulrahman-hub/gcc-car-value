@@ -141,6 +141,21 @@ body {
 
 body.has-sidebar { display: flex; }
 
+/* ── Floating Utility Bar ── */
+.floating-utilities {
+  position: fixed;
+  top: 16px; right: 24px;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: rgba(9,12,17,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+}
 /* ── Skip Link ── */
 .skip-link {
   position: absolute;
@@ -945,13 +960,6 @@ body.has-sidebar { display: flex; }
   min-height: 680px;
   overflow: hidden;
   margin-bottom: 0;
-  border-radius: var(--radius-2xl);
-  background-color: var(--bg-hero);
-  background-image: url('hero-bg.png');
-  background-position: 75% center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border: 1px solid var(--border-subtle);
 }
 
 /* Dark gradient overlay — keeps text readable, creates depth */
@@ -3807,14 +3815,11 @@ body.has-sidebar { display: flex; }
 </aside>
 
 <div class="main-wrap">
-<header class="header">
-<div class="header-brand"></div>
-<div class="header-actions">
+
+<!-- ═══ FLOATING UTILITY BAR ═══ -->
+<div class="floating-utilities">
   <button class="header-btn" title="Search" onclick="focusGlobalSearch()" aria-label="Search vehicles and markets">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <button class="header-btn" title="Notifications" onclick="return false">
-    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
   </button>
   <button class="header-btn" title="Theme" onclick="return false" aria-label="Theme — dark mode">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -3825,13 +3830,12 @@ body.has-sidebar { display: flex; }
     <span class="lang-option">AR</span>
   </button>
 </div>
-</header>
 
 <main class="main-content" id="main-content">
 
 <div class="breadcrumbs hidden" id="breadcrumbs"></div>
 
-<div id="page-home">
+<div id="page-home" style="background-image:url('hero-bg.png');background-size:cover;background-position:center;background-attachment:fixed">
 
 <div id="home-skeleton-content">
   <div class="home-hero" style="min-height:680px;display:flex;align-items:center;padding:40px 56px">
@@ -4201,12 +4205,11 @@ body.has-sidebar { display: flex; }
 <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
-<div id="page-browse" class="hidden">
+<div id="page-browse" class="hidden" style="background-image:url('img/browse-hero.png');background-size:cover;background-position:center top;background-attachment:fixed">
 
-<!-- ═══ 1. FULL-BLEED HERO — continuous canvas ═══ -->
-<div class="page-browse-hero" style="position:relative;overflow:hidden;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;min-height:340px;display:flex;align-items:flex-end;margin:-40px -40px 0;padding:var(--space-8) 40px var(--space-10)">
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,12,17,0.3) 0%,rgba(9,12,17,0.2) 40%,rgba(9,12,17,0.7) 100%);pointer-events:none"></div>
-  <div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-3);width:100%">
+<!-- ═══ PAGE TITLE — floating over background ═══ -->
+<div style="padding:60px 0 30px;position:relative;z-index:1">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-3)">
     <div>
       <h2 class="page-title" style="margin-bottom:4px">Browse Models</h2>
       <p class="page-sub" style="margin-bottom:0">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
@@ -4219,8 +4222,8 @@ body.has-sidebar { display: flex; }
   </div>
 </div>
 
-<!-- ═══ 2. FLOATING KPI STRIP — overlaps hero ═══ -->
-<div class="browse-kpi-strip" id="browse-kpi-strip" style="margin-top:-50px;position:relative;z-index:5">
+<!-- ═══ FLOATING KPI STRIP ═══ -->
+<div class="browse-kpi-strip" id="browse-kpi-strip" style="position:relative;z-index:2">
   <div class="browse-kpi-card"><div class="browse-kpi-label">Manufacturers</div><div class="browse-kpi-value" id="browse-kpi-makes">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Active brands</div></div>
   <div class="browse-kpi-card"><div class="browse-kpi-label">Total Models</div><div class="browse-kpi-value" id="browse-kpi-models">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Across all brands</div></div>
   <div class="browse-kpi-card"><div class="browse-kpi-label">Active Listings</div><div class="browse-kpi-value" id="browse-kpi-listings">—</div><div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">Live in market</div></div>
