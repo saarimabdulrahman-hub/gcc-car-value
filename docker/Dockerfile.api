@@ -4,7 +4,6 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip first to avoid Poetry interference
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 COPY pyproject.toml .
@@ -14,14 +13,6 @@ RUN pip install --no-cache-dir ".[dev]"
 
 ENV ALEMBIC_CONFIG=src/db/migrations/alembic.ini
 
-RUN echo '#!/bin/bash\n\
-set -e\n\
-if [ -n "$DATABASE_URL" ]; then\n\
-  cd /app && alembic upgrade head || echo "Migration skipped"\n\
-fi\n\
-exec uvicorn src.api.main:app --host 0.0.0.0 --port 8000\n\
-' > /app/start.sh && chmod +x /app/start.sh
-
 EXPOSE 8000
 
-CMD ["/app/start.sh"]
+CMD sh -c "alembic upgrade head || echo 'Migration skipped' && uvicorn src.api.main:app --host 0.0.0.0 --port 8000"
