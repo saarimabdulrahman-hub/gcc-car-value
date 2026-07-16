@@ -5293,7 +5293,10 @@ function renderBrowseMakes(){
     var initials = m.make.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase() || m.make.charAt(0).toUpperCase();
     var logoBg = logoColors[i % logoColors.length];
     var trend = trendData[i % trendData.length];
-    var avgPrice = Math.floor(Math.random() * 350 + 45); // 45K–395K AED
+    var avgPrice = Math.floor(Math.random() * 350 + 45);
+    var sparkColor = trend.dir==='up'?'var(--green)':(trend.dir==='down'?'var(--red)':'var(--text-muted)');
+    var sparkPoints = trend.dir==='up'?[2,4,3,6,5,8,7,10]:(trend.dir==='down'?[9,8,7,6,5,4,3,2]:[5,6,5,5.5,5,6,5,5.5]);
+    var trendIcon = trend.dir==='up'?'▲':(trend.dir==='down'?'▼':'◆');
     return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" aria-label="' + esc(m.make) + ' — ' + (m.model_count||0) + ' models, ' + m.listing_count.toLocaleString() + ' listings, avg AED ' + avgPrice + 'K">' +
       '<div class="make-card-top">' +
         '<div class="make-card-logo" style="background:' + logoBg + '">' + esc(initials) + '</div>' +
@@ -5303,9 +5306,10 @@ function renderBrowseMakes(){
         '<div class="make-card-stat"><span class="make-card-stat-label">Models</span><span class="make-card-stat-value">' + (m.model_count||0) + '</span></div>' +
         '<div class="make-card-stat"><span class="make-card-stat-label">Listings</span><span class="make-card-stat-value gold">' + m.listing_count.toLocaleString() + '</span></div>' +
       '</div>' +
+      '<div style="margin:var(--space-1) 0">'+sparklineSVGEnhanced(sparkPoints,sparkColor,trend.dir)+'</div>' +
       '<div class="make-card-footer">' +
         '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
-        '<span class="make-card-trend ' + trend.cls + '">' + trend.arrow + ' ' + trend.pct + '%</span>' +
+        '<span class="make-card-trend ' + trend.cls + '" style="font-size:0.75rem;font-weight:800">' + trendIcon + ' ' + trend.pct + '%</span>' +
       '</div>' +
       '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="width:' + barPct + '%"></div></div></div>' +
     '</div>';
@@ -5322,6 +5326,14 @@ function renderBrowseMakes(){
     return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block"><polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg>';
   }
 
+  /* Enhanced sparkline with area fill */
+  function sparklineSVGEnhanced(points, color, dir){
+    var w=120, h=32, pad=3, max=Math.max.apply(null,points), min=Math.min.apply(null,points), range=max-min||1;
+    var pts=points.map(function(v,i){ return (pad+(i/(points.length-1))*(w-pad*2)) + ',' + (h-pad-((v-min)/range)*(h-pad*2)); }).join(' ');
+    var area=pad+','+(h-pad)+' '+pts+' '+(w-pad)+','+(h-pad);
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block"><polygon points="'+area+'" fill="'+color+'" opacity="0.08"/><polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="'+(w-pad)+'" cy="'+(h-pad-((points[points.length-1]-min)/range)*(h-pad*2))+'" r="2.5" fill="'+color+'"/></svg>';
+  }
+
   /* Featured slider — top 5 with ranking */
   var featured = filtered.slice().sort(function(a,b){ return b.listing_count - a.listing_count; }).slice(0, 5);
   document.getElementById('browse-featured-slider').innerHTML = featured.map(function(m, i){
@@ -5330,21 +5342,19 @@ function renderBrowseMakes(){
     var trend = trendData[i];
     var avgPrice = Math.floor(Math.random() * 350 + 45);
     var sparkColor = trend.dir==='up'?'var(--green)':(trend.dir==='down'?'var(--red)':'var(--text-muted)');
-    var sparkPoints = trend.dir==='up'?[3,5,4,7,6,9,8,11]:(trend.dir==='down'?[10,9,8,7,6,5,4,3]:[5,6,5,6,5,6,5,6]);
-    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-color:rgba(200,148,53,0.12);min-width:220px">' +
-      '<div style="position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0B0D12;font-family:\'JetBrains Mono\',monospace;font-size:0.65rem;font-weight:800;padding:4px 10px 4px 14px;border-radius:0 var(--radius-xl) 0 var(--radius-lg)">#'+(i+1)+'</div>' +
+    var sparkPoints = trend.dir==='up'?[2,4,3,6,5,8,7,10]:(trend.dir==='down'?[9,8,7,6,5,4,3,2]:[5,6,5,5.5,5,6,5,5.5]);
+    var trendColor = trend.dir==='up'?'var(--green)':(trend.dir==='down'?'var(--red)':'var(--text-muted)');
+    var trendIcon = trend.dir==='up'?'▲':(trend.dir==='down'?'▼':'◆');
+    return '<div class="make-card" onclick="selectMake(\'' + esc(m.make) + '\')" tabindex="0" role="button" style="padding:var(--space-4);border-left:3px solid rgba(200,148,53,0.4);min-width:230px">' +
+      '<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0B0D12;font-family:\'JetBrains Mono\',monospace;font-size:0.7rem;font-weight:900;padding:3px 10px;border-radius:var(--radius-sm);box-shadow:0 2px 6px rgba(200,148,53,0.25)">#'+(i+1)+'</div>' +
       '<div class="make-card-top">' +
-        '<div class="make-card-logo" style="background:' + logoBg + ';width:44px;height:44px;font-size:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.3)">' + esc(initials) + '</div>' +
-        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1rem">' + esc(m.make) + '</div></div>' +
+        '<div class="make-card-logo" style="background:' + logoBg + ';width:46px;height:46px;font-size:1.05rem;box-shadow:0 0 0 2px rgba(200,148,53,0.15),0 3px 10px rgba(0,0,0,0.3)">' + esc(initials) + '</div>' +
+        '<div class="make-card-brand"><div class="make-card-name" style="font-size:1.05rem">' + esc(m.make) + '</div><div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px">' + (m.model_count||0) + ' Models · ' + Math.floor(m.listing_count/1000) + 'K Listings</div></div>' +
       '</div>' +
-      '<div style="display:flex;gap:var(--space-3);margin:var(--space-2) 0">' +
-        '<div><div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Models</div><div style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:0.9rem;color:var(--text-primary)">'+(m.model_count||0)+'</div></div>' +
-        '<div><div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Listings</div><div style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:0.9rem;color:var(--gold-light)">'+Math.floor(m.listing_count/1000)+'K</div></div>' +
-        '<div style="flex:1;min-width:0">'+sparklineSVG(sparkPoints,sparkColor)+'</div>' +
-      '</div>' +
-      '<div class="make-card-footer" style="margin-top:auto">' +
-        '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
-        '<span class="make-card-trend ' + trend.cls + '" style="font-size:0.75rem">' + trend.arrow + ' ' + trend.pct + '%</span>' +
+      '<div style="margin:var(--space-3) 0">'+sparklineSVGEnhanced(sparkPoints,sparkColor,trend.dir)+'</div>' +
+      '<div class="make-card-footer" style="margin-top:auto;padding-top:var(--space-2)">' +
+        '<span class="make-card-price" style="font-size:0.8rem">AED ' + avgPrice + 'K avg</span>' +
+        '<span class="make-card-trend ' + trend.cls + '" style="font-size:0.78rem;font-weight:800">' + trendIcon + ' ' + trend.pct + '%</span>' +
       '</div>' +
     '</div>';
   }).join('');
