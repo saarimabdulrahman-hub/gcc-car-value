@@ -18,11 +18,11 @@
      ════════════════════════════════════════════════════════════════ */
 
   /* ── Surface Palette — layered depth (Vision: Graphite 900→100) ── */
-  --graphite-950:  #090C11;  /* --bg-primary    — deepest surface */
-  --graphite-900:  #0C0F15;  /* --bg-secondary  — sidebars, chrome */
+  --graphite-950:  #090B10;  /* --bg-primary    — deepest surface */
+  --graphite-900:  #0D1017;  /* --bg-secondary  — sidebars, chrome */
   --graphite-850:  #10151B;  /* --bg-input      — form fields */
   --graphite-800:  #11161D;  /* --bg-elevated   — dropdowns, popovers */
-  --graphite-750:  #151B23;  /* --bg-card       — card surfaces */
+  --graphite-750:  #141922;  /* --bg-card       — card surfaces */
   --graphite-700:  #1A2029;  /* --bg-card-hover — card hover state */
   /* Legacy aliases — keep existing code working */
   --bg-primary:    var(--graphite-950);
@@ -42,8 +42,8 @@
   --border-focus:   rgba(200,148,53,0.45);
 
   /* ── Accent — Luxury Gold (Vision: Primary) ── */
-  --gold:             #C89435;
-  --gold-dark:        #9B7020;
+  --gold:             #C9922E;
+  --gold-dark:        #8E6324;
   --gold-light:       #DEB85A;
   --gold-glow:        rgba(200,148,53,0.18);
   --gold-glow-strong: rgba(200,148,53,0.32);
@@ -185,94 +185,54 @@ body.has-sidebar { display: flex; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
 
 /* ══════════════════════════════════════════════════════════════════
-   HEADER
+   TOP TOOLBAR — 72px, search/notifications/theme/language + GCC badge
    ══════════════════════════════════════════════════════════════════ */
 
-.header {
-  background: rgba(9,11,18,0.75);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  padding: 0 var(--space-5);
-  height: 68px;
+.top-toolbar {
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 var(--space-4);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   flex-shrink: 0;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  position: relative;
-  z-index: 10;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
 }
-
-.header-brand {
+.top-toolbar-left {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 4px;
 }
-
-.logo-icon {
-  width: 44px; height: 44px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-md);
-  font-weight: 900;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
-  box-shadow: 0 0 24px var(--gold-glow-strong);
-}
-
-.header-titles {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.header-brand h1 {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-}
-.header-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-/* ── Header Actions ── */
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.header-btn {
-  width: 40px; height: 40px;
+.toolbar-btn {
+  width: 48px; height: 48px;
   display: inline-flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--duration-fast);
+  transition: all var(--duration-base);
 }
-.header-btn:hover {
-  background: rgba(255,255,255,0.08);
+.toolbar-btn:hover {
+  background: rgba(255,255,255,0.04);
   color: var(--text-primary);
+  border-color: rgba(255,255,255,0.06);
 }
-.header-btn:active {
+.toolbar-btn:active {
   transform: scale(0.94);
   transition: all var(--duration-instant);
+}
+.top-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(0,214,107,0.06);
+  border: 1px solid rgba(0,214,107,0.15);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
 }
 
 /* ── Language Switcher ── */
@@ -280,43 +240,44 @@ body.has-sidebar { display: flex; }
   display: flex;
   align-items: center;
   gap: 2px;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
-  padding: 7px 14px;
+  padding: 8px 14px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
-  transition: all var(--duration-fast);
+  transition: all var(--duration-base);
   letter-spacing: 0.03em;
   color: var(--text-secondary);
+  margin-left: 4px;
 }
-
-.lang-option {
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: all var(--duration-fast);
-}
-
-.lang-option.active {
+.lang-btn:hover {
+  border-color: rgba(255,255,255,0.15);
   color: var(--text-primary);
-  background: var(--gold-glow);
 }
+.lang-option { padding: 2px 6px; border-radius: 4px; transition: all var(--duration-base); }
+.lang-option.active { color: var(--text-primary); background: var(--gold-glow); }
+.lang-divider { color: rgba(255,255,255,0.1); margin: 0 2px; }
 
-.lang-divider {
-  color: rgba(255,255,255,0.1);
-  margin: 0 2px;
-}
+/* ── Legacy header styles (keep for backwards compat) ── */
+.header { display: none; }
+.header-brand { display: none; }
+.header-btn { display: none; }
+.header-actions { display: none; }
+
+/* ── Floating Utilities (remove) ── */
+.floating-utilities { display: none; }
 
 /* ══════════════════════════════════════════════════════════════════
    SIDEBAR
    ══════════════════════════════════════════════════════════════════ */
 
 .sidebar {
-  width: 256px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border-subtle);
+  width: 250px;
+  background: #0D1017;
+  border-right: 1px solid rgba(255,255,255,0.04);
   display: none;
   flex-direction: column;
   flex-shrink: 0;
@@ -1713,20 +1674,22 @@ body.has-sidebar { display: flex; }
   margin-bottom: var(--space-4);
 }
 .browse-kpi-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: #141922;
+  border: 1px solid rgba(255,255,255,0.04);
   border-radius: var(--radius-lg);
-  padding: var(--space-2) var(--space-3);
+  padding: 14px var(--space-3);
   display: flex;
   flex-direction: column;
   gap: 2px;
+  height: 96px;
+  justify-content: center;
   box-shadow: 0 4px 20px rgba(0,0,0,0.35);
   transition: all var(--duration-base);
 }
 .browse-kpi-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.50), 0 0 16px var(--gold-glow);
-  border-color: var(--border-hover);
+  border-color: rgba(255,255,255,0.08);
 }
 .browse-kpi-label {
   font-size: var(--text-xs);
@@ -1999,7 +1962,7 @@ body.has-sidebar { display: flex; }
 /* ── Bottom Insights Grid ── */
 .browse-insights-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 30% 40% 30%;
   gap: var(--space-3);
   margin-bottom: var(--space-5);
 }
@@ -3579,7 +3542,7 @@ body.has-sidebar { display: flex; }
 
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
-  .sidebar { width: 256px; }
+  .sidebar { width: 250px; }
   .price-hero .amount { font-size: 2.5rem; }
   .result-amount { font-size: 2.5rem; }
   .result-actions { flex-direction: column; align-items: stretch; }
@@ -3844,20 +3807,24 @@ body.has-sidebar { display: flex; }
 
 <div class="main-wrap">
 
-<!-- ═══ FLOATING UTILITY BAR ═══ -->
-<div class="floating-utilities">
-  <button class="header-btn" title="Search" onclick="focusGlobalSearch()" aria-label="Search vehicles and markets">
-    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <button class="header-btn" title="Theme" onclick="return false" aria-label="Theme — dark mode">
-    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  </button>
-  <button class="lang-btn" onclick="toggleLang()">
-    <span class="lang-option active">EN</span>
-    <span class="lang-divider">|</span>
-    <span class="lang-option">AR</span>
-  </button>
-</div>
+<header class="top-toolbar">
+  <div class="top-toolbar-left">
+    <button class="toolbar-btn" title="Search" onclick="focusGlobalSearch()" aria-label="Search vehicles and markets">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="toolbar-btn" title="Notifications" onclick="return false" aria-label="Notifications">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <button class="toolbar-btn" title="Theme" onclick="return false" aria-label="Theme — dark mode">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="lang-btn" onclick="toggleLang()"><span class="lang-option active">EN</span><span class="lang-divider">|</span><span class="lang-option">AR</span></button>
+  </div>
+  <div class="top-toolbar-right">
+    <span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
+    <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
+  </div>
+</header>
 
 <main class="main-content" id="main-content">
 
@@ -4233,35 +4200,51 @@ body.has-sidebar { display: flex; }
 <div id="buy-error" class="card hidden"></div><div id="buy-results" class="hidden" aria-live="polite"></div>
 </div>
 
-<div id="page-browse" class="hidden" style="background-image:url('img/browse-hero.png');background-size:cover;background-position:center top;background-attachment:fixed;position:relative">
+<div id="page-browse" class="hidden">
 
-<!-- ═══ HERO LAYER 1: Background gradient overlay ═══ -->
-<div style="position:absolute;inset:0;top:0;height:500px;background:linear-gradient(180deg,rgba(9,12,17,0.35) 0%,rgba(9,12,17,0.15) 50%,rgba(9,12,17,0.85) 100%);pointer-events:none;z-index:0"></div>
-
-<!-- ═══ HERO LAYER 2: Car illustration at bottom ═══ -->
-<div style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:500px;max-width:80%;z-index:1;pointer-events:none;opacity:0.35">
-  <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="240" cy="260" rx="180" ry="12" fill="rgba(0,0,0,0.4)"/>
-    <path d="M60 200 L60 175 L90 150 L180 145 L280 145 L340 140 L380 130 L420 130 L430 145 L430 200 L410 200 L400 210 L380 210 L370 200 L110 200 L100 210 L80 210 L70 200 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-    <path d="M150 145 L150 100 L200 90 L260 90 L320 100 L320 145" fill="rgba(200,180,140,0.12)" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-    <circle cx="160" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
-    <circle cx="160" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/>
-    <circle cx="360" cy="200" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
-    <circle cx="360" cy="200" r="14" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/>
-  </svg>
+<!-- ═══ BREADCRUMB ═══ -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
+  <div style="font-size:var(--text-xs);color:var(--text-muted)">
+    <a href="#" onclick="goPage('home',document.getElementById('nav-home'))" style="color:var(--text-muted);text-decoration:none">Home</a>
+    <span style="margin:0 6px;opacity:0.3">/</span>
+    <span style="color:var(--text-secondary);font-weight:600">Browse Models</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:var(--space-2);background:rgba(0,214,107,0.06);border:1px solid rgba(0,214,107,0.15);border-radius:var(--radius-full);padding:5px 12px">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
+    <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
+  </div>
 </div>
 
-<!-- ═══ HERO LAYER 3: Text overlay ═══ -->
-<div style="padding:60px 0 120px;position:relative;z-index:2">
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-3)">
-    <div>
-      <h2 class="page-title" style="margin-bottom:4px">Browse Models</h2>
-      <p class="page-sub" style="margin-bottom:0">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:var(--space-2);padding-bottom:4px">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
-      <span style="font-size:var(--text-xs);font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
-      <span style="font-size:var(--text-xs);color:var(--text-muted);margin-left:var(--space-1)" id="browse-last-updated">Updated just now</span>
+<!-- ═══ HERO BANNER — 260px, 40/35/25 3-column ═══ -->
+<div style="display:grid;grid-template-columns:40% 35% 25%;min-height:260px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;border-radius:var(--radius-xl);overflow:hidden;margin-bottom:var(--space-4);position:relative">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.3) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.8) 100%);pointer-events:none"></div>
+  <!-- Left 40%: Title + Subtitle -->
+  <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-end">
+    <h2 class="page-title" style="margin-bottom:6px;font-size:2rem">Browse Models</h2>
+    <p class="page-sub" style="margin-bottom:0;font-size:0.9rem">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
+  </div>
+  <!-- Center 35%: 5 Cars illustration -->
+  <div style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:var(--space-2)">
+    <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;opacity:0.6">
+      <ellipse cx="60" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
+      <path d="M25 160 L25 140 L40 130 L70 130 L90 135 L120 135 L140 130 L160 130 L165 145 L165 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+      <circle cx="55" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+      <circle cx="135" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+      <ellipse cx="210" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
+      <path d="M175 160 L175 135 L190 125 L220 125 L240 130 L270 130 L290 125 L310 125 L315 140 L315 160 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+      <circle cx="205" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+      <circle cx="285" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+      <ellipse cx="360" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
+      <path d="M325 160 L325 142 L340 132 L370 132 L390 137 L400 140 L400 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+      <circle cx="355" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+    </svg>
+  </div>
+  <!-- Right 25%: Network Map + Country Labels -->
+  <div style="position:relative;z-index:1;padding:var(--space-4);display:flex;flex-direction:column;justify-content:flex-end">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:0.6rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.04em">
+      <span>🇦🇪 UAE</span><span>🇸🇦 KSA</span>
+      <span>🇰🇼 Kuwait</span><span>🇶🇦 Qatar</span>
+      <span>🇧🇭 Bahrain</span><span>🇴🇲 Oman</span>
     </div>
   </div>
 </div>
