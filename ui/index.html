@@ -4560,7 +4560,7 @@ if(p==='settings')renderSettings();
 /* Breadcrumbs */
 var bc=document.getElementById('breadcrumbs');
 var titles={home:'',sell:'Sell Your Car',buy:'Buy a Car',browse:'Browse Models',market:'Market Trends',reports:'Reports',watchlist:'Watchlist',settings:'Settings'};
-if(p==='home'||!titles[p]){if(bc)bc.classList.add('hidden');}
+if(p==='home'||p==='browse'||!titles[p]){if(bc)bc.classList.add('hidden');}
 else{if(bc){bc.classList.remove('hidden');bc.innerHTML='<a href="#" onclick="goPage(\'home\',document.getElementById(\'nav-home\'))">Home</a> <span class="breadcrumb-sep">/</span> <span class="breadcrumb-current">'+titles[p]+'</span>';}}
 
 if(p==='home'){
