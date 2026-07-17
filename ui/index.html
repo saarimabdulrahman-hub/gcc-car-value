@@ -4215,36 +4215,28 @@ body.has-sidebar { display: flex; }
   </div>
 </div>
 
-<!-- ═══ HERO BANNER — 260px, 40/35/25 3-column ═══ -->
-<div style="display:grid;grid-template-columns:40% 35% 25%;min-height:260px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;border-radius:var(--radius-xl);overflow:hidden;margin-bottom:var(--space-4);position:relative">
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.3) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.8) 100%);pointer-events:none"></div>
-  <!-- Left 40%: Title + Subtitle -->
-  <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-end">
-    <h2 class="page-title" style="margin-bottom:6px;font-size:2rem">Browse Models</h2>
-    <p class="page-sub" style="margin-bottom:0;font-size:0.9rem">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
-  </div>
-  <!-- Center 35%: 5 Cars illustration -->
-  <div style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:var(--space-2)">
-    <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;opacity:0.6">
-      <ellipse cx="60" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
-      <path d="M25 160 L25 140 L40 130 L70 130 L90 135 L120 135 L140 130 L160 130 L165 145 L165 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
-      <circle cx="55" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
-      <circle cx="135" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
-      <ellipse cx="210" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
-      <path d="M175 160 L175 135 L190 125 L220 125 L240 130 L270 130 L290 125 L310 125 L315 140 L315 160 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-      <circle cx="205" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-      <circle cx="285" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-      <ellipse cx="360" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/>
-      <path d="M325 160 L325 142 L340 132 L370 132 L390 137 L400 140 L400 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
-      <circle cx="355" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
-    </svg>
-  </div>
-  <!-- Right 25%: Network Map + Country Labels -->
-  <div style="position:relative;z-index:1;padding:var(--space-4);display:flex;flex-direction:column;justify-content:flex-end">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:0.6rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.04em">
-      <span>🇦🇪 UAE</span><span>🇸🇦 KSA</span>
-      <span>🇰🇼 Kuwait</span><span>🇶🇦 Qatar</span>
-      <span>🇧🇭 Bahrain</span><span>🇴🇲 Oman</span>
+<!-- ═══ HERO CARD — 260px with bg image ═══ -->
+<div class="card" style="padding:0;border-radius:var(--radius-xl);overflow:hidden;margin-bottom:0;border:1px solid rgba(255,255,255,0.06)">
+  <div style="display:grid;grid-template-columns:40% 35% 25%;min-height:260px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;position:relative">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.3) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.8) 100%);pointer-events:none"></div>
+    <!-- Left 40%: Title + Subtitle -->
+    <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-end">
+      <h2 class="page-title" style="margin-bottom:6px;font-size:2rem">Browse Models</h2>
+      <p class="page-sub" style="margin-bottom:0;font-size:0.9rem">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
+    </div>
+    <!-- Center 35%: 5 Cars -->
+    <div style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:var(--space-2)">
+      <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;opacity:0.6">
+        <ellipse cx="60" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/><path d="M25 160 L25 140 L40 130 L70 130 L90 135 L120 135 L140 130 L160 130 L165 145 L165 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/><circle cx="55" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/><circle cx="135" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+        <ellipse cx="210" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/><path d="M175 160 L175 135 L190 125 L220 125 L240 130 L270 130 L290 125 L310 125 L315 140 L315 160 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/><circle cx="205" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/><circle cx="285" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+        <ellipse cx="360" cy="170" rx="40" ry="6" fill="rgba(0,0,0,0.3)"/><path d="M325 160 L325 142 L340 132 L370 132 L390 137 L400 140 L400 160 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/><circle cx="355" cy="160" r="16" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+      </svg>
+    </div>
+    <!-- Right 25%: Countries -->
+    <div style="position:relative;z-index:1;padding:var(--space-4);display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:0.6rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.04em">
+        <span>🇦🇪 UAE</span><span>🇸🇦 KSA</span><span>🇰🇼 Kuwait</span><span>🇶🇦 Qatar</span><span>🇧🇭 Bahrain</span><span>🇴🇲 Oman</span>
+      </div>
     </div>
   </div>
 </div>
