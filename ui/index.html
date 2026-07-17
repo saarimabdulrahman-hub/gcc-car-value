@@ -4202,11 +4202,16 @@ body.has-sidebar { display: flex; }
 
 <div id="page-browse" class="hidden">
 
-<!-- ═══ HERO — transparent, pushed to top ═══ -->
-<div style="display:grid;grid-template-columns:40% 35% 25%;min-height:260px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;position:relative;margin:0;border-radius:0">
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.3) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.8) 100%);pointer-events:none"></div>
-    <!-- Left 40%: Title + Subtitle -->
+<!-- ═══ HERO — full width, bg pushed up ═══ -->
+<div style="display:grid;grid-template-columns:40% 35% 25%;min-height:280px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center 30%;position:relative;margin:0 -40px;border-radius:0">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.25) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.85) 100%);pointer-events:none"></div>
+    <!-- Left 40%: Breadcrumb + Title + Subtitle -->
     <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.4);margin-bottom:var(--space-2)">
+        <a href="#" onclick="goPage('home',document.getElementById('nav-home'))" style="color:rgba(255,255,255,0.4);text-decoration:none">Home</a>
+        <span style="margin:0 6px">/</span>
+        <span style="color:rgba(255,255,255,0.7);font-weight:500">Browse Models</span>
+      </div>
       <h2 class="page-title" style="margin-bottom:6px;font-size:2rem">Browse Models</h2>
       <p class="page-sub" style="margin-bottom:0;font-size:0.9rem">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
     </div>
