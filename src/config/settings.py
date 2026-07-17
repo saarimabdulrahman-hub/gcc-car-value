@@ -32,11 +32,7 @@ class Settings(BaseSettings):
     # API
     api_rate_limit_anonymous: str = "10/minute"
     api_rate_limit_registered: str = "30/minute"
-    api_cors_origins: list[str] = [
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "https://gcc-car-value.vercel.app",
-]
+    api_cors_origins: list[str] = ["*"]
     api_title: str = "GCC Car Value API"
     api_version: str = "1.0.0"
 

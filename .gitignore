@@ -17,3 +17,4 @@ data/
 haraj_debug2.txt
 _test_*.js
 .env
+.vercel

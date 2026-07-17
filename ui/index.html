@@ -3820,11 +3820,7 @@ body.has-sidebar { display: flex; }
     </button>
     <button class="lang-btn" onclick="toggleLang()"><span class="lang-option active">EN</span><span class="lang-divider">|</span><span class="lang-option">AR</span></button>
   </div>
-  <div class="top-toolbar-right">
-    <span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
-    <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
-  </div>
-</header>
+  </header>
 
 <main class="main-content" id="main-content">
 
@@ -4202,25 +4198,16 @@ body.has-sidebar { display: flex; }
 
 <div id="page-browse" class="hidden">
 
-<!-- ═══ BREADCRUMB ═══ -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)">
-  <div style="font-size:var(--text-xs);color:var(--text-muted)">
-    <a href="#" onclick="goPage('home',document.getElementById('nav-home'))" style="color:var(--text-muted);text-decoration:none">Home</a>
-    <span style="margin:0 6px;opacity:0.3">/</span>
-    <span style="color:var(--text-secondary);font-weight:600">Browse Models</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:var(--space-2);background:rgba(0,214,107,0.06);border:1px solid rgba(0,214,107,0.15);border-radius:var(--radius-full);padding:5px 12px">
-    <span style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0;animation:pulse 2s ease-in-out infinite"></span>
-    <span style="font-size:var(--text-xs);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">GCC Live Market</span>
-  </div>
-</div>
-
-<!-- ═══ HERO CARD — 260px with bg image ═══ -->
-<div class="card" style="padding:0;border-radius:var(--radius-xl);overflow:hidden;margin-bottom:0;border:1px solid rgba(255,255,255,0.06)">
-  <div style="display:grid;grid-template-columns:40% 35% 25%;min-height:260px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center;position:relative">
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.3) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.8) 100%);pointer-events:none"></div>
-    <!-- Left 40%: Title + Subtitle -->
-    <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-end">
+<!-- ═══ HERO — full width, bg pushed up ═══ -->
+<div style="display:grid;grid-template-columns:40% 35% 25%;min-height:280px;background-image:url('img/browse-hero.png');background-size:cover;background-position:center 30%;position:relative;margin:0 -40px;border-radius:0">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,16,0.25) 0%,rgba(9,11,16,0.15) 50%,rgba(9,11,16,0.85) 100%);pointer-events:none"></div>
+    <!-- Left 40%: Breadcrumb + Title + Subtitle -->
+    <div style="position:relative;z-index:1;padding:var(--space-5);display:flex;flex-direction:column;justify-content:flex-start;padding-top:var(--space-4)">
+      <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.4);margin-bottom:var(--space-2)">
+        <a href="#" onclick="goPage('home',document.getElementById('nav-home'))" style="color:rgba(255,255,255,0.4);text-decoration:none">Home</a>
+        <span style="margin:0 6px">/</span>
+        <span style="color:rgba(255,255,255,0.7);font-weight:500">Browse Models</span>
+      </div>
       <h2 class="page-title" style="margin-bottom:6px;font-size:2rem">Browse Models</h2>
       <p class="page-sub" style="margin-bottom:0;font-size:0.9rem">Explore every make and model across <span id="browse-header-count">—</span> manufacturers in 6 GCC countries.</p>
     </div>
@@ -4238,7 +4225,6 @@ body.has-sidebar { display: flex; }
         <span>🇦🇪 UAE</span><span>🇸🇦 KSA</span><span>🇰🇼 Kuwait</span><span>🇶🇦 Qatar</span><span>🇧🇭 Bahrain</span><span>🇴🇲 Oman</span>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- ═══ HERO LAYER 4: FLOATING KPI STRIP ═══ -->
@@ -4570,7 +4556,7 @@ if(p==='settings')renderSettings();
 /* Breadcrumbs */
 var bc=document.getElementById('breadcrumbs');
 var titles={home:'',sell:'Sell Your Car',buy:'Buy a Car',browse:'Browse Models',market:'Market Trends',reports:'Reports',watchlist:'Watchlist',settings:'Settings'};
-if(p==='home'||!titles[p]){if(bc)bc.classList.add('hidden');}
+if(p==='home'||p==='browse'||!titles[p]){if(bc)bc.classList.add('hidden');}
 else{if(bc){bc.classList.remove('hidden');bc.innerHTML='<a href="#" onclick="goPage(\'home\',document.getElementById(\'nav-home\'))">Home</a> <span class="breadcrumb-sep">/</span> <span class="breadcrumb-current">'+titles[p]+'</span>';}}
 
 if(p==='home'){
