@@ -21,6 +21,12 @@ class PipelineOrchestrator:
                 scraper._session_factory = self.session_factory
             try:
                 scraper_result = await scraper.run()
+                if scraper_result.records_ingested == 0:
+                    logger.critical(
+                        "scraper_zero_yield", source=scraper.source,
+                        pages_crawled=scraper_result.pages_crawled,
+                        errors=len(scraper_result.errors),
+                        hint="selectors broken, blocked, or JS-rendered page")
                 run = await self._record_run(scraper_result, scraper.source)
                 pipeline_runs.append(run)
                 logger.info("scraper_complete", source=scraper.source,
@@ -45,7 +51,7 @@ class PipelineOrchestrator:
                 records_rejected=result.records_rejected,
                 error_count=len(result.errors),
                 errors=result.errors,
-                success=len(result.errors) == 0,
+                success=len(result.errors) == 0 and result.records_ingested > 0,
                 parser_version="1.0.0",
                 normalizer_version="1.0.0",
             )
