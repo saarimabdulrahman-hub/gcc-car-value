@@ -1,1 +1,0 @@
-class MonitoringError(Exception): pass
