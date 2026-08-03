@@ -87,19 +87,7 @@
 
 <header class="top-toolbar">
   <div class="top-toolbar-left">
-    <button class="toolbar-btn mobile-menu-btn" title="Menu" onclick="toggleIndexMenu()" aria-label="Open navigation" aria-expanded="false">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-    </button>
-    <button class="toolbar-btn" title="Search" onclick="focusGlobalSearch()" aria-label="Search vehicles and markets">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </button>
-    <button class="toolbar-btn" title="Notifications" onclick="window.location.href='notifications.html'" aria-label="Notifications">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    </button>
-    <button class="toolbar-btn" title="Theme" onclick="return false" aria-label="Theme — dark mode">
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-option active">EN</span><span class="lang-divider">|</span><span class="lang-option">AR</span></button>
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn"><span class="lang-option active" id="lang-en">EN</span><span class="lang-divider">|</span><span class="lang-option" id="lang-ar">AR</span></button>
   </div>
   </header>
 
