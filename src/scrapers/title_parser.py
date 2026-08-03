@@ -12,6 +12,22 @@ MULTI_WORD_MAKES = [
     "great wall",
 ]
 
+# Trailing tokens that are trim levels, not part of the model name.
+# Deliberately excludes ambiguous words that are real model tokens:
+# "sport" (Range Rover Sport), "limited", "base", "lx"/"gx" (Lexus models),
+# and anything numeric ("LX 570", "320i").
+# ALSO excludes "gt"/"gts" (Bentley Continental GT, Mercedes-AMG GT are real
+# GCC-market model names) and "ex" (Infiniti EX nameplate).
+# ponytail: a curated trim list caps out here; a real model catalogue is the
+# proper fix if extraction accuracy ever becomes the bottleneck.
+TRIM_WORDS = {
+    "se", "le", "xle", "xse", "exl", "sr", "srt", "glx", "gxr", "vxr",
+    "platinum", "signature", "ultimate", "touring",
+    "premium", "luxury", "prestige", "diamond", "titanium",
+    "v6", "v8", "turbo", "awd", "4wd", "4x4", "2dr", "4dr",
+    "standard", "comfort",
+}
+
 SINGLE_WORD_MAKES = [
     "toyota", "nissan", "honda", "hyundai", "kia", "ford", "chevrolet",
     "bmw", "mercedes", "audi", "lexus", "mazda", "mitsubishi", "porsche",
@@ -63,13 +79,24 @@ def extract_make_model(title: str) -> tuple[str, str]:
 
 
 def _first_words(text: str, n: int) -> str:
-    return " ".join(text.split()[:n]).strip()
+    """Take up to n words, dropping a trailing trim token.
+
+    "Patrol Platinum" -> "Patrol"      (Platinum is a trim)
+    "Land Cruiser"    -> "Land Cruiser" (Cruiser is part of the model)
+    "LX 570"          -> "LX 570"       (570 is part of the model)
+    """
+    words = text.split()[:n]
+    if len(words) == 2 and words[1].lower() in TRIM_WORDS:
+        words = words[:1]
+    return " ".join(words).strip()
 
 
 _UPPER_MAKES = {"bmw", "vw", "mg"}
 
 
 def _title(make: str) -> str:
+    if make.lower() == "mercedes benz":
+        return "Mercedes-Benz"
     words = make.split()
     return " ".join(w.upper() if w.lower() in _UPPER_MAKES else w.capitalize() for w in words)
 
@@ -79,10 +106,14 @@ def demo() -> None:
     cases = [
         ("Toyota Camry 2020 GCC 50,000 km", ("Toyota", "Camry")),
         ("Land Rover Range Rover Vogue 2019", ("Land Rover", "Range Rover")),
-        ("2018 Nissan Patrol Platinum GCC", ("Nissan", "Patrol Platinum")),
-        ("Mercedes Benz C200 2021", ("Mercedes Benz", "C200")),
+        ("2018 Nissan Patrol Platinum GCC", ("Nissan", "Patrol")),
+        ("Mercedes Benz C200 2021", ("Mercedes-Benz", "C200")),
         ("BMW 320i 2017 | 80,000 km", ("BMW", "320i")),
         ("Lexus LX 570 2020 GCC Spec", ("Lexus", "LX 570")),
+        ("Toyota Camry SE 2021", ("Toyota", "Camry")),
+        ("Nissan Altima SR 2019", ("Nissan", "Altima")),
+        ("Toyota Land Cruiser 2019 GCC", ("Toyota", "Land Cruiser")),
+        ("Mitsubishi Pajero 2020", ("Mitsubishi", "Pajero")),
     ]
     for title, expected in cases:
         got = extract_make_model(title)

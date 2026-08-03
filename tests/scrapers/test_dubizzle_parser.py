@@ -38,7 +38,7 @@ def test_parse_listing_no_price():
 
 def test_extract_make_model():
     # Parser splits by spaces — first two tokens become make/model
-    assert _extract_make_model("2022 Toyota Camry SE") == ("Toyota", "Camry SE")
+    assert _extract_make_model("2022 Toyota Camry SE") == ("Toyota", "Camry")
     assert _extract_make_model("BMW X5") == ("BMW", "X5")
     assert _extract_make_model("") == ("", "")
 
