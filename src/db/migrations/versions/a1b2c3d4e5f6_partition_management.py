@@ -81,7 +81,7 @@ def upgrade() -> None:
             partition_date := date_trunc('month', CURRENT_DATE);
             FOR i IN 0..months_ahead LOOP
                 SELECT create_listing_snapshots_partition(
-                    partition_date + (i || ' months')::INTERVAL
+                    (partition_date + (i || ' months')::INTERVAL)::date
                 ) INTO result;
                 RETURN NEXT result;
             END LOOP;

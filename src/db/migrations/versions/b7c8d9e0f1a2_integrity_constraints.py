@@ -243,8 +243,11 @@ def _add_unique_constraint_with_dedup_check(
 ) -> None:
     """Add UNIQUE constraint, checking for duplicates first.
 
-    If duplicates exist, RAISES an error with description and a
-    sample query to identify them. No data is deleted.
+    Idempotent: skips if the constraint already exists — the initial
+    schema migration builds tables from Base.metadata.create_all(), which
+    already creates model-declared unique constraints. If duplicates exist,
+    RAISES an error with description and a sample query to identify them.
+    No data is deleted.
     """
     col_list = ", ".join(columns)
     op.execute(sa.text(f"""
@@ -252,6 +255,12 @@ def _add_unique_constraint_with_dedup_check(
         DECLARE
             dup_count INTEGER;
         BEGIN
+            IF EXISTS (
+                SELECT 1 FROM pg_constraint WHERE conname = '{constraint_name}'
+            ) THEN
+                RETURN;  -- already present (initial-schema create_all)
+            END IF;
+
             SELECT count(*) INTO dup_count FROM (
                 SELECT {col_list}, count(*) AS cnt
                 FROM {table}
@@ -264,11 +273,9 @@ def _add_unique_constraint_with_dedup_check(
                     '% duplicate groups found. %',
                     dup_count, '{description}';
             END IF;
+
+            EXECUTE format(
+                'ALTER TABLE {table} ADD CONSTRAINT {constraint_name} UNIQUE ({col_list})'
+            );
         END $$;
     """))
-
-    op.create_unique_constraint(
-        constraint_name=constraint_name,
-        table_name=table,
-        columns=columns,
-    )
