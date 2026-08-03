@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from bs4 import BeautifulSoup
 import httpx
-from src.api.dependencies import get_db
+from src.api.dependencies import get_db, require_api_key
 from src.engine.statistical import valuate
 from src.pipeline.normalizer import normalize_listing
 import structlog
@@ -209,6 +209,7 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
 async def valuate_from_url(
     request: URLValuationRequest,
     db: AsyncSession = Depends(get_db),
+    user: dict = Depends(require_api_key),
 ):
     """Paste a car listing URL, we fetch it, parse the details, and return a valuation."""
     try:
