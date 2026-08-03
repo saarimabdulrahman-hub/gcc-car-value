@@ -5,6 +5,7 @@ It is never read directly from environment variables or config defaults.
 """
 import hashlib
 import secrets
+import uuid
 from datetime import datetime, timedelta, timezone
 import jwt
 import structlog
@@ -13,6 +14,10 @@ logger = structlog.get_logger()
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+# In-memory cache of revoked JTIs. The DB is the source of truth; this is a
+# fast path that also keeps auth working during a brief DB outage.
+_revoked_jtis: set[str] = set()
 
 # Lazy-loaded JWT secret — resolved on first use via SecretProvider
 _jwt_secret: str | None = None
@@ -101,24 +106,45 @@ def create_refresh_token(user_id: str) -> str:
 
 
 async def revoke_token_jti(jti: str) -> None:
-    """Revoke a token by its JWT ID (using dead_letter table for persistence)."""
-    async with async_session_factory() as db:
-        await db.execute(
-            text("INSERT INTO dead_letter (source, external_id, rejection_reason, raw_data) VALUES ('auth', :jti, 'revoked_token', '{}')"),
-            {"jti": jti}
-        )
-        await db.commit()
+    """Revoke a token by its JTI. Writes through to the DB, caches in memory."""
+    _revoked_jtis.add(jti)
+    try:
+        async with async_session_factory() as db:
+            await db.execute(
+                text("INSERT INTO dead_letter (id, source, external_id, rejection_reason, raw_data) "
+                     "VALUES (:id, 'auth', :jti, 'revoked_token', '{}')"),
+                {"id": str(uuid.uuid4()), "jti": jti},
+            )
+            await db.commit()
+    except Exception as exc:
+        # Never let a DB failure block logout. The in-memory set still holds
+        # for this process; the revocation is lost on restart.
+        logger.error("token_revoke_persist_failed", jti=jti[:8] + "...", error=str(exc)[:200])
     logger.info("token_revoked", jti=jti[:8] + "...")
 
 
 async def is_token_revoked(jti: str) -> bool:
-    """Check if a token JTI has been revoked in the DB."""
-    async with async_session_factory() as db:
-        result = await db.execute(
-            text("SELECT id FROM dead_letter WHERE source = 'auth' AND external_id = :jti AND rejection_reason = 'revoked_token'"),
-            {"jti": jti}
-        )
-        return result.fetchone() is not None
+    """Check revocation. Memory first, then DB. Fails open on DB error."""
+    if jti in _revoked_jtis:
+        return True
+    try:
+        async with async_session_factory() as db:
+            result = await db.execute(
+                text("SELECT id FROM dead_letter WHERE source = 'auth' "
+                     "AND external_id = :jti AND rejection_reason = 'revoked_token'"),
+                {"jti": jti},
+            )
+            revoked = result.fetchone() is not None
+    except Exception as exc:
+        # Fail OPEN: a DB outage must not 500 every authenticated request.
+        # Trade-off: a revoked token stays usable until the DB recovers.
+        # ponytail: acceptable for a 15-minute access token; revisit if
+        # revocation ever needs to be hard-guaranteed.
+        logger.error("token_revocation_check_failed", error=str(exc)[:200])
+        return False
+    if revoked:
+        _revoked_jtis.add(jti)   # cache the hit
+    return True if revoked else False
 
 
 async def verify_token(token: str, check_revoked: bool = True) -> dict | None:
