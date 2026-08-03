@@ -1,0 +1,26 @@
+# The production frontend is the static HTML/CSS/JS in this directory.
+# Never ignore generic *.css or *.js patterns here: dedicated pages depend on
+# detail.css and detail-pages.js being part of the deployed artifact.
+
+# Local React/Vite experiment
+node_modules/
+dist/
+coverage/
+
+# Local environment and tool output
+.env*.local
+*.log
+.lighthouseci/
+
+# Editor / OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.bak
+*.tmp
+*.pid

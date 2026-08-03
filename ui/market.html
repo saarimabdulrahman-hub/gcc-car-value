@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Real-time insights into the GCC automotive market — market trends, segment share, top models, and pricing data across UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, and Oman.">
+  <title>Market Overview — GCC Car Valuator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    /* ══════════════════════════════════════════════════════════════════
+       Market Page — Layout & Design System
+       ══════════════════════════════════════════════════════════════════ */
+
+    :root {
+      --rail: 252px;
+      --bg: var(--color-canvas);
+      --surface: var(--color-sidebar);
+      --surface-2: var(--color-surface);
+      --surface-3: var(--color-surface-raised);
+      --surface-hover: var(--color-surface-hover);
+      --line: var(--color-line);
+      --line-hover: var(--color-line-hover);
+      --line-soft: var(--color-line-soft);
+      --text: var(--color-text-primary);
+      --muted: var(--color-text-secondary);
+      --muted-2: var(--color-text-muted);
+      --gold: var(--color-accent);
+      --gold-light: var(--color-accent-light);
+      --gold-dark: var(--color-accent-dark);
+      --gold-soft: var(--color-accent-soft);
+      --green: var(--color-success);
+      --red: var(--color-danger);
+      --radius: 11px;
+      --shadow: 0 14px 34px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: var(--bg); scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button { color: inherit; background: none; border: none; }
+    a { color: inherit; text-decoration: none; }
+    svg { display: block; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* Display face for brand + headings; body stays Inter. */
+    .brand-title, .brand-mark, .hero h1, .stat-value, .card-title { font-family: var(--font-display); }
+
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 15px; height: 15px; }
+    .icon.lg { width: 22px; height: 22px; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 80;
+      width: var(--rail);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 62%, var(--bg) 100%);
+      border-right: 1px solid var(--line);
+    }
+    .brand {
+      height: 92px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-mark {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      flex: 0 0 auto;
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: -.05em;
+    }
+    .brand-title { display: block; font-size: 18px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+    .brand-subtitle { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; letter-spacing: .02em; }
+
+    .sidebar-scroll { flex: 1; overflow-y: auto; padding: 20px 11px 14px; scrollbar-width: none; }
+    .sidebar-scroll::-webkit-scrollbar { display: none; }
+    .nav-group + .nav-group { margin-top: 24px; }
+    .nav-heading { margin: 0 8px 10px; color: var(--muted-2); font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+    .nav-item {
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,.025); }
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(90deg, rgba(225,151,15,.22), rgba(117,78,12,.08));
+      border-color: rgba(230, 158, 15, .32);
+      box-shadow: inset 3px 0 0 var(--gold-dark);
+    }
+    .nav-item.active .icon { color: var(--gold-light); }
+
+    .sidebar-footer { margin-top: auto; padding: 12px; }
+    .account-card, .health-card { border: 1px solid var(--line); border-radius: 10px; background: rgba(7,14,21,.76); }
+    .account-card { display: flex; align-items: center; gap: 13px; padding: 14px 13px; }
+    .account-logo {
+      width: 40px; height: 40px; display: grid; place-items: center; flex: 0 0 auto;
+      background: linear-gradient(145deg, var(--gold-light), var(--gold-dark)); color: var(--text); border-radius: 7px; font-weight: 700; font-size: 13px;
+    }
+    .account-name { font-size: 13px; font-weight: 600; }
+    .account-plan { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .health-card { margin-top: 11px; padding: 13px; }
+    .health-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; }
+    .health-copy { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted-2); font-size: 9px; }
+    .health-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--green); }
+    .health-pulse { width: 8px; height: 2px; background: var(--color-success-dark); border-radius: 10px; }
+
+    /* ── Main Content ── */
+    .main { margin-left: var(--rail); min-height: 100vh; overflow: hidden; background: var(--color-hero); }
+
+    /* ── Hero Banner ── */
+    .hero {
+      position: relative;
+      height: 260px;
+      overflow: hidden;
+      background-image:
+        linear-gradient(90deg, rgba(5,10,15,.82) 0%, rgba(5,10,15,.42) 30%, rgba(5,10,15,.08) 60%, rgba(5,10,15,.22) 100%),
+        linear-gradient(0deg, var(--color-hero) 0%, rgba(6,11,16,.16) 22%, rgba(6,11,16,.08) 100%),
+        url('img/market-hero.jpg');
+      background-position: center center;
+      background-size: cover;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 63% 46%, transparent 0 30%, rgba(3,7,11,.08) 70%), linear-gradient(180deg, rgba(3,8,12,.22), transparent 42%);
+    }
+    .hero-copy { position: relative; z-index: 2; width: min(440px, 50%); padding: 78px 0 0 38px; text-shadow: 0 2px 18px rgba(0,0,0,.9); }
+    .hero h1 { margin: 0 0 7px; font-size: clamp(30px, 2.5vw, 38px); line-height: 1.08; letter-spacing: -.035em; font-weight: 800; }
+    .hero p { max-width: 400px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    /* GCC Map Overlay - right side of hero */
+    .gcc-map-overlay {
+      position: absolute;
+      z-index: 2;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 340px;
+      height: 200px;
+      opacity: .5;
+    }
+    .map-label {
+      position: absolute;
+      color: rgba(255,255,255,.65);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0,0,0,.8);
+    }
+
+    /* ── Top Toolbar ── */
+    .hero-tools {
+      position: absolute;
+      z-index: 3;
+      top: 17px;
+      left: 32px;
+      display: flex;
+      gap: 11px;
+    }
+    .tool-button, .language-toggle {
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: rgba(6, 13, 20, .75);
+      box-shadow: 0 7px 20px rgba(0,0,0,.16);
+      backdrop-filter: blur(10px);
+    }
+    .tool-button { width: 41px; border-radius: 10px; }
+    .tool-button:hover { background: var(--surface-3); border-color: var(--line-hover); }
+    .language-toggle { grid-template-columns: 1fr 1fr; width: 82px; border-radius: 10px; overflow: hidden; }
+    .language-toggle button { height: 100%; border: 0; background: transparent; color: var(--muted); font-size: 11px; font-weight: 600; }
+    .language-toggle button.active { color: var(--text); background: var(--gold-soft); }
+
+    .live-market {
+      position: absolute;
+      z-index: 3;
+      top: 14px;
+      right: 31px;
+      min-width: 160px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      background: rgba(5,12,18,.7);
+      backdrop-filter: blur(9px);
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
+    .live-title { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+    .live-title .health-dot { width: 7px; height: 7px; }
+    .live-time { margin-top: 2px; color: var(--muted-2); font-size: 10px; }
+
+    /* ── Content Area ── */
+    .content { position: relative; z-index: 4; margin-top: -1px; padding: 0 28px 34px; background: var(--bg); }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin: -38px 0 22px;
+      position: relative;
+      z-index: 5;
+    }
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      transition: border-color .2s, transform .2s;
+    }
+    .stat-card:hover { border-color: var(--line-hover); transform: translateY(-2px); }
+    .stat-icon {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      flex: 0 0 auto;
+      border-radius: 9px;
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+    .stat-icon svg { width: 20px; height: 20px; }
+    .stat-label { font-size: 10px; font-weight: 600; color: var(--muted-2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+    .stat-value { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+    .stat-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .stat-change { font-size: 11px; font-weight: 600; margin-top: 2px; }
+    .stat-change.up { color: var(--green); }
+    .stat-change.down { color: var(--red); }
+    .stat-right { display: flex; flex-direction: column; min-width: 0; }
+    .stat-card:last-child .stat-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+    .view-all-link { font-size: 11px; color: var(--muted); cursor: pointer; transition: color .15s; }
+    .view-all-link:hover { color: var(--gold); }
+
+    /* ── Dashboard Grid ── */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 320px;
+      grid-template-rows: auto auto auto;
+      gap: 16px;
+    }
+
+    /* ── Card shared ── */
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: var(--line-hover); }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .card-title span { color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+    /* ── Market Trend (area 1,1) ── */
+    .chart-trend { grid-column: 1; grid-row: 1; }
+    .chart-canvas-wrap { position: relative; width: 100%; height: 220px; }
+    .chart-canvas-wrap canvas { width: 100%; height: 100%; }
+    .chart-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--muted); }
+    .legend-line { width: 22px; height: 2px; border-radius: 1px; }
+
+    /* ── Market Share by Segment (area 1,2) ── */
+    .chart-segment { grid-column: 2; grid-row: 1; }
+    .segment-layout { display: flex; align-items: center; gap: 24px; }
+    .donut-wrap { position: relative; flex: 0 0 180px; width: 180px; height: 180px; }
+    .donut-wrap canvas { width: 100%; height: 100%; }
+    .segment-legend { flex: 1; }
+    .segment-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+    .segment-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
+    .segment-name { flex: 1; font-size: 12px; color: var(--muted); }
+    .segment-pct { font-size: 12px; font-weight: 600; color: var(--text); }
+
+    /* ── Top Models (area 1-2, 3) ── */
+    .top-models { grid-column: 3; grid-row: 1 / 3; }
+    .model-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .model-item:last-child { border-bottom: none; }
+    .model-img {
+      width: 64px; height: 48px;
+      flex: 0 0 64px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--surface-3);
+    }
+    .model-info { flex: 1; min-width: 0; }
+    .model-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .model-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .model-change { font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .model-change.up { color: var(--green); }
+    .model-change.down { color: var(--red); }
+
+    /* ── Market by Country (area 2,1) ── */
+    .market-country { grid-column: 1; grid-row: 2; }
+    .country-table { width: 100%; border-collapse: collapse; }
+    .country-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted-2);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .country-table td {
+      padding: 9px 0;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,.03);
+      vertical-align: middle;
+    }
+    .country-table tr:last-child td { border-bottom: none; }
+    .country-flag {
+      width: 18px; height: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+      border-radius: 2px;
+    }
+    .country-yoy { font-weight: 600; }
+    .country-yoy.up { color: var(--green); }
+    .country-yoy.down { color: var(--red); }
+
+    /* ── Price Range Distribution (area 2,2) ── */
+    .chart-price { grid-column: 2; grid-row: 2; }
+    .price-canvas-wrap { position: relative; width: 100%; height: 200px; }
+    .price-canvas-wrap canvas { width: 100%; height: 100%; }
+
+    /* ── Market Insights (area 2, 3) — nested in top-models column ── */
+    .market-insights { grid-column: 3; grid-row: 3; }
+    .insight-item {
+      display: flex;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-icon {
+      width: 34px; height: 34px;
+      flex: 0 0 34px;
+      display: grid; place-items: center;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .insight-icon.gold { background: var(--gold-soft); }
+    .insight-icon.blue { background: var(--color-info-soft); }
+    .insight-icon.red { background: var(--color-danger-soft); }
+    .insight-icon.green { background: var(--color-success-soft); }
+    .insight-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+    .insight-time { font-size: 10px; color: var(--muted-2); margin-top: 3px; }
+
+    /* ── Recent Market Activity (full width) ── */
+    .recent-activity { grid-column: 1 / 3; grid-row: 3; }
+    .activity-table { width: 100%; border-collapse: collapse; }
+    .activity-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted-2);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .activity-table td {
+      padding: 11px 0;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,.03);
+      vertical-align: middle;
+    }
+    .activity-table tr:last-child td { border-bottom: none; }
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .type-badge.listing { background: var(--color-info-soft); color: var(--color-info); }
+    .type-badge.sale { background: var(--color-success-soft); color: var(--green); }
+    .activity-change { font-weight: 600; }
+    .activity-change.up { color: var(--green); }
+    .activity-change.down { color: var(--red); }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .stat-card { animation: fadeInUp .45s ease both; }
+    .stat-card:nth-child(1) { animation-delay: .04s; }
+    .stat-card:nth-child(2) { animation-delay: .08s; }
+    .stat-card:nth-child(3) { animation-delay: .12s; }
+    .stat-card:nth-child(4) { animation-delay: .16s; }
+    .stat-card:nth-child(5) { animation-delay: .20s; }
+    .card { animation: fadeInUp .5s ease both; animation-delay: .22s; }
+    .chart-segment { animation-delay: .28s; }
+    .top-models { animation-delay: .32s; }
+    .market-country { animation-delay: .36s; }
+    .chart-price { animation-delay: .40s; }
+    .market-insights { animation-delay: .44s; }
+    .recent-activity { animation-delay: .48s; }
+
+    /* ── Pulse for live dot ── */
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+    .live-title .health-dot { animation: livePulse 1.8s ease-in-out infinite; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">CV</div>
+    <div>
+      <span class="brand-title">CAR VALUATOR</span>
+      <span class="brand-subtitle">GCC MARKET INTELLIGENCE</span>
+    </div>
+  </div>
+
+  <div class="sidebar-scroll">
+    <!-- MAIN -->
+    <nav class="nav-group">
+      <div class="nav-heading">Main</div>
+      <a href="index.html" class="nav-item" id="nav-home">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+        Home
+      </a>
+      <a href="#" class="nav-item" id="nav-sell">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
+        Sell
+      </a>
+      <a href="#" class="nav-item" id="nav-buy">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Buy
+      </a>
+    </nav>
+
+    <!-- ANALYSIS -->
+    <nav class="nav-group">
+      <div class="nav-heading">Analysis</div>
+      <a href="browse.html" class="nav-item" id="nav-browse">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Browse
+      </a>
+      <a href="market.html" class="nav-item active" id="nav-market">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-5 4 3 5-7"/></svg>
+        Market
+      </a>
+      <a href="reports.html" class="nav-item" id="nav-reports">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Reports
+      </a>
+      <a href="watchlist.html" class="nav-item" id="nav-watchlist">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Watchlist
+      </a>
+    </nav>
+
+    <!-- ADMIN -->
+    <nav class="nav-group">
+      <div class="nav-heading">Admin</div>
+      <a href="settings.html" class="nav-item" id="nav-settings">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="account-card">
+      <div class="account-logo">GCC</div>
+      <div>
+        <div class="account-name">GCC Car Valuator</div>
+        <div class="account-plan">Enterprise</div>
+      </div>
+    </div>
+    <div class="health-card">
+      <div class="health-title"><span class="health-dot"></span> All systems operational</div>
+      <div class="health-copy"><span class="health-pulse"></span> All services are running normally</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="main" id="main-content">
+
+  <!-- Hero Banner -->
+  <section class="hero" id="hero">
+    <!-- Top Tools -->
+    <div class="hero-tools">
+      <button class="tool-button" aria-label="Search">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="tool-button" aria-label="Notifications">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </button>
+      <button class="tool-button" aria-label="Dark mode">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <div class="language-toggle">
+        <button class="active">EN</button>
+        <button>AR</button>
+      </div>
+    </div>
+
+    <!-- Live Market Badge -->
+    <div class="live-market">
+      <div class="live-title"><span class="health-dot"></span> GCC LIVE MARKET</div>
+      <div class="live-time">Updated 2 min ago</div>
+    </div>
+
+    <!-- GCC Map Labels -->
+    <div class="gcc-map-overlay">
+      <span class="map-label" style="right: 30px; top: 18px;">KUWAIT</span>
+      <span class="map-label" style="right: 0; top: 45px;">BAHRAIN</span>
+      <span class="map-label" style="right: -10px; top: 75px;">QATAR</span>
+      <span class="map-label" style="left: 40px; top: 80px;">SAUDI ARABIA</span>
+      <span class="map-label" style="right: -15px; top: 100px;">UAE</span>
+      <span class="map-label" style="right: -10px; top: 140px;">OMAN</span>
+    </div>
+
+    <div class="hero-copy">
+      <h1>Market Overview</h1>
+      <p>Real-time insights into the GCC automotive market</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ── Stats Row ── -->
+    <div class="stats-row" id="stats-row">
+      <!-- Total Market Size -->
+      <div class="stat-card" id="stat-market-size">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-label">Total Market Size</div>
+          <div class="stat-value">1.82M</div>
+          <div class="stat-sub">Vehicles</div>
+          <div class="stat-change up">↑ 8.3%</div>
+        </div>
+      </div>
+
+      <!-- Total Sales (YTD) -->
+      <div class="stat-card" id="stat-sales">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-label">Total Sales (YTD)</div>
+          <div class="stat-value">612K</div>
+          <div class="stat-sub">Vehicles</div>
+          <div class="stat-change up">↑ 6.7%</div>
+        </div>
+      </div>
+
+      <!-- Avg. Car Price -->
+      <div class="stat-card" id="stat-avg-price">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-label">Avg. Car Price</div>
+          <div class="stat-value">AED 103K</div>
+          <div class="stat-sub">Across GCC</div>
+          <div class="stat-change up">↑ 4.2%</div>
+        </div>
+      </div>
+
+      <!-- Market Growth -->
+      <div class="stat-card" id="stat-growth">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-label">Market Growth</div>
+          <div class="stat-value">7.9%</div>
+          <div class="stat-sub">YoY Change</div>
+          <div class="stat-change up">↑ 7.9%</div>
+        </div>
+      </div>
+
+      <!-- Active Listings -->
+      <div class="stat-card" id="stat-listings">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="stat-right">
+          <div class="stat-header" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+            <div class="stat-label" style="margin-bottom:0;">Active Listings</div>
+            <span class="view-all-link">View all</span>
+          </div>
+          <div class="stat-value">156K</div>
+          <div class="stat-sub">Across GCC</div>
+          <div class="stat-change down">↓ -3.4%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Dashboard Grid ── -->
+    <div class="dashboard-grid" id="dashboard-grid">
+
+      <!-- Market Trend -->
+      <div class="card chart-trend" id="card-trend">
+        <div class="card-header">
+          <div class="card-title">MARKET TREND <span>(Vehicles Sold)</span></div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="trendCanvas"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-line" style="background: var(--muted);"></span> 2024</div>
+          <div class="legend-item"><span class="legend-line" style="background: var(--gold);"></span> 2023</div>
+        </div>
+      </div>
+
+      <!-- Market Share by Segment -->
+      <div class="card chart-segment" id="card-segment">
+        <div class="card-header">
+          <div class="card-title">MARKET SHARE BY SEGMENT</div>
+        </div>
+        <div class="segment-layout">
+          <div class="donut-wrap">
+            <canvas id="donutCanvas"></canvas>
+          </div>
+          <div class="segment-legend" id="segment-legend">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Models -->
+      <div class="card top-models" id="card-top-models">
+        <div class="card-header">
+          <div class="card-title">TOP MODELS</div>
+          <span class="view-all-link">View all →</span>
+        </div>
+        <div class="model-item">
+          <img class="model-img" src="img/cars/land-cruiser.jpg" alt="Toyota Land Cruiser">
+          <div class="model-info">
+            <div class="model-name">Toyota Land Cruiser</div>
+            <div class="model-count">5,071</div>
+          </div>
+          <div class="model-change up">↑ 4.2%</div>
+        </div>
+        <div class="model-item">
+          <img class="model-img" src="img/cars/nissan-patrol.jpg" alt="Nissan Patrol">
+          <div class="model-info">
+            <div class="model-name">Nissan Patrol</div>
+            <div class="model-count">5,154</div>
+          </div>
+          <div class="model-change up">↑ 2.8%</div>
+        </div>
+        <div class="model-item">
+          <img class="model-img" src="img/cars/toyota-camry.jpg" alt="Toyota Camry">
+          <div class="model-info">
+            <div class="model-name">Toyota Camry</div>
+            <div class="model-count">6,253</div>
+          </div>
+          <div class="model-change up">↑ 1.9%</div>
+        </div>
+        <div class="model-item">
+          <img class="model-img" src="img/cars/mercedes-s-class.jpg" alt="Mercedes-Benz S-Class">
+          <div class="model-info">
+            <div class="model-name">Mercedes-Benz S-Class</div>
+            <div class="model-count">4,120</div>
+          </div>
+          <div class="model-change down">↓ -1.2%</div>
+        </div>
+        <div class="model-item">
+          <img class="model-img" src="img/cars/bmw-x5.jpg" alt="BMW X5">
+          <div class="model-info">
+            <div class="model-name">BMW X5</div>
+            <div class="model-count">3,987</div>
+          </div>
+          <div class="model-change up">↑ 3.6%</div>
+        </div>
+      </div>
+
+      <!-- Market by Country -->
+      <div class="card market-country" id="card-country">
+        <div class="card-header">
+          <div class="card-title">MARKET BY COUNTRY</div>
+        </div>
+        <table class="country-table">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Market Size</th>
+              <th>YoY Change</th>
+              <th>Avg. Price</th>
+              <th>Active Listings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><img class="country-flag" src="img/flags/ae.svg" alt="UAE flag">UAE</td>
+              <td>742K</td>
+              <td class="country-yoy up">↑ 9.1%</td>
+              <td>AED 118K</td>
+              <td>45K</td>
+            </tr>
+            <tr>
+              <td><img class="country-flag" src="img/flags/sa.svg" alt="Saudi Arabia flag">Saudi Arabia</td>
+              <td>512K</td>
+              <td class="country-yoy up">↑ 7.0%</td>
+              <td>AED 96K</td>
+              <td>36K</td>
+            </tr>
+            <tr>
+              <td><img class="country-flag" src="img/flags/qa.svg" alt="Qatar flag">Qatar</td>
+              <td>214K</td>
+              <td class="country-yoy up">↑ 6.2%</td>
+              <td>AED 115K</td>
+              <td>22K</td>
+            </tr>
+            <tr>
+              <td><img class="country-flag" src="img/flags/kw.svg" alt="Kuwait flag">Kuwait</td>
+              <td>156K</td>
+              <td class="country-yoy up">↑ 5.1%</td>
+              <td>AED 86K</td>
+              <td>17K</td>
+            </tr>
+            <tr>
+              <td><img class="country-flag" src="img/flags/bh.svg" alt="Bahrain flag">Bahrain</td>
+              <td>98K</td>
+              <td class="country-yoy up">↑ 4.3%</td>
+              <td>AED 82K</td>
+              <td>11K</td>
+            </tr>
+            <tr>
+              <td><img class="country-flag" src="img/flags/om.svg" alt="Oman flag">Oman</td>
+              <td>78K</td>
+              <td class="country-yoy down">↓ -1.8%</td>
+              <td>AED 84K</td>
+              <td>8K</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Price Range Distribution -->
+      <div class="card chart-price" id="card-price">
+        <div class="card-header">
+          <div class="card-title">PRICE RANGE DISTRIBUTION</div>
+        </div>
+        <div class="price-canvas-wrap">
+          <canvas id="priceCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent Market Activity -->
+      <div class="card recent-activity" id="card-activity">
+        <div class="card-header">
+          <div class="card-title">RECENT MARKET ACTIVITY</div>
+        </div>
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Model</th>
+              <th>Country</th>
+              <th>Price (AED)</th>
+              <th>Change</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="type-badge listing">Listing</span></td>
+              <td>Toyota Land Cruiser</td>
+              <td>UAE</td>
+              <td>285,000</td>
+              <td class="activity-change up">↑ 2.1%</td>
+              <td style="color:var(--muted)">2 min ago</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge sale">Sale</span></td>
+              <td>Mercedes GLE</td>
+              <td>UAE</td>
+              <td>280,000</td>
+              <td class="activity-change up">↑ 1.5%</td>
+              <td style="color:var(--muted)">5 min ago</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge listing">Listing</span></td>
+              <td>BMW X5</td>
+              <td>Saudi Arabia</td>
+              <td>270,000</td>
+              <td class="activity-change down">↓ -0.6%</td>
+              <td style="color:var(--muted)">7 min ago</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge sale">Sale</span></td>
+              <td>Nissan Patrol</td>
+              <td>Qatar</td>
+              <td>240,000</td>
+              <td class="activity-change up">↑ 3.2%</td>
+              <td style="color:var(--muted)">10 min ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Market Insights -->
+      <div class="card market-insights" id="card-insights">
+        <div class="card-header">
+          <div class="card-title">MARKET INSIGHTS</div>
+          <span class="view-all-link">View all →</span>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon gold">⭐</div>
+          <div>
+            <div class="insight-text">Luxury vehicles continue to see strong demand across GCC markets</div>
+            <div class="insight-time">2 min ago</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon blue">🚙</div>
+          <div>
+            <div class="insight-text">SUV segment leads with 42% market share</div>
+            <div class="insight-time">5 min ago</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon red">📈</div>
+          <div>
+            <div class="insight-text">Used car prices increased by 4.2% YoY</div>
+            <div class="insight-time">7 min ago</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon green">🌍</div>
+          <div>
+            <div class="insight-text">Saudi Arabia shows highest growth in GCC</div>
+            <div class="insight-time">10 min ago</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════ CHARTS (Canvas) ═══════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Color helpers ── */
+  const GOLD = '#e9a50a';
+  const GOLD_SOFT = 'rgba(233,165,10,0.15)';
+  const MUTED = '#929cab';
+  const MUTED_2 = '#657180';
+  const LINE_COLOR = '#1c2732';
+  const GREEN = '#14df75';
+
+  /* DPR helper */
+  function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    return { ctx, w: rect.width, h: rect.height };
+  }
+
+  /* ═══════════════════════════════════════════════
+     1. MARKET TREND — Area / Line Chart
+     ═══════════════════════════════════════════════ */
+  function drawTrend() {
+    const canvas = document.getElementById('trendCanvas');
+    if (!canvas) return;
+    const { ctx, w, h } = setupCanvas(canvas);
+
+    const padL = 48, padR = 16, padT = 10, padB = 36;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+
+    /* Y axis — 0 to 100K */
+    const yLabels = ['0', '20K', '40K', '60K', '80K', '100K'];
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = MUTED_2;
+    ctx.textAlign = 'right';
+    for (let i = 0; i < yLabels.length; i++) {
+      const y = padT + chartH - (i / (yLabels.length - 1)) * chartH;
+      ctx.fillText(yLabels[i], padL - 8, y + 3);
+      /* grid lines */
+      ctx.strokeStyle = LINE_COLOR;
+      ctx.lineWidth = .7;
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + chartW, y);
+      ctx.stroke();
+    }
+
+    /* X axis labels */
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    ctx.textAlign = 'center';
+    ctx.fillStyle = MUTED_2;
+    months.forEach((m, i) => {
+      const x = padL + (i / (months.length - 1)) * chartW;
+      ctx.fillText(m, x, h - 8);
+    });
+
+    /* Data (normalised to 0-100K) */
+    const data2024 = [42, 48, 62, 72, 78, 85]; // thousands
+    const data2023 = [38, 44, 56, 65, 70, 74];
+
+    function dataToPoints(data) {
+      return data.map((v, i) => ({
+        x: padL + (i / (data.length - 1)) * chartW,
+        y: padT + chartH - (v / 100) * chartH
+      }));
+    }
+
+    function drawLine(points, color, fill) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        const xc = (points[i - 1].x + points[i].x) / 2;
+        const yc = (points[i - 1].y + points[i].y) / 2;
+        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+      }
+      ctx.quadraticCurveTo(points[points.length - 2].x, points[points.length - 2].y, points[points.length - 1].x, points[points.length - 1].y);
+
+      if (fill) {
+        const grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+        grad.addColorStop(0, fill);
+        grad.addColorStop(1, 'rgba(233,165,10,0)');
+        ctx.lineTo(points[points.length - 1].x, padT + chartH);
+        ctx.lineTo(points[0].x, padT + chartH);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      /* stroke */
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        const xc = (points[i - 1].x + points[i].x) / 2;
+        const yc = (points[i - 1].y + points[i].y) / 2;
+        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+      }
+      ctx.quadraticCurveTo(points[points.length - 2].x, points[points.length - 2].y, points[points.length - 1].x, points[points.length - 1].y);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      /* dots */
+      points.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = '#0b131c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    }
+
+    const pts2023 = dataToPoints(data2023);
+    const pts2024 = dataToPoints(data2024);
+
+    drawLine(pts2024, MUTED, null);
+    drawLine(pts2023, GOLD, GOLD_SOFT);
+  }
+
+  /* ═══════════════════════════════════════════════
+     2. DONUT CHART — Market Share by Segment
+     ═══════════════════════════════════════════════ */
+  function drawDonut() {
+    const canvas = document.getElementById('donutCanvas');
+    if (!canvas) return;
+    const { ctx, w, h } = setupCanvas(canvas);
+
+    const segments = [
+      { name: 'SUV',    pct: 42.3, color: GOLD },
+      { name: 'Sedan',  pct: 28.1, color: '#f59e0b' },
+      { name: 'Luxury', pct: 16.7, color: '#3b82f6' },
+      { name: 'Truck',  pct: 7.4,  color: '#14df75' },
+      { name: 'Coupe',  pct: 3.0,  color: '#8b5cf6' },
+      { name: 'MPV',    pct: 2.5,  color: '#ec4899' },
+    ];
+
+    const cx = w / 2, cy = h / 2;
+    const outerR = Math.min(w, h) / 2 - 6;
+    const innerR = outerR * 0.62;
+
+    let startAngle = -Math.PI / 2;
+    segments.forEach(seg => {
+      const sweep = (seg.pct / 100) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
+      ctx.arc(cx, cy, innerR, startAngle + sweep, startAngle, true);
+      ctx.closePath();
+      ctx.fillStyle = seg.color;
+      ctx.fill();
+
+      /* gap */
+      ctx.beginPath();
+      ctx.moveTo(cx + innerR * Math.cos(startAngle), cy + innerR * Math.sin(startAngle));
+      ctx.lineTo(cx + outerR * Math.cos(startAngle), cy + outerR * Math.sin(startAngle));
+      ctx.strokeStyle = '#0b131c';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      startAngle += sweep;
+    });
+
+    /* Legend */
+    const legend = document.getElementById('segment-legend');
+    legend.innerHTML = segments.map(seg =>
+      `<div class="segment-row">
+        <span class="segment-dot" style="background:${seg.color}"></span>
+        <span class="segment-name">${seg.name}</span>
+        <span class="segment-pct">${seg.pct}%</span>
+      </div>`
+    ).join('');
+  }
+
+  /* ═══════════════════════════════════════════════
+     3. PRICE RANGE DISTRIBUTION — Bar Chart
+     ═══════════════════════════════════════════════ */
+  function drawPrice() {
+    const canvas = document.getElementById('priceCanvas');
+    if (!canvas) return;
+    const { ctx, w, h } = setupCanvas(canvas);
+
+    const padL = 36, padR = 12, padT = 12, padB = 38;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+
+    const data = [
+      { label: '< 50K', pct: 12 },
+      { label: '50K-100K', pct: 35 },
+      { label: '100K-200K', pct: 28 },
+      { label: '200K-300K', pct: 15 },
+      { label: '300K+', pct: 10 },
+    ];
+
+    const maxPct = 40;
+
+    /* Y axis */
+    const ySteps = [0, 10, 20, 30, 40];
+    ctx.font = '10px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = MUTED_2;
+    ySteps.forEach(v => {
+      const y = padT + chartH - (v / maxPct) * chartH;
+      ctx.fillText(v + '%', padL - 6, y + 3);
+      ctx.strokeStyle = LINE_COLOR;
+      ctx.lineWidth = .6;
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + chartW, y);
+      ctx.stroke();
+    });
+
+    /* Bars */
+    const barGap = 16;
+    const barW = (chartW - barGap * (data.length + 1)) / data.length;
+
+    data.forEach((d, i) => {
+      const x = padL + barGap + i * (barW + barGap);
+      const barH = (d.pct / maxPct) * chartH;
+      const y = padT + chartH - barH;
+
+      /* gradient bar */
+      const grad = ctx.createLinearGradient(x, y, x, padT + chartH);
+      grad.addColorStop(0, GOLD);
+      grad.addColorStop(1, 'rgba(233,165,10,.35)');
+      ctx.fillStyle = grad;
+
+      /* rounded top */
+      const radius = 4;
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + barW - radius, y);
+      ctx.quadraticCurveTo(x + barW, y, x + barW, y + radius);
+      ctx.lineTo(x + barW, padT + chartH);
+      ctx.lineTo(x, padT + chartH);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fill();
+
+      /* percentage label above bar */
+      ctx.fillStyle = var_text();
+      ctx.textAlign = 'center';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.fillText(d.pct + '%', x + barW / 2, y - 6);
+
+      /* X label */
+      ctx.fillStyle = MUTED_2;
+      ctx.font = '9px Inter, sans-serif';
+      ctx.fillText(d.label, x + barW / 2, h - 8);
+    });
+  }
+
+  function var_text() { return '#f7f8fa'; }
+
+  /* ── Init ── */
+  function init() {
+    drawTrend();
+    drawDonut();
+    drawPrice();
+  }
+
+  /* Wait for fonts + render */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(init);
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  /* Redraw on resize */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 120);
+  });
+})();
+</script>
+
+</body>
+</html>

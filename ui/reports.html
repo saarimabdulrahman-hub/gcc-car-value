@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Reports - GCC Car Valuator</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="detail.css">
+</head>
+<body class="reports-page">
+  <aside class="sidebar">
+    <a class="brand" href="index.html"><span class="brand-mark">CV</span><span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span></a>
+    <nav class="nav">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="index.html">⌂ <span>Home</span></a>
+      <a class="nav-item" href="index.html#buy">▱ <span>Buy</span></a>
+      <a class="nav-item" href="index.html#sell">♧ <span>Sell</span></a>
+      <div class="nav-label">Analysis</div>
+      <a class="nav-item" href="browse.html">▦ <span>Browse</span></a>
+      <a class="nav-item" href="market.html">⌁ <span>Market</span></a>
+      <a class="nav-item active" href="reports.html">▤ <span>Reports</span></a>
+      <a class="nav-item" href="watchlist.html">♡ <span>Watchlist</span></a>
+      <div class="nav-label">Admin</div>
+      <a class="nav-item" href="settings.html">⚙ <span>Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="account"><span class="avatar">GCC</span><div><strong>GCC Car Valuator</strong><span>Enterprise</span></div></div>
+      <div class="health"><i></i>All systems operational</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="toolbar">
+      <button class="tool" aria-label="Menu">☰</button>
+      <button class="tool" aria-label="Search">⌕</button>
+      <button class="tool" aria-label="Notifications" onclick="location.href='notifications.html'">♧</button>
+      <button class="tool" aria-label="Dark mode">☾</button>
+      <button class="lang"><strong>EN</strong> &nbsp; AR</button>
+    </header>
+
+    <div class="content">
+      <section class="reports-hero">
+        <div class="crumbs"><a href="index.html">Home</a><span>›</span><span style="color:#e9edf0">Reports</span></div>
+        <div class="page-head"><div><h1 class="page-title">Reports</h1><p class="page-sub">Comprehensive analytics and insights for the GCC automotive market.</p></div></div>
+        <div class="reports-live"><i></i><div>GCC LIVE MARKET<span>Updated 2 min ago</span></div></div>
+      </section>
+
+      <section class="reports-kpis">
+        <div class="reports-kpi"><div class="reports-kpi-icon">▱</div><div><div class="reports-kpi-label">Total market size</div><div class="reports-kpi-value">AED 12.8B <span class="reports-kpi-change">↑ 5.6%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
+        <div class="reports-kpi"><div class="reports-kpi-icon">▣</div><div><div class="reports-kpi-label">Total vehicles listed</div><div class="reports-kpi-value">56,421 <span class="reports-kpi-change">↑ 8.2%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
+        <div class="reports-kpi"><div class="reports-kpi-icon">◇</div><div><div class="reports-kpi-label">Avg. list price</div><div class="reports-kpi-value">AED 24,750 <span class="reports-kpi-change">↑ 3.4%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
+        <div class="reports-kpi"><div class="reports-kpi-icon">↗</div><div><div class="reports-kpi-label">Market growth (YOY)</div><div class="reports-kpi-value">6.7% <span class="reports-kpi-change">↑ 1.8%</span></div><div class="reports-kpi-note">vs last year</div></div></div>
+        <div class="reports-kpi"><div class="reports-kpi-icon">♙</div><div><div class="reports-kpi-label">Active dealers</div><div class="reports-kpi-value">2,134 <span class="reports-kpi-change down">↓ 2.1%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
+      </section>
+
+      <section class="reports-filter">
+        <div class="reports-filter-controls"><select class="reports-select"><option>May 1, 2024 - May 31, 2024</option><option>Last 12 months</option><option>Year to date</option></select><select class="reports-select"><option>All GCC Countries</option><option>UAE</option><option>Saudi Arabia</option><option>Qatar</option></select><select class="reports-select"><option>All Makes</option><option>Toyota</option><option>Nissan</option><option>BMW</option></select><select class="reports-select"><option>All Models</option><option>Land Cruiser</option><option>Patrol</option><option>Camry</option></select></div>
+        <div class="actions"><button class="btn ghost" onclick="downloadReport('market report')">↓ &nbsp;Export Report</button><button class="btn primary" onclick="toast('Report schedule opened')">▣ &nbsp;Schedule Report</button></div>
+      </section>
+
+      <section class="reports-analytics">
+        <article class="reports-card"><div class="reports-card-head"><h2>MARKET TREND <span style="font-weight:400;color:var(--muted)">(Vehicles Sold)</span></h2><div class="reports-legend"><span><b></b>2024</span><span><b class="alt"></b>2023</span></div></div><div class="reports-card-body"><div class="reports-chart"><svg viewBox="0 0 640 220" preserveAspectRatio="none"><polyline points="0,175 53,149 106,121 159,102 212,80 265,64 318,54 371,39 424,31 477,26 530,17 583,4 640,-12" fill="none" stroke="var(--gold)" stroke-width="4"/><polyline points="0,190 53,180 106,164 159,145 212,126 265,109 318,99 371,87 424,81 477,69 530,57 583,37 640,14" fill="none" stroke="#23c6c1" stroke-width="3"/><g fill="var(--gold-light)"><circle cx="0" cy="175" r="4"/><circle cx="106" cy="121" r="4"/><circle cx="212" cy="80" r="4"/><circle cx="318" cy="54" r="4"/><circle cx="424" cy="31" r="4"/><circle cx="530" cy="17" r="4"/><circle cx="640" cy="-12" r="4"/></g></svg></div><div class="reports-mini-stats"><div class="reports-mini"><label>Highest month</label><strong>AED 12.8B</strong><small>May 2024</small></div><div class="reports-mini"><label>Lowest month</label><strong>AED 8.7B</strong><small>Jan 2024</small></div><div class="reports-mini"><label>Average monthly growth</label><strong class="green">+5.6%</strong><small>2024 vs 2023</small></div></div></div></article>
+        <article class="reports-card"><div class="reports-card-head"><h2>MARKET SHARE BY SEGMENT</h2><span>Based on active listings</span></div><div class="donut-wrap"><div class="donut"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e9a50a" stroke-width="8" stroke-dasharray="42.3 57.7"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#23c6c1" stroke-width="8" stroke-dasharray="28.1 71.9" stroke-dashoffset="-42.3"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#2587d9" stroke-width="8" stroke-dasharray="16.7 83.3" stroke-dashoffset="-70.4"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#5d48d6" stroke-width="8" stroke-dasharray="7.4 92.6" stroke-dashoffset="-87.1"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#984ee6" stroke-width="8" stroke-dasharray="3 97" stroke-dashoffset="-94.5"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e74c59" stroke-width="8" stroke-dasharray="2.5 97.5" stroke-dashoffset="-97.5"/></svg><div class="donut-center"><strong>100%</strong><span>Total</span></div></div><div class="reports-segment-legend"><div class="reports-segment"><div><i style="background:#e9a50a"></i>SUV</div><strong>42.3%</strong></div><div class="reports-segment"><div><i style="background:#23c6c1"></i>Sedan</div><strong>28.1%</strong></div><div class="reports-segment"><div><i style="background:#2587d9"></i>Luxury</div><strong>16.7%</strong></div><div class="reports-segment"><div><i style="background:#5d48d6"></i>Truck</div><strong>7.4%</strong></div><div class="reports-segment"><div><i style="background:#984ee6"></i>Coupe</div><strong>3.0%</strong></div><div class="reports-segment"><div><i style="background:#e74c59"></i>MPV</div><strong>2.5%</strong></div></div></div></article>
+        <article class="reports-card"><div class="reports-card-head"><h2>TOP PERFORMING MODELS</h2><a href="comparables.html" class="gold">View all →</a></div><div class="reports-card-body reports-models"><a href="vehicle.html" class="reports-model"><span class="reports-rank">1</span><img src="img/cars/land-cruiser.jpg" alt="Toyota Land Cruiser"><div class="reports-model-main"><strong>Toyota Land Cruiser</strong><span>5,071 listings</span></div><span class="reports-model-trend">↑ 4.2%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">2</span><img src="img/cars/nissan-patrol.jpg" alt="Nissan Patrol"><div class="reports-model-main"><strong>Nissan Patrol</strong><span>5,154 listings</span></div><span class="reports-model-trend">↑ 2.8%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">3</span><img src="img/cars/toyota-camry.jpg" alt="Toyota Camry"><div class="reports-model-main"><strong>Toyota Camry</strong><span>6,253 listings</span></div><span class="reports-model-trend">↑ 1.9%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">4</span><img src="img/cars/mercedes-s-class.jpg" alt="Mercedes-Benz S-Class"><div class="reports-model-main"><strong>Mercedes-Benz S-Class</strong><span>3,421 listings</span></div><span class="reports-model-trend down">↓ 1.2%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">5</span><img src="img/cars/bmw-x5.jpg" alt="BMW X5"><div class="reports-model-main"><strong>BMW X5</strong><span>2,981 listings</span></div><span class="reports-model-trend">↑ 0.7%</span></a></div></article>
+      </section>
+
+      <section class="reports-bottom">
+        <article class="reports-card reports-insights"><div class="reports-card-head"><h2>MARKET INSIGHTS</h2></div><div class="reports-card-body"><div class="reports-insight"><div class="reports-insight-icon">↗</div><div class="reports-insight-main"><strong>Market Growth</strong><span>Total market size increased by 5.6% compared to last month.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">▣</div><div class="reports-insight-main"><strong>Popular Segment</strong><span>SUVs dominate the market with 42.3% share of active listings.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">⌁</div><div class="reports-insight-main"><strong>Price Trend</strong><span>Average list price increased by 3.4% driven by luxury segment.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">♙</div><div class="reports-insight-main"><strong>Top Country</strong><span>UAE leads with 32.6% market share across GCC countries.</span></div><span class="gold">›</span></div></div></article>
+        <article class="reports-card reports-table-wrap"><div class="reports-card-head"><h2>RECENT REPORTS</h2><a href="report-detail.html" class="gold">View all →</a></div><div class="reports-card-body"><table class="reports-table"><thead><tr><th>Report name</th><th>Type</th><th>Date generated</th><th>Period</th><th>Format</th><th>Action</th></tr></thead><tbody><tr><td>GCC Market Overview - May 2024</td><td>Market Analysis</td><td>May 31, 2024 10:30 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td><a class="report-link" href="report-detail.html">◉</a> &nbsp; <a class="report-link" href="#" onclick="downloadReport('GCC market overview');return false">↓</a></td></tr><tr><td>UAE Market Report - May 2024</td><td>Country Report</td><td>May 31, 2024 09:15 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td><a class="report-link" href="report-detail.html">◉</a> &nbsp; ↓</td></tr><tr><td>SUV Segment Analysis - Q2 2024</td><td>Segment Report</td><td>May 30, 2024 04:45 PM</td><td>Apr 1 - Jun 30, 2024</td><td>Excel</td><td>◉ &nbsp; ↓</td></tr><tr><td>Luxury Market Insights - May 2024</td><td>Segment Report</td><td>May 30, 2024 02:20 PM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td>◉ &nbsp; ↓</td></tr><tr><td>GCC Price Trends - May 2024</td><td>Trend Report</td><td>May 29, 2024 11:10 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td>◉ &nbsp; ↓</td></tr></tbody></table><div class="reports-pagination"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>…</button><button>8</button><button>›</button></div></div></article>
+      </section>
+    </div>
+  </main>
+  <script src="detail-pages.js"></script>
+  <script>
+  (function () {
+    var BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
+    var TIMEOUT = 3000;
+
+    /* Show loading shimmer on KPI values while fetching */
+    document.querySelectorAll('.reports-kpi-value').forEach(function (el) {
+      el.dataset.original = el.innerHTML;
+      el.classList.add('loading-shimmer');
+    });
+
+    function fmt(n) {
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M+';
+      if (n >= 1e3) return Math.round(n).toLocaleString();
+      return String(n);
+    }
+
+    function done() {
+      document.querySelectorAll('.reports-kpi-value').forEach(function (el) {
+        el.classList.remove('loading-shimmer');
+      });
+    }
+
+    fetch(BASE + '/v1/models', { signal: AbortSignal.timeout(TIMEOUT) })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var makes = Array.isArray(data.makes) ? data.makes : [];
+        if (!makes.length) { done(); return; }
+
+        var totalListings = makes.reduce(function (s, m) { return s + (m.listing_count || 0); }, 0);
+        var totalModels = makes.reduce(function (s, m) { return s + (m.model_count || 0); }, 0);
+
+        /* KPIs 2 & 3: vehicles listed, total models */
+        var kpis = document.querySelectorAll('.reports-kpi');
+        if (kpis[1]) {
+          kpis[1].querySelector('.reports-kpi-value').innerHTML =
+            fmt(totalListings) + ' <span class="reports-kpi-change live">● LIVE</span>';
+        }
+        if (kpis[2]) {
+          kpis[2].querySelector('.reports-kpi-value').innerHTML =
+            totalModels + ' <span class="reports-kpi-change live">● LIVE</span>';
+        }
+
+        /* Top models: sort by listing_count desc, take top 5 */
+        var sorted = makes.slice().sort(function (a, b) {
+          return (b.listing_count || 0) - (a.listing_count || 0);
+        }).slice(0, 5);
+
+        var modelsEl = document.querySelector('.reports-models');
+        if (modelsEl && sorted.length) {
+          var cars = ['img/cars/land-cruiser.jpg', 'img/cars/nissan-patrol.jpg',
+            'img/cars/toyota-camry.jpg', 'img/cars/mercedes-s-class.jpg', 'img/cars/bmw-x5.jpg'];
+          modelsEl.innerHTML = sorted.map(function (m, i) {
+            var img = cars[i % cars.length];
+            return '<a href="vehicle.html" class="reports-model">' +
+              '<span class="reports-rank">' + (i + 1) + '</span>' +
+              '<img src="' + img + '" alt="' + m.make + '">' +
+              '<div class="reports-model-main"><strong>' + m.make + '</strong>' +
+              '<span>' + fmt(m.listing_count) + ' listings</span></div></a>';
+          }).join('');
+        }
+
+        done();
+      })
+      .catch(function () { done(); });
+  })();
+  </script>
+</body>
+</html>

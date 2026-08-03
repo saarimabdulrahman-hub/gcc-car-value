@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">Mercedes-Benz</title>
+  <circle cx="60" cy="60" r="52" fill="none" stroke="#d9dde2" stroke-width="5"/>
+  <path fill="#d9dde2" d="M60 15 66 53 103 83 64 66 60 106 56 66 17 83 54 53Z"/>
+  <circle cx="60" cy="60" r="5" fill="#d9dde2"/>
+</svg>

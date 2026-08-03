@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Track and monitor vehicles you're interested in across the GCC market — market value, price changes, and alerts.">
+  <title>Watchlist — GCC Car Valuator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    :root {
+      --rail: 252px;
+      --bg: var(--color-canvas);
+      --surface: var(--color-sidebar);
+      --surface-2: var(--color-surface);
+      --surface-3: var(--color-surface-raised);
+      --surface-hover: var(--color-surface-hover);
+      --line: var(--color-line);
+      --line-hover: var(--color-line-hover);
+      --line-soft: var(--color-line-soft);
+      --text: var(--color-text-primary);
+      --muted: var(--color-text-secondary);
+      --muted-2: var(--color-text-muted);
+      --gold: var(--color-accent);
+      --gold-light: var(--color-accent-light);
+      --gold-dark: var(--color-accent-dark);
+      --gold-soft: var(--color-accent-soft);
+      --green: var(--color-success);
+      --red: var(--color-danger);
+      --radius: 11px;
+      --shadow: 0 14px 34px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    svg { display: block; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* Display face for brand + headings; body stays Inter. */
+    .brand-title, .brand-mark, .hero h1, .kpi-value, .veh-name { font-family: var(--font-display); }
+
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 15px; height: 15px; }
+    .icon.lg { width: 22px; height: 22px; }
+
+    /* ── Sidebar (shared shell) ── */
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 80;
+      width: var(--rail);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 62%, var(--bg) 100%);
+      border-right: 1px solid var(--line);
+    }
+    .brand {
+      height: 92px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-mark {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      flex: 0 0 auto;
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: -.05em;
+    }
+    .brand-title { display: block; font-size: 18px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+    .brand-subtitle { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; letter-spacing: .02em; }
+
+    .sidebar-scroll { overflow-y: auto; padding: 20px 11px 14px; scrollbar-width: none; }
+    .sidebar-scroll::-webkit-scrollbar { display: none; }
+    .nav-group + .nav-group { margin-top: 24px; }
+    .nav-heading { margin: 0 8px 10px; color: var(--muted-2); font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+    .nav-item {
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 9px;
+      transition: color .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,.025); }
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(90deg, rgba(225,151,15,.22), rgba(117,78,12,.08));
+      border-color: rgba(230, 158, 15, .32);
+      box-shadow: inset 3px 0 0 var(--gold-dark);
+    }
+    .nav-item.active .icon { color: var(--gold-light); }
+
+    .sidebar-footer { margin-top: auto; padding: 12px; }
+    .account-card, .health-card { border: 1px solid var(--line); border-radius: 10px; background: rgba(7,14,21,.76); }
+    .account-card { display: flex; align-items: center; gap: 13px; padding: 14px 13px; }
+    .account-logo {
+      width: 40px; height: 40px; display: grid; place-items: center; flex: 0 0 auto;
+      background: linear-gradient(145deg, var(--gold-light), var(--gold-dark)); color: var(--text); border-radius: 7px; font-weight: 700; font-size: 13px;
+    }
+    .account-name { font-size: 13px; font-weight: 600; }
+    .account-plan { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .health-card { margin-top: 11px; padding: 13px; }
+    .health-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; }
+    .health-copy { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted-2); font-size: 9px; }
+    .health-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--green); }
+    .health-pulse { width: 8px; height: 2px; background: var(--color-success-dark); border-radius: 10px; }
+
+    .mobile-bar { display: none; }
+    .main { margin-left: var(--rail); min-height: 100vh; overflow: hidden; background: var(--color-hero); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      background-image:
+        linear-gradient(90deg, rgba(5,10,15,.86) 0%, rgba(5,10,15,.5) 30%, rgba(5,10,15,.1) 62%, rgba(5,10,15,.28) 100%),
+        linear-gradient(0deg, var(--color-hero) 0%, rgba(6,11,16,.16) 22%, rgba(6,11,16,.08) 100%),
+        url('img/browse-hero.png');
+      background-position: center center;
+      background-size: cover;
+    }
+    .hero::after {
+      content: "";
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 63% 46%, transparent 0 30%, rgba(3,7,11,.08) 70%), linear-gradient(180deg, rgba(3,8,12,.22), transparent 42%);
+    }
+    .hero-copy { position: relative; z-index: 2; width: min(460px, 55%); padding: 84px 0 0 38px; text-shadow: 0 2px 18px rgba(0,0,0,.9); }
+    .breadcrumb { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 13px; }
+    .breadcrumb .icon { width: 12px; height: 12px; color: var(--muted-2); }
+    .hero h1 { margin: 14px 0 7px; font-size: clamp(31px, 2.5vw, 39px); line-height: 1.08; letter-spacing: -.035em; }
+    .hero p { max-width: 400px; margin: 0; color: var(--text); font-size: 13px; line-height: 1.5; }
+
+    .hero-tools { position: absolute; z-index: 3; top: 17px; left: 32px; display: flex; gap: 11px; }
+    .tool-button, .language-toggle {
+      height: 40px; display: grid; place-items: center;
+      border: 1px solid var(--line); background: rgba(6, 13, 20, .75);
+      box-shadow: 0 7px 20px rgba(0,0,0,.16); backdrop-filter: blur(10px);
+    }
+    .tool-button { width: 41px; border-radius: 10px; }
+    .tool-button:hover { background: var(--surface-3); border-color: var(--line-hover); }
+    .language-toggle { grid-template-columns: 1fr 1fr; width: 82px; border-radius: 10px; overflow: hidden; }
+    .language-toggle button { height: 100%; border: 0; background: transparent; color: var(--muted); font-size: 11px; font-weight: 600; }
+    .language-toggle button.active { color: var(--text); background: var(--gold-soft); }
+
+    .live-market {
+      position: absolute; z-index: 3; top: 14px; right: 31px; min-width: 160px;
+      padding: 8px 14px; border: 1px solid rgba(255,255,255,.08); border-radius: 20px;
+      background: rgba(5,12,18,.7); backdrop-filter: blur(9px); text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
+    .live-title { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .live-title .health-dot { width: 7px; height: 7px; animation: livePulse 1.8s ease-in-out infinite; }
+    .live-time { margin-top: 2px; color: var(--muted-2); font-size: 10px; }
+
+    .content { position: relative; z-index: 4; margin-top: -1px; padding: 0 32px 34px; }
+
+    /* ── KPI row (5 cards) ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .kpi-card {
+      min-height: 96px; display: flex; align-items: center; gap: 17px; padding: 14px 15px;
+      background: linear-gradient(145deg, rgba(13,23,32,.96), rgba(7,13,19,.98));
+      border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(0,0,0,.23); animation: rise .5s both;
+    }
+    .kpi-card:nth-child(2) { animation-delay: .04s; }
+    .kpi-card:nth-child(3) { animation-delay: .08s; }
+    .kpi-card:nth-child(4) { animation-delay: .12s; }
+    .kpi-card:nth-child(5) { animation-delay: .16s; }
+    .kpi-icon {
+      width: 46px; height: 46px; display: grid; place-items: center; flex: 0 0 auto;
+      color: var(--gold); background: rgba(225, 154, 12, .095); border: 1px solid rgba(225,154,12,.13); border-radius: 50%;
+    }
+    .kpi-icon.green { color: var(--green); background: var(--color-success-soft); border-color: rgba(20,223,117,.15); }
+    .kpi-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+    .kpi-value { margin-top: 3px; font-size: 23px; font-weight: 600; line-height: 1.1; letter-spacing: -.025em; }
+    .kpi-note { margin-top: 5px; color: var(--muted-2); font-size: 11px; white-space: nowrap; }
+
+    /* ── Toolbar (search + compare + add) ── */
+    .table-panel {
+      margin-top: 14px; padding: 16px 20px 4px;
+      background: linear-gradient(145deg, rgba(11,20,28,.96), rgba(7,14,20,.96));
+      border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .toolbar { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; }
+    .search-box {
+      position: relative; display: flex; align-items: center; height: 44px;
+      background: rgba(4,10,15,.64); border: 1px solid var(--line); border-radius: 9px; color: var(--text);
+    }
+    .search-box .icon { position: absolute; left: 16px; color: var(--muted); }
+    .search-box input { width: 100%; height: 100%; padding: 0 16px 0 46px; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 13px; }
+    .search-box input::placeholder { color: var(--muted); }
+    .btn {
+      height: 44px; display: inline-flex; align-items: center; gap: 9px; padding: 0 17px;
+      border: 1px solid var(--line); background: rgba(7,14,20,.5); border-radius: 9px; color: var(--text); font-size: 13px; font-weight: 500; white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--line-hover); background: var(--surface-hover); }
+    .btn .icon { color: var(--muted); }
+    .btn-primary {
+      border-color: transparent; color: var(--color-text-inverse); font-weight: 600;
+      background: linear-gradient(100deg, var(--gold-light), var(--gold-dark)); box-shadow: 0 6px 16px rgba(0,0,0,.35);
+    }
+    .btn-primary .icon { color: var(--color-text-inverse); }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .toolbar-second { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: 14px 0; }
+    .sort-label { color: var(--muted); font-size: 12px; }
+    .control-select {
+      position: relative; display: flex; align-items: center; height: 38px; min-width: 172px;
+      background: rgba(4,10,15,.64); border: 1px solid var(--line); border-radius: 9px; color: var(--text);
+    }
+    .control-select select { width: 100%; height: 100%; padding: 0 34px 0 14px; appearance: none; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 12px; font-weight: 600; }
+    .control-select select option { background: var(--surface-2); color: var(--text); }
+    .control-select .chevron { position: absolute; right: 12px; width: 13px; height: 13px; pointer-events: none; color: var(--muted); }
+    .btn.filter-btn { height: 38px; }
+
+    /* ── Table ── */
+    .wl-table { width: 100%; border-collapse: collapse; }
+    .wl-table thead th {
+      text-align: left; padding: 12px 10px; color: var(--muted-2); font-size: 10px; font-weight: 600;
+      letter-spacing: .05em; text-transform: uppercase; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: nowrap;
+    }
+    .wl-table thead th .info { display: inline-flex; vertical-align: middle; margin-left: 5px; color: var(--muted-2); }
+    .wl-table thead th.col-num { text-align: right; }
+    .wl-table thead th.col-actions { text-align: right; }
+    .wl-table tbody td { padding: 11px 10px; border-bottom: 1px solid rgba(255,255,255,.035); vertical-align: middle; font-size: 13px; }
+    .wl-table tbody tr { animation: rise .4s both; }
+    .wl-table tbody tr:hover { background: rgba(255,255,255,.02); }
+    .col-check { width: 40px; }
+    .col-num { text-align: right; white-space: nowrap; }
+
+    .checkbox {
+      appearance: none; width: 17px; height: 17px; border: 1px solid var(--line-hover); border-radius: 5px;
+      background: rgba(4,10,15,.5); display: inline-grid; place-content: center; cursor: pointer; vertical-align: middle;
+    }
+    .checkbox:checked { background: var(--gold); border-color: var(--gold); }
+    .checkbox:checked::after { content: ""; width: 9px; height: 9px; background: var(--color-text-inverse); clip-path: polygon(14% 44%, 0 65%, 40% 100%, 100% 16%, 82% 0, 37% 68%); }
+
+    .veh-cell { display: flex; align-items: center; gap: 13px; }
+    .veh-thumb {
+      width: 62px; height: 42px; flex: 0 0 62px; border-radius: 6px; object-fit: cover;
+      background: radial-gradient(circle at 60% 30%, #33404c, #111921 65%); border: 1px solid rgba(255,255,255,.05);
+    }
+    .veh-thumb-ph { display: grid; place-items: center; color: #8b95a1; }
+    .veh-thumb-ph svg { width: 48px; height: 24px; fill: rgba(190,198,205,.1); stroke: currentColor; stroke-width: 1.2; }
+    .veh-name { font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .veh-trim { color: var(--muted); font-size: 11px; margin-top: 2px; white-space: nowrap; }
+
+    .mv-value { font-size: 13px; font-weight: 600; }
+    .mv-range { color: var(--muted); font-size: 11px; margin-top: 2px; white-space: nowrap; }
+    .mv-cell { display: flex; align-items: center; gap: 14px; }
+    .mv-spark { width: 78px; height: 26px; flex: 0 0 78px; }
+    .mv-spark path { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .mv-spark.up path { stroke: var(--green); }
+    .mv-spark.down path { stroke: var(--red); }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 7px;
+      font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .pill.up { color: var(--green); background: var(--color-success-soft); }
+    .pill.down { color: var(--red); background: var(--color-danger-soft); }
+
+    .row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 7px; }
+    .icon-btn {
+      width: 33px; height: 33px; display: grid; place-items: center; flex: 0 0 auto;
+      border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted);
+    }
+    .icon-btn:hover { color: var(--text); border-color: var(--line-hover); background: rgba(255,255,255,.03); }
+    .icon-btn.on { color: var(--gold); border-color: var(--color-line-active); background: var(--gold-soft); }
+
+    .empty-state { min-height: 180px; display: grid; place-items: center; color: var(--muted); text-align: center; }
+    .empty-state strong { display: block; color: #d9dde2; margin-bottom: 4px; }
+
+    /* ── Footer / pagination ── */
+    .table-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 0 6px; flex-wrap: wrap; }
+    .footer-count { color: var(--muted); font-size: 12px; }
+    .pager { display: flex; align-items: center; gap: 7px; }
+    .page-btn {
+      min-width: 36px; height: 36px; display: grid; place-items: center; padding: 0 6px;
+      border: 1px solid var(--line); border-radius: 8px; background: rgba(7,14,20,.5); color: var(--muted); font-size: 13px; font-weight: 600;
+    }
+    .page-btn:hover:not(:disabled) { color: var(--text); border-color: var(--line-hover); }
+    .page-btn.active { color: var(--color-text-inverse); border-color: transparent; background: linear-gradient(100deg, var(--gold-light), var(--gold-dark)); }
+    .page-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .footer-show { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+    .footer-show .control-select { min-width: 118px; height: 36px; }
+
+    .toast { position: fixed; z-index: 200; right: 24px; bottom: 24px; padding: 11px 15px; color: #fff; background: #121c25; border: 1px solid #31404d; border-radius: 8px; box-shadow: var(--shadow); transform: translateY(18px); opacity: 0; pointer-events: none; transition: .2s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 1220px) {
+      :root { --rail: 220px; }
+      .brand { padding-inline: 15px; }
+      .brand-title { font-size: 15px; }
+      .content { padding-inline: 22px; }
+      .hero-copy { padding-left: 28px; }
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .kpi-card:nth-child(4), .kpi-card:nth-child(5) { display: none; }
+      .mv-spark { display: none; }
+    }
+    @media (max-width: 980px) {
+      .col-added { display: none; }
+      .toolbar { grid-template-columns: 1fr auto; }
+      .toolbar .btn-primary { grid-column: 1 / -1; justify-content: center; }
+    }
+    @media (max-width: 860px) {
+      .sidebar { transform: translateX(-100%); transition: transform .25s ease; }
+      .sidebar.open { transform: translateX(0); box-shadow: 22px 0 55px rgba(0,0,0,.55); }
+      .main { margin-left: 0; padding-top: 58px; }
+      .mobile-bar { position: fixed; inset: 0 0 auto 0; z-index: 70; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: rgba(5,11,16,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+      .mobile-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+      .mobile-brand .brand-mark { width: 32px; height: 32px; font-size: 13px; }
+      .menu-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: #0b141d; }
+      .hero { height: 270px; }
+      .hero-tools { left: 18px; }
+      .live-market { right: 18px; }
+      .hero-copy { padding: 100px 18px 0; width: 78%; }
+      .content { padding: 0 16px 30px; }
+      .table-panel { padding: 14px; overflow-x: auto; }
+      .col-year { display: none; }
+    }
+    @media (max-width: 600px) {
+      .hero { height: 250px; background-position: 41% center; }
+      .hero-tools .tool-button:nth-child(2), .hero-tools .tool-button:nth-child(3), .language-toggle { display: none; }
+      .live-market { min-width: 140px; right: 12px; }
+      .hero-copy { width: 92%; padding-top: 100px; }
+      .hero h1 { font-size: 29px; }
+      .content { padding-inline: 12px; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .kpi-card { min-width: 0; min-height: 85px; gap: 10px; padding: 12px; }
+      .kpi-card:nth-child(3) { display: none; }
+      .kpi-icon { width: 38px; height: 38px; }
+      .kpi-value { font-size: 19px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .toolbar-second { flex-wrap: wrap; }
+      .col-listprice { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></symbol>
+      <symbol id="i-sell" viewBox="0 0 24 24"><path d="m12 3 8 8-9 9-8-8 9-9Z"/><circle cx="13" cy="8" r="1.5"/><path d="M7 12h7m-5 3h3"/></symbol>
+      <symbol id="i-buy" viewBox="0 0 24 24"><path d="M7 6.5A2.5 2.5 0 1 1 10.8 4l2.4 2.4A2.5 2.5 0 1 1 17.5 8l1.4 1.4a2 2 0 0 1 0 2.8L12.2 19a2 2 0 0 1-2.8 0L8 17.5A2.5 2.5 0 1 1 4.5 14L3 12.5a2 2 0 0 1 0-2.8Z"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10m6 10V5m6 15v-8m4 8H2"/><path d="m3 9 6-5 6 6 6-7"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v5h5M9 13h6m-6 4h4"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 3 6.2 6.8 1-4.9 4.8 1.2 6.8-6.1-3.2-6.1 3.2 1.2-6.8-4.9-4.8 6.8-1Z"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.4A8 8 0 0 1 8.6 4 8.5 8.5 0 1 0 20 15.4Z"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+      <symbol id="i-tune" viewBox="0 0 24 24"><path d="M4 7h10m4 0h2M4 17h4m4 0h8M14 5v4M8 15v4"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5m5 5-5-5 5-5"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4Z"/><path d="m4 7 8 4 8-4v10l-8 4-8-4Z"/><path d="M12 11v10"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18m0-18a15 15 0 0 0 0 18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-sort" viewBox="0 0 24 24"><path d="M8 4v16m0-16L4 8m4-4 4 4m4 12V4m0 16-4-4m4 4 4-4"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-trend" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-compare" viewBox="0 0 24 24"><path d="M12 3v18M5 8 2 12l3 4m14-8 3 4-3 4M8 12H2m20 0h-6"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4m8-4v4"/></symbol>
+      <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="18" r="1.4"/></symbol>
+      <symbol id="i-car" viewBox="0 0 64 30"><path d="M7 21h49l-3-9-10-5H24l-9 6-8 2Z"/><path d="M21 13h28M17 21a5 5 0 1 0 10 0m19 0a5 5 0 1 0 10 0"/></symbol>
+    </defs>
+  </svg>
+
+  <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">CV</span>
+      <span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span>
+    </a>
+    <div class="sidebar-scroll">
+      <nav>
+        <div class="nav-group">
+          <div class="nav-heading">Main</div>
+          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span>Home</span></a>
+          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span>Buy</span></a>
+          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span>Sell</span></a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-heading">Analysis</div>
+          <a class="nav-item" href="browse.html"><svg class="icon"><use href="#i-grid"/></svg><span>Browse</span></a>
+          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span>Market</span></a>
+          <a class="nav-item" href="index.html#reports"><svg class="icon"><use href="#i-file"/></svg><span>Reports</span></a>
+          <a class="nav-item active" href="watchlist.html" aria-current="page"><svg class="icon"><use href="#i-star"/></svg><span>Watchlist</span></a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-heading">Admin</div>
+          <a class="nav-item" href="settings.html"><svg class="icon"><use href="#i-gear"/></svg><span>Settings</span></a>
+        </div>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="account-card"><div class="account-logo">GCC</div><div><div class="account-name">GCC Car Valuator</div><div class="account-plan">Enterprise</div></div></div>
+      <div class="health-card"><div class="health-title"><span class="health-dot"></span>All systems operational</div><div class="health-copy"><span class="health-pulse"></span>All services are running normally</div></div>
+    </div>
+  </aside>
+
+  <header class="mobile-bar"><div class="mobile-brand"><span class="brand-mark">CV</span>CAR VALUATOR</div><button class="menu-button" id="menuButton" aria-label="Open navigation"><svg class="icon"><use href="#i-menu"/></svg></button></header>
+
+  <main class="main" id="mainContent">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-tools">
+        <button class="tool-button" aria-label="Search" onclick="document.getElementById('wlSearch').focus()"><svg class="icon"><use href="#i-search"/></svg></button>
+        <button class="tool-button" aria-label="Notifications" onclick="showToast('You have 3 active price alerts')"><svg class="icon"><use href="#i-bell"/></svg></button>
+        <button class="tool-button" aria-label="Display settings" onclick="document.body.classList.toggle('dimmed')"><svg class="icon"><use href="#i-moon"/></svg></button>
+        <div class="language-toggle" role="group" aria-label="Language"><button class="active" data-lang="EN">EN</button><button data-lang="AR">AR</button></div>
+      </div>
+      <div class="live-market"><div class="live-title"><span class="health-dot"></span>GCC LIVE MARKET</div><div class="live-time">Updated 2 min ago</div></div>
+      <div class="hero-copy">
+        <div class="breadcrumb"><span>Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Watchlist</span></div>
+        <h1 id="pageTitle">Watchlist</h1>
+        <p>Track and monitor vehicles you're interested in.</p>
+      </div>
+    </section>
+
+    <div class="content">
+      <section class="kpi-grid" aria-label="Watchlist summary">
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-star"/></svg></div><div><div class="kpi-label">Total Vehicles</div><div class="kpi-value" id="kpiTotal">12</div><div class="kpi-note">In your watchlist</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-trend"/></svg></div><div><div class="kpi-label">Total Value</div><div class="kpi-value" id="kpiValue">AED 3.13M</div><div class="kpi-note">Est. market value</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon green"><svg class="icon lg"><use href="#i-trend"/></svg></div><div><div class="kpi-label">Avg. Price Change</div><div class="kpi-value" id="kpiChange">+1.3%</div><div class="kpi-note">vs last 30 days</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-bell"/></svg></div><div><div class="kpi-label">Price Alerts</div><div class="kpi-value" id="kpiAlerts">3</div><div class="kpi-note">Active alerts</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-calendar"/></svg></div><div><div class="kpi-label">Last Updated</div><div class="kpi-value">2 min ago</div><div class="kpi-note">Real-time data</div></div></article>
+      </section>
+
+      <section class="table-panel" aria-label="Watchlist">
+        <div class="toolbar">
+          <label class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="wlSearch" type="search" placeholder="Search your watchlist..." autocomplete="off"></label>
+          <button class="btn" id="compareBtn"><svg class="icon"><use href="#i-compare"/></svg>Compare (<span id="compareCount">0</span>)</button>
+          <button class="btn btn-primary" onclick="showToast('Add vehicle — coming soon')"><svg class="icon"><use href="#i-plus"/></svg>Add Vehicle</button>
+        </div>
+
+        <div class="toolbar-second">
+          <span class="sort-label">Sort by:</span>
+          <span class="control-select">
+            <select id="sortSelect">
+              <option value="recent">Recently Added</option>
+              <option value="price-change">Price Change</option>
+              <option value="value-desc">Market Value (High–Low)</option>
+              <option value="value-asc">Market Value (Low–High)</option>
+              <option value="name">Name (A–Z)</option>
+            </select>
+            <svg class="icon chevron"><use href="#i-chevron"/></svg>
+          </span>
+          <button class="btn filter-btn" onclick="showToast('Filters — coming soon')"><svg class="icon sm"><use href="#i-tune"/></svg>Filters</button>
+        </div>
+
+        <table class="wl-table">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" class="checkbox" id="selectAll" aria-label="Select all"></th>
+              <th>Vehicle</th>
+              <th class="col-year">Year</th>
+              <th class="col-listprice">List Price</th>
+              <th>Market Value <span class="info" title="Estimated fair market value with 30-day range"><svg class="icon sm"><use href="#i-info"/></svg></span></th>
+              <th>Price Change</th>
+              <th class="col-added">Added On</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="wlBody" aria-live="polite"></tbody>
+        </table>
+
+        <div class="table-footer">
+          <span class="footer-count" id="footerCount">Showing 0 vehicles</span>
+          <div class="pager" id="pager"></div>
+          <div class="footer-show">
+            Show
+            <span class="control-select">
+              <select id="perPage">
+                <option value="6">6 per page</option>
+                <option value="12">12 per page</option>
+                <option value="24">24 per page</option>
+              </select>
+              <svg class="icon chevron"><use href="#i-chevron"/></svg>
+            </span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // Demo watchlist data. Falls back to this when the API is offline (same pattern as browse/market).
+    const FALLBACK = [
+      { id: 1, name: 'Toyota Land Cruiser', trim: 'GXR V8 4.6L 4WD', img: 'img/cars/land-cruiser.jpg', make: 'Toyota', year: 2022, listPrice: 285000, marketValue: 265000, low: 240000, high: 290000, change: 4.2, added: '2024-05-24', addedTs: 1716508800000, alerts: true },
+      { id: 2, name: 'Nissan Patrol', trim: 'Platinum 5.6L', img: 'img/cars/nissan-patrol.jpg', make: 'Nissan', year: 2021, listPrice: 215000, marketValue: 198000, low: 175000, high: 215000, change: 2.8, added: '2024-05-22', addedTs: 1716336000000, alerts: false },
+      { id: 3, name: 'Toyota Camry', trim: 'SE 2.5L', img: 'img/cars/toyota-camry.jpg', make: 'Toyota', year: 2023, listPrice: 118000, marketValue: 108000, low: 98000, high: 118000, change: 1.9, added: '2024-05-20', addedTs: 1716163200000, alerts: false },
+      { id: 4, name: 'Mercedes-Benz S-Class', trim: 'S 500 4MATIC', img: 'img/cars/mercedes-s-class.jpg', make: 'Mercedes-Benz', year: 2020, listPrice: 410000, marketValue: 398000, low: 370000, high: 420000, change: -1.2, added: '2024-05-18', addedTs: 1715990400000, alerts: true },
+      { id: 5, name: 'BMW X5', trim: 'xDrive40i M Sport', img: 'img/cars/bmw-x5.jpg', make: 'BMW', year: 2022, listPrice: 320000, marketValue: 322000, low: 300000, high: 340000, change: 0.7, added: '2024-05-15', addedTs: 1715731200000, alerts: false },
+      { id: 6, name: 'Lexus LX 600', trim: 'Luxury 3.5L Twin Turbo', img: '', make: 'Lexus', year: 2023, listPrice: 495000, marketValue: 488000, low: 450000, high: 510000, change: -0.5, added: '2024-05-12', addedTs: 1715472000000, alerts: true },
+      { id: 7, name: 'Toyota Prado', trim: 'VXR 4.0L 4WD', img: '', make: 'Toyota', year: 2022, listPrice: 235000, marketValue: 228000, low: 210000, high: 245000, change: 3.1, added: '2024-05-10', addedTs: 1715299200000, alerts: false },
+      { id: 8, name: 'Nissan X-Trail', trim: 'SL 2.5L', img: '', make: 'Nissan', year: 2023, listPrice: 122000, marketValue: 116000, low: 105000, high: 125000, change: -0.9, added: '2024-05-08', addedTs: 1715126400000, alerts: false },
+      { id: 9, name: 'BMW 5 Series', trim: '530i M Sport', img: '', make: 'BMW', year: 2021, listPrice: 205000, marketValue: 195000, low: 180000, high: 210000, change: 1.4, added: '2024-05-05', addedTs: 1714867200000, alerts: false },
+      { id: 10, name: 'Audi Q7', trim: '55 TFSI quattro', img: '', make: 'Audi', year: 2022, listPrice: 288000, marketValue: 279000, low: 260000, high: 300000, change: 2.2, added: '2024-05-03', addedTs: 1714694400000, alerts: false },
+      { id: 11, name: 'Mercedes-Benz E-Class', trim: 'E 300 AMG Line', img: '', make: 'Mercedes-Benz', year: 2023, listPrice: 265000, marketValue: 258000, low: 240000, high: 275000, change: -1.8, added: '2024-05-01', addedTs: 1714521600000, alerts: false },
+      { id: 12, name: 'Lexus RX 350', trim: 'F Sport 2.4L Turbo', img: '', make: 'Lexus', year: 2023, listPrice: 275000, marketValue: 271000, low: 255000, high: 285000, change: 3.6, added: '2024-04-28', addedTs: 1714262400000, alerts: false }
+    ];
+
+    let rows = FALLBACK.slice();
+    let selected = new Set();
+    let page = 1;
+
+    const els = {
+      body: document.getElementById('wlBody'),
+      search: document.getElementById('wlSearch'),
+      sort: document.getElementById('sortSelect'),
+      perPage: document.getElementById('perPage'),
+      selectAll: document.getElementById('selectAll'),
+      footerCount: document.getElementById('footerCount'),
+      pager: document.getElementById('pager'),
+      compareCount: document.getElementById('compareCount')
+    };
+
+    function esc(v) { return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function fmtK(n) { return 'AED ' + Math.round(n / 1000) + 'K'; }
+    function fmtRange(lo, hi) { return Math.round(lo / 1000) + 'K – ' + Math.round(hi / 1000) + 'K'; }
+    function fmtDate(iso) { return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+    function initials(name) { return name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase(); }
+
+    // Deterministic sparkline path per row, tilted by the sign of the change.
+    function sparkPath(seed, up) {
+      const n = 8, w = 78, h = 26, pad = 3;
+      let s = seed * 2654435761 >>> 0;
+      const rnd = () => { s = (s * 1103515245 + 12345) >>> 0; return (s % 1000) / 1000; };
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const t = i / (n - 1);
+        const drift = up ? t : (1 - t);              // rise for gains, fall for losses
+        const y = pad + (1 - (drift * 0.55 + rnd() * 0.4)) * (h - pad * 2);
+        pts.push([pad + t * (w - pad * 2), y]);
+      }
+      return 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L');
+    }
+
+    function carThumb() {
+      return '<div class="veh-thumb veh-thumb-ph"><svg viewBox="0 0 64 30"><use href="#i-car"/></svg></div>';
+    }
+
+    function visibleRows() {
+      const q = els.search.value.trim().toLowerCase();
+      let list = rows.filter(r => !q || (r.name + ' ' + r.trim).toLowerCase().includes(q));
+      const sort = els.sort.value;
+      const cmp = {
+        'recent': (a, b) => b.addedTs - a.addedTs,
+        'price-change': (a, b) => b.change - a.change,
+        'value-desc': (a, b) => b.marketValue - a.marketValue,
+        'value-asc': (a, b) => a.marketValue - b.marketValue,
+        'name': (a, b) => a.name.localeCompare(b.name)
+      }[sort];
+      return list.slice().sort(cmp);
+    }
+
+    function render() {
+      const list = visibleRows();
+      const per = Number(els.perPage.value);
+      const pageCount = Math.max(1, Math.ceil(list.length / per));
+      if (page > pageCount) page = pageCount;
+      const start = (page - 1) * per;
+      const pageRows = list.slice(start, start + per);
+
+      if (!pageRows.length) {
+        els.body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div><strong>No vehicles found</strong>Try a different search, or add a vehicle to your watchlist.</div></div></td></tr>';
+      } else {
+        els.body.innerHTML = pageRows.map((r, i) => {
+          const up = r.change >= 0;
+          const thumb = r.img
+            ? '<img class="veh-thumb" src="' + esc(r.img) + '" alt="' + esc(r.name) + '" onerror="this.outerHTML=carThumb()">'
+            : carThumb();
+          return '<tr style="animation-delay:' + (i * 35) + 'ms">' +
+            '<td class="col-check"><input type="checkbox" class="checkbox" data-id="' + r.id + '"' + (selected.has(r.id) ? ' checked' : '') + ' aria-label="Select ' + esc(r.name) + '"></td>' +
+            '<td><div class="veh-cell">' + thumb + '<div><div class="veh-name">' + esc(r.name) + '</div><div class="veh-trim">' + esc(r.trim) + '</div></div></div></td>' +
+            '<td class="col-year">' + r.year + '</td>' +
+            '<td class="col-listprice">' + fmtK(r.listPrice) + '</td>' +
+            '<td><div class="mv-cell"><div><div class="mv-value">' + fmtK(r.marketValue) + '</div><div class="mv-range">' + fmtRange(r.low, r.high) + '</div></div>' +
+              '<svg class="mv-spark ' + (up ? 'up' : 'down') + '" viewBox="0 0 78 26" preserveAspectRatio="none"><path d="' + sparkPath(r.id, up) + '"/></svg></div></td>' +
+            '<td><span class="pill ' + (up ? 'up' : 'down') + '">' + (up ? '▲' : '▼') + ' ' + Math.abs(r.change).toFixed(1) + '%</span></td>' +
+            '<td class="col-added" style="color:var(--muted)">' + fmtDate(r.added) + '</td>' +
+            '<td class="col-actions"><div class="row-actions">' +
+              '<button class="icon-btn' + (r.alerts ? ' on' : '') + '" title="' + (r.alerts ? 'Alert on' : 'Set price alert') + '" onclick="toggleAlert(' + r.id + ',this)"><svg class="icon sm"><use href="#i-bell"/></svg></button>' +
+              '<button class="icon-btn" title="Compare" onclick="toggleCompare(' + r.id + ')"><svg class="icon sm"><use href="#i-compare"/></svg></button>' +
+              '<button class="icon-btn" title="More" onclick="showToast(\'More actions — coming soon\')"><svg class="icon sm"><use href="#i-dots"/></svg></button>' +
+            '</div></td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      const from = list.length ? start + 1 : 0;
+      const to = Math.min(start + per, list.length);
+      els.footerCount.textContent = 'Showing ' + from + ' to ' + to + ' of ' + list.length + ' vehicles';
+      renderPager(pageCount);
+
+      // "Select all" reflects the current page's selection state.
+      const pageIds = pageRows.map(r => r.id);
+      els.selectAll.checked = pageIds.length > 0 && pageIds.every(id => selected.has(id));
+      els.compareCount.textContent = selected.size;
+    }
+
+    function renderPager(pageCount) {
+      let html = '<button class="page-btn" ' + (page <= 1 ? 'disabled' : '') + ' onclick="goPage(' + (page - 1) + ')" aria-label="Previous"><svg class="icon sm"><use href="#i-arrow-left"/></svg></button>';
+      for (let p = 1; p <= pageCount; p++) {
+        html += '<button class="page-btn' + (p === page ? ' active' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+      }
+      html += '<button class="page-btn" ' + (page >= pageCount ? 'disabled' : '') + ' onclick="goPage(' + (page + 1) + ')" aria-label="Next"><svg class="icon sm"><use href="#i-arrow"/></svg></button>';
+      els.pager.innerHTML = html;
+    }
+
+    function goPage(p) { page = p; render(); document.querySelector('.table-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+    function toggleAlert(id, btn) {
+      const r = rows.find(x => x.id === id);
+      if (!r) return;
+      r.alerts = !r.alerts;
+      btn.classList.toggle('on', r.alerts);
+      btn.title = r.alerts ? 'Alert on' : 'Set price alert';
+      document.getElementById('kpiAlerts').textContent = rows.filter(x => x.alerts).length;
+      showToast(r.alerts ? 'Price alert enabled for ' + r.name : 'Price alert disabled');
+    }
+
+    function toggleCompare(id) {
+      if (selected.has(id)) selected.delete(id); else selected.add(id);
+      render();
+    }
+
+    function updateKpis() {
+      const total = rows.length;
+      const totalValue = rows.reduce((s, r) => s + r.marketValue, 0);
+      const avgChange = total ? rows.reduce((s, r) => s + r.change, 0) / total : 0;
+      document.getElementById('kpiTotal').textContent = total;
+      document.getElementById('kpiValue').textContent = 'AED ' + (totalValue / 1e6).toFixed(2) + 'M';
+      document.getElementById('kpiChange').textContent = (avgChange >= 0 ? '+' : '') + avgChange.toFixed(1) + '%';
+      document.getElementById('kpiAlerts').textContent = rows.filter(r => r.alerts).length;
+    }
+
+    let toastTimer;
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200); }
+
+    // Events
+    els.search.addEventListener('input', () => { page = 1; render(); });
+    els.sort.addEventListener('change', () => { page = 1; render(); });
+    els.perPage.addEventListener('change', () => { page = 1; render(); });
+    els.body.addEventListener('change', e => {
+      const cb = e.target.closest('.checkbox[data-id]');
+      if (!cb) return;
+      const id = Number(cb.dataset.id);
+      if (cb.checked) selected.add(id); else selected.delete(id);
+      els.compareCount.textContent = selected.size;
+    });
+    els.selectAll.addEventListener('change', () => {
+      const per = Number(els.perPage.value);
+      const list = visibleRows().slice((page - 1) * per, (page - 1) * per + per);
+      list.forEach(r => els.selectAll.checked ? selected.add(r.id) : selected.delete(r.id));
+      render();
+    });
+    document.getElementById('compareBtn').addEventListener('click', () => {
+      showToast(selected.size < 2 ? 'Select at least 2 vehicles to compare' : 'Comparing ' + selected.size + ' vehicles');
+    });
+    document.querySelector('.language-toggle').addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') return;
+      document.querySelectorAll('.language-toggle button').forEach(b => b.classList.toggle('active', b === e.target));
+      showToast(e.target.dataset.lang === 'AR' ? 'Arabic interface selected' : 'English interface selected');
+    });
+    document.getElementById('menuButton').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+
+    async function loadData() {
+      updateKpis(); render();
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 1800);
+        const res = await fetch('/v1/watchlist', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (!res.ok) throw new Error('API unavailable');
+        const payload = await res.json();
+        if (Array.isArray(payload.vehicles) && payload.vehicles.length) {
+          rows = payload.vehicles;
+          updateKpis(); render();
+        }
+      } catch (_) { /* Demo data stays visible when the API is offline. */ }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

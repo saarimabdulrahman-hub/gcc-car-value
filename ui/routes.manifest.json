@@ -1,0 +1,19 @@
+{
+  "description": "Production frontend routes served from ui/ (Vercel, cleanUrls=true). Every route must return 200 after deploy. Keep in sync with ui/*.html (excluding react-browse.html, the gitignored React WIP).",
+  "base_url_env": "FRONTEND_BASE_URL",
+  "default_base_url": "https://gcc-car-value.vercel.app",
+  "routes": [
+    "/",
+    "/browse",
+    "/market",
+    "/reports",
+    "/report-detail",
+    "/results",
+    "/vehicle",
+    "/comparables",
+    "/auth",
+    "/notifications",
+    "/settings",
+    "/watchlist"
+  ]
+}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Sign in - GCC Car Valuator</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+  <main class="main" style="margin:0;min-height:100vh">
+    <header class="toolbar">
+      <button class="lang" onclick="goHome()">← Back to platform</button>
+    </header>
+    <div class="auth-wrap">
+      <section class="auth-card">
+        <div class="auth-brand">
+          <span class="brand-mark">CV</span>
+          <div>
+            <strong class="brand-title">CAR VALUATOR</strong>
+            <span class="brand-subtitle">GCC MARKET INTELLIGENCE</span>
+          </div>
+        </div>
+        <div class="eyebrow">Enterprise access</div>
+        <h1 class="auth-title" id="authTitle">Sign in to your workspace</h1>
+        <p class="auth-copy" id="authCopy">Sign in or create an account to save valuations and set alerts.</p>
+        <div class="auth-tabs" style="display:flex;gap:0;margin-bottom:20px">
+          <button class="btn primary" id="tabLogin" style="flex:1;border-radius:8px 0 0 8px">Sign In</button>
+          <button class="btn" id="tabRegister" style="flex:1;border-radius:0 8px 8px 0">Register</button>
+        </div>
+        <form style="margin-top:0">
+          <div class="field">
+            <label for="email">Work email</label>
+            <input id="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+          </div>
+          <div class="field" style="margin-top:15px">
+            <label for="password">Password</label>
+            <div style="display:flex;gap:8px">
+              <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="8" required>
+              <button class="btn" type="button" id="btnShow" onclick="toggleShow()">Show</button>
+            </div>
+          </div>
+          <button class="btn primary" type="submit" style="width:100%;margin-top:20px" id="btnSubmit">Sign In</button>
+        </form>
+        <div id="authMsg" class="quiet" style="text-align:center;margin-top:12px;min-height:20px"></div>
+        <p class="quiet" style="text-align:center;font-size:11px;margin:25px 0 0">Passwords are hashed with PBKDF2-SHA256 (600k iterations). Accounts are created with consumer access by default.</p>
+      </section>
+    </div>
+  </main>
+  <script src="detail-pages.js"></script>
+  <script>
+  (function () {
+    var BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
+    var isRegister = false;
+    var form = document.querySelector('form');
+    var btnLogin = document.getElementById('tabLogin');
+    var btnRegister = document.getElementById('tabRegister');
+    var btnSubmit = document.getElementById('btnSubmit');
+    var authTitle = document.getElementById('authTitle');
+    var authCopy = document.getElementById('authCopy');
+    var authMsg = document.getElementById('authMsg');
+
+    function toggleShow() {
+      var pw = document.getElementById('password');
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    }
+
+    function setMode(register) {
+      isRegister = register;
+      if (register) {
+        btnLogin.className = 'btn';
+        btnRegister.className = 'btn primary';
+        btnSubmit.textContent = 'Create Account';
+        authTitle.textContent = 'Create your account';
+        authCopy.textContent = 'Register to save valuations, set alerts, and track your watchlist.';
+      } else {
+        btnLogin.className = 'btn primary';
+        btnRegister.className = 'btn';
+        btnSubmit.textContent = 'Sign In';
+        authTitle.textContent = 'Sign in to your workspace';
+        authCopy.textContent = 'Sign in or create an account to save valuations and set alerts.';
+      }
+      authMsg.textContent = '';
+    }
+
+    btnLogin.addEventListener('click', function (e) { e.preventDefault(); setMode(false); });
+    btnRegister.addEventListener('click', function (e) { e.preventDefault(); setMode(true); });
+
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = form.querySelector('#email');
+      var password = form.querySelector('#password');
+      if (!email || !password || !email.value || !password.value) {
+        authMsg.textContent = 'Please enter email and password.';
+        return;
+      }
+      authMsg.textContent = 'Please wait…';
+      btnSubmit.disabled = true;
+
+      var endpoint = isRegister ? '/v1/auth/register' : '/v1/auth/login';
+      fetch(BASE + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, password: password.value }),
+        signal: AbortSignal.timeout(10000),
+      })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        btnSubmit.disabled = false;
+        if (!res.ok) {
+          authMsg.textContent = res.data.detail || 'Authentication failed.';
+          return;
+        }
+        if (res.data.access_token) {
+          localStorage.setItem('token', res.data.access_token);
+          localStorage.setItem('refresh_token', res.data.refresh_token || '');
+          localStorage.setItem('user', JSON.stringify({ email: res.data.email, role: res.data.role }));
+          authMsg.textContent = '';
+          if (typeof toast === 'function') toast('Logged in successfully');
+          setTimeout(function () { location.href = 'index.html'; }, 600);
+        } else if (res.data.message) {
+          // Registration success — switch to login mode
+          authMsg.textContent = 'Account created! Sign in below.';
+          setMode(false);
+        }
+      })
+      .catch(function () {
+        btnSubmit.disabled = false;
+        authMsg.textContent = 'Server unavailable — try again later.';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

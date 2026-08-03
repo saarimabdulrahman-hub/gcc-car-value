@@ -1,88 +1,743 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Browse Models — Car Valuator</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<style>
-    /* Floating Header Style */
-    .floating-header {
-        position: absolute;
-        top: 20px;
-        right: 40px;
-        z-index: 100;
-        display: flex;
-        gap: 10px;
-        background: rgba(0,0,0,0.2);
-        padding: 10px;
-        border-radius: 12px;
-        backdrop-filter: blur(10px);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Browse Models — GCC Car Valuator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    :root {
+      --rail: 252px;
+      --bg: var(--color-canvas);
+      --surface: var(--color-sidebar);
+      --surface-2: var(--color-surface);
+      --surface-3: var(--color-surface-raised);
+      --surface-hover: var(--color-surface-hover);
+      --line: var(--color-line);
+      --line-hover: var(--color-line-hover);
+      --line-soft: var(--color-line-soft);
+      --text: var(--color-text-primary);
+      --muted: var(--color-text-secondary);
+      --muted-2: var(--color-text-muted);
+      --gold: var(--color-accent);
+      --gold-light: var(--color-accent-light);
+      --gold-dark: var(--color-accent-dark);
+      --gold-soft: var(--color-accent-soft);
+      --green: var(--color-success);
+      --red: var(--color-danger);
+      --radius: 11px;
+      --shadow: 0 14px 34px rgba(0, 0, 0, .28);
     }
-    .page-hero-container {
-        position: relative;
-        background: linear-gradient(to bottom, rgba(9, 12, 17, 0.4), #090c11),
-                    url('img/browse-hero.png') no-repeat center bottom / cover;
-        min-height: 300px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 40px 80px;
-        color: white;
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
     }
-    .kpi-container {
-        margin-top: -100px;
-        position: relative;
-        z-index: 10;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 16px;
-        padding: 0 56px;
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    svg { display: block; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* Display face for brand + headings; body stays Inter. */
+    .brand-title, .brand-mark, .hero h1, .kpi-value, .brand-name { font-family: var(--font-display); }
+
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 15px; height: 15px; }
+    .icon.lg { width: 22px; height: 22px; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 80;
+      width: var(--rail);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 62%, var(--bg) 100%);
+      border-right: 1px solid var(--line);
     }
-</style>
+    .brand {
+      height: 92px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.05em;
+    }
+    .brand-title { display: block; font-size: 18px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+    .brand-subtitle { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; letter-spacing: .02em; }
+
+    .sidebar-scroll { overflow-y: auto; padding: 20px 11px 14px; scrollbar-width: none; }
+    .sidebar-scroll::-webkit-scrollbar { display: none; }
+    .nav-group + .nav-group { margin-top: 24px; }
+    .nav-heading { margin: 0 8px 10px; color: var(--muted-2); font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+    .nav-item {
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 9px;
+      transition: color .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,.025); }
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(90deg, rgba(225,151,15,.22), rgba(117,78,12,.08));
+      border-color: rgba(230, 158, 15, .32);
+      box-shadow: inset 3px 0 0 var(--gold-dark);
+    }
+    .nav-item.active .icon { color: var(--gold-light); }
+
+    .sidebar-footer { margin-top: auto; padding: 12px; }
+    .account-card, .health-card { border: 1px solid var(--line); border-radius: 10px; background: rgba(7,14,21,.76); }
+    .account-card { display: flex; align-items: center; gap: 13px; padding: 14px 13px; }
+    .account-logo {
+      width: 40px; height: 40px; display: grid; place-items: center; flex: 0 0 auto;
+      background: linear-gradient(145deg, var(--gold-light), var(--gold-dark)); color: var(--text); border-radius: 7px; font-weight: 700; font-size: 13px;
+    }
+    .account-name { font-size: 13px; font-weight: 600; }
+    .account-plan { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .health-card { margin-top: 11px; padding: 13px; }
+    .health-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; }
+    .health-copy { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted-2); font-size: 9px; }
+    .health-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--green); }
+    .health-pulse { width: 8px; height: 2px; background: var(--color-success-dark); border-radius: 10px; }
+
+    .mobile-bar { display: none; }
+    .main { margin-left: var(--rail); min-height: 100vh; overflow: hidden; background: var(--color-hero); }
+    .hero {
+      position: relative;
+      height: 327px;
+      overflow: hidden;
+      background-image:
+        linear-gradient(90deg, rgba(5,10,15,.78) 0%, rgba(5,10,15,.38) 28%, rgba(5,10,15,.05) 60%, rgba(5,10,15,.16) 100%),
+        linear-gradient(0deg, var(--color-hero) 0%, rgba(6,11,16,.16) 22%, rgba(6,11,16,.08) 100%),
+        url('img/browse-hero.png');
+      background-position: center center;
+      background-size: cover;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 63% 46%, transparent 0 30%, rgba(3,7,11,.08) 70%), linear-gradient(180deg, rgba(3,8,12,.22), transparent 42%);
+    }
+    .hero-copy { position: relative; z-index: 2; width: min(420px, 50%); padding: 86px 0 0 38px; text-shadow: 0 2px 18px rgba(0,0,0,.9); }
+    .breadcrumb { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 13px; }
+    .breadcrumb .icon { width: 12px; height: 12px; color: var(--muted-2); }
+    .hero h1 { margin: 14px 0 7px; font-size: clamp(31px, 2.5vw, 39px); line-height: 1.08; letter-spacing: -.035em; }
+    .hero p { max-width: 400px; margin: 0; color: var(--text); font-size: 13px; line-height: 1.5; }
+
+    .hero-tools {
+      position: absolute;
+      z-index: 3;
+      top: 17px;
+      left: 32px;
+      display: flex;
+      gap: 11px;
+    }
+    .tool-button, .language-toggle {
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: rgba(6, 13, 20, .75);
+      box-shadow: 0 7px 20px rgba(0,0,0,.16);
+      backdrop-filter: blur(10px);
+    }
+    .tool-button { width: 41px; border-radius: 10px; }
+    .tool-button:hover { background: var(--surface-3); border-color: var(--line-hover); }
+    .language-toggle { grid-template-columns: 1fr 1fr; width: 82px; border-radius: 10px; overflow: hidden; }
+    .language-toggle button { height: 100%; border: 0; background: transparent; color: var(--muted); font-size: 11px; font-weight: 600; }
+    .language-toggle button.active { color: var(--text); background: var(--gold-soft); }
+
+    .live-market {
+      position: absolute;
+      z-index: 3;
+      top: 14px;
+      right: 31px;
+      min-width: 160px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      background: rgba(5,12,18,.7);
+      backdrop-filter: blur(9px);
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    }
+    .live-title { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--green); font-size: 11px; font-weight: 700; }
+    .live-title .health-dot { width: 7px; height: 7px; }
+    .live-time { margin-top: 2px; color: var(--muted-2); font-size: 10px; }
+
+    .content { position: relative; z-index: 4; margin-top: -1px; padding: 0 32px 34px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .kpi-card {
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      padding: 14px 15px;
+      background: linear-gradient(145deg, rgba(13,23,32,.96), rgba(7,13,19,.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(0,0,0,.23);
+      animation: rise .5s both;
+    }
+    .kpi-card:nth-child(2) { animation-delay: .04s; }
+    .kpi-card:nth-child(3) { animation-delay: .08s; }
+    .kpi-card:nth-child(4) { animation-delay: .12s; }
+    .kpi-card:nth-child(5) { animation-delay: .16s; }
+    .kpi-icon {
+      width: 46px; height: 46px; display: grid; place-items: center; flex: 0 0 auto;
+      color: var(--gold); background: rgba(225, 154, 12, .095); border: 1px solid rgba(225,154,12,.13); border-radius: 50%;
+    }
+    .kpi-label { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .kpi-value { margin-top: 3px; font-size: 23px; font-weight: 600; line-height: 1.1; letter-spacing: -.025em; }
+    .kpi-note { margin-top: 5px; color: var(--muted-2); font-size: 11px; white-space: nowrap; }
+
+    .filter-panel {
+      margin-top: 14px;
+      padding: 15px 20px 12px;
+      background: linear-gradient(145deg, rgba(11,20,28,.96), rgba(7,14,20,.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .filter-top { display: grid; grid-template-columns: 1fr 170px; gap: 24px; }
+    .search-box, .control-select {
+      height: 43px;
+      background: rgba(4,10,15,.64);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--text);
+    }
+    .search-box { position: relative; display: flex; align-items: center; }
+    .search-box .icon { position: absolute; left: 16px; color: var(--muted); }
+    .search-box input { width: 100%; height: 100%; padding: 0 45px 0 51px; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 12px; }
+    .search-box input::placeholder { color: var(--muted); }
+    .search-box .tune { position: absolute; right: 14px; color: var(--muted-2); }
+    .advanced-button, .clear-button, .view-filter-button {
+      border: 1px solid var(--line);
+      background: rgba(7,14,20,.5);
+      border-radius: 9px;
+      color: var(--muted);
+    }
+    .advanced-button { height: 43px; display: flex; align-items: center; justify-content: center; gap: 11px; border-color: var(--gold); color: var(--text); font-size: 12px; font-weight: 600; }
+    .advanced-button .icon { color: var(--gold); }
+    .advanced-button.active { background: var(--gold-soft); }
+    .filter-middle { display: grid; grid-template-columns: 290px 280px 1fr 123px; gap: 24px; align-items: end; margin-top: 17px; }
+    .field-label { display: block; margin: 0 0 5px 46px; color: var(--muted-2); font-size: 9px; text-transform: uppercase; }
+    .control-select { position: relative; display: flex; align-items: center; }
+    .control-select > .icon:first-child { margin-left: 12px; color: var(--muted); }
+    .control-select select { width: 100%; height: 100%; padding: 0 36px 0 14px; appearance: none; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 12px; font-weight: 600; }
+    .control-select select option { background: var(--surface-2); color: var(--text); }
+    .control-select .chevron { position: absolute; right: 12px; width: 13px; height: 13px; pointer-events: none; }
+    .result-count { align-self: center; justify-self: end; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .clear-button { height: 43px; display: flex; align-items: center; justify-content: center; gap: 12px; white-space: nowrap; }
+    .clear-button:hover { color: var(--text); border-color: var(--line-hover); }
+    .filter-divider { height: 1px; margin: 14px 0 7px; background: rgba(255,255,255,.035); }
+    .quick-label { color: var(--muted); font-size: 10px; text-transform: uppercase; }
+    .quick-row { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+    .chips { display: flex; align-items: center; gap: 15px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { min-width: 53px; height: 29px; padding: 0 16px; border: 1px solid var(--line); border-radius: 16px; background: transparent; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .chip:hover { color: var(--text); border-color: var(--line-hover); }
+    .chip.active { color: var(--color-text-inverse); border-color: transparent; background: linear-gradient(100deg, var(--gold-light), var(--gold-dark)); box-shadow: 0 5px 14px rgba(0,0,0,.35); }
+    .view-filter-button { height: 31px; display: flex; align-items: center; gap: 18px; padding: 0 17px; color: var(--text); font-size: 11px; white-space: nowrap; }
+    .advanced-row { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding-top: 13px; }
+    .advanced-row.open { display: grid; }
+    .advanced-row label { color: var(--muted); font-size: 10px; }
+    .advanced-row input { width: 100%; height: 36px; margin-top: 5px; padding: 0 12px; background: rgba(4,10,15,.64); border: 1px solid var(--line); border-radius: 8px; color: var(--text); outline: 0; }
+
+    .section-heading { display: flex; align-items: center; justify-content: space-between; margin: 13px 2px 4px; color: var(--muted); }
+    .section-heading h2 { margin: 0; font-size: 11px; font-weight: 500; text-transform: uppercase; }
+    .section-link { display: flex; align-items: center; gap: 9px; color: var(--muted); border: 0; background: transparent; font-size: 11px; }
+    .section-link:hover { color: var(--text); }
+
+    .manufacturer-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 13px; }
+    .manufacturer-card {
+      position: relative;
+      min-width: 0;
+      height: 138px;
+      padding: 10px 13px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #0b151e, #081018);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      animation: rise .42s both;
+    }
+    .manufacturer-card:hover { transform: translateY(-2px); border-color: #35424f; background: linear-gradient(145deg, #0e1a25, #09121a); }
+    .rank { position: absolute; top: 10px; right: 10px; padding: 4px 7px; color: var(--gold); background: rgba(226,154,11,.11); border-radius: 6px; font-size: 11px; font-weight: 700; }
+    .brand-lockup { text-align: center; }
+    .brand-logo {
+      position: relative;
+      width: 41px; height: 41px; margin: 0 auto 1px; display: grid; place-items: center;
+      color: #e7e9ec; background: rgba(255,255,255,0.035); border-radius: 12px;
+      font-size: 11px; font-weight: 700; letter-spacing: -.04em;
+    }
+    .brand-logo img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 8px;
+      background: rgba(255,255,255,0.035); border-radius: inherit;
+    }
+    /* Brand artwork should read as a mark, not as an image tile. */
+    .manufacturer-card .brand-logo {
+      width: 60px;
+      height: 52px;
+      margin: 0 auto 8px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+    .manufacturer-card .brand-logo img {
+      position: static;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      object-fit: contain;
+    }
+    .drill-panel .brand-logo { border-radius: 50%; }
+    .brand-name { display: block; overflow: hidden; color: #f6f7f8; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .brand-meta { display: flex; justify-content: space-between; margin-top: 6px; color: #a1aab6; font-size: 10px; }
+    .brand-market { display: grid; grid-template-columns: auto 1fr auto; align-items: end; gap: 8px; margin-top: 8px; }
+    .price { color: #e5e8ec; font-size: 10px; white-space: nowrap; }
+    .price strong { color: #fff; font-weight: 600; }
+    .spark { width: 100%; height: 17px; }
+    .spark path { fill: none; stroke: #d98c05; stroke-width: 1.6; }
+    .trend { display: flex; align-items: center; gap: 3px; color: var(--green); font-size: 10px; white-space: nowrap; }
+    .trend.down { color: var(--red); }
+
+    .bottom-grid { display: grid; grid-template-columns: 1.05fr 1.1fr 1.07fr; gap: 14px; margin-top: 14px; }
+    .data-panel { min-height: 183px; overflow: hidden; background: linear-gradient(145deg, #0b151e, #081018); border: 1px solid var(--line); border-radius: 9px; }
+    .panel-header { height: 31px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; color: #a5aeba; border-bottom: 1px solid rgba(255,255,255,.035); font-size: 11px; text-transform: uppercase; }
+    .panel-header .section-link { text-transform: none; }
+    .vehicle-row, .insight-row, .recent-row { min-height: 48px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,.035); }
+    button.vehicle-row, button.recent-row, button.model-row { width: 100%; color: inherit; background: transparent; border-top: 0; border-right: 0; border-left: 0; text-align: left; }
+    .vehicle-row:last-child, .insight-row:last-child, .recent-row:last-child { border-bottom: 0; }
+    .vehicle-row { padding: 6px 18px; gap: 13px; }
+    .vehicle-thumb { width: 66px; height: 39px; display: grid; place-items: center; flex: 0 0 auto; overflow: hidden; border-radius: 5px; background: radial-gradient(circle at 60% 30%, #33404c, #111921 65%); border: 1px solid rgba(255,255,255,.05); color: #bdc3ca; }
+    .vehicle-thumb svg { width: 53px; height: 26px; fill: rgba(190,198,205,.12); stroke: currentColor; stroke-width: 1.2; }
+    .vehicle-copy { min-width: 0; flex: 1; }
+    .vehicle-name { display: block; overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    .vehicle-meta { display: block; margin-top: 2px; color: #8f99a6; font-size: 10px; }
+    .vehicle-price { color: var(--gold); font-size: 10px; font-weight: 600; white-space: nowrap; }
+    .insight-list { display: grid; grid-template-columns: 1fr 1fr; }
+    .insight-row { padding: 5px 12px; gap: 10px; }
+    .insight-row:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.035); }
+    .insight-icon { width: 29px; height: 29px; display: grid; place-items: center; flex: 0 0 auto; color: #e8bd58; background: rgba(225,154,11,.1); border: 1px solid rgba(225,154,11,.12); border-radius: 7px; }
+    .insight-icon.pink { color: #ef61bd; background: rgba(198,35,139,.15); border-color: rgba(198,35,139,.18); }
+    .insight-icon.blue { color: #1bafff; background: rgba(0,130,218,.15); border-color: rgba(0,130,218,.18); }
+    .insight-copy { min-width: 0; flex: 1; }
+    .insight-label { display: block; color: #909aa7; font-size: 9px; white-space: nowrap; }
+    .insight-value { display: block; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .insight-change { color: var(--green); font-size: 10px; white-space: nowrap; }
+    .recent-row { padding: 5px 17px; gap: 13px; }
+    .recent-row .vehicle-thumb { width: 56px; height: 34px; }
+    .row-arrow { width: 31px; height: 31px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.01); }
+    .row-arrow:hover { border-color: #3b4855; background: rgba(255,255,255,.03); }
+
+    .empty-state { grid-column: 1 / -1; min-height: 138px; display: grid; place-items: center; color: var(--muted); border: 1px dashed #273440; border-radius: 9px; text-align: center; }
+    .empty-state strong { display: block; color: #d9dde2; margin-bottom: 4px; }
+
+    .drill-overlay { position: fixed; inset: 0; z-index: 110; visibility: hidden; background: rgba(0,0,0,.68); opacity: 0; backdrop-filter: blur(3px); transition: opacity .22s ease, visibility .22s; }
+    .drill-overlay.open { visibility: visible; opacity: 1; }
+    .drill-panel { position: fixed; z-index: 120; top: 0; right: 0; width: min(470px, 100vw); height: 100vh; display: flex; flex-direction: column; background: #09121a; border-left: 1px solid #283541; box-shadow: -20px 0 50px rgba(0,0,0,.4); transform: translateX(100%); transition: transform .28s cubic-bezier(.22,.85,.31,1); }
+    .drill-panel.open { transform: translateX(0); }
+    .drill-head { height: 70px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-bottom: 1px solid var(--line); }
+    .drill-title { flex: 1; font-size: 16px; font-weight: 600; }
+    .drill-close { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: transparent; }
+    .drill-body { padding: 12px 18px; overflow-y: auto; }
+    .model-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 10px; border-bottom: 1px solid var(--line-soft); border-radius: 7px; }
+    .model-row:hover { background: rgba(255,255,255,.025); }
+    .model-name { display: block; font-size: 13px; font-weight: 500; }
+    .model-meta { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
+    .model-price { color: var(--gold); font-size: 11px; }
+
+    .toast { position: fixed; z-index: 200; right: 24px; bottom: 24px; padding: 11px 15px; color: #fff; background: #121c25; border: 1px solid #31404d; border-radius: 8px; box-shadow: var(--shadow); transform: translateY(18px); opacity: 0; pointer-events: none; transition: .2s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .loading-shimmer { position: relative; overflow: hidden; color: transparent !important; border-radius: 4px; background: #141f29; }
+    .loading-shimmer::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent); animation: shimmer 1.3s infinite; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+    @media (max-width: 1220px) {
+      :root { --rail: 220px; }
+      .brand { padding-inline: 15px; }
+      .brand-title { font-size: 15px; }
+      .content { padding-inline: 22px; }
+      .hero-copy { padding-left: 28px; }
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .kpi-card:nth-child(4), .kpi-card:nth-child(5) { display: none; }
+      .manufacturer-grid { grid-template-columns: repeat(3, 1fr); }
+      .manufacturer-card:nth-child(n+4) { display: none; }
+      .filter-middle { grid-template-columns: 1fr 1fr; }
+      .result-count { justify-self: start; }
+      .bottom-grid { grid-template-columns: 1fr 1fr; }
+      .data-panel:nth-child(2) { grid-column: 1 / -1; order: 3; }
+    }
+    @media (max-width: 860px) {
+      .sidebar { transform: translateX(-100%); transition: transform .25s ease; }
+      .sidebar.open { transform: translateX(0); box-shadow: 22px 0 55px rgba(0,0,0,.55); }
+      .main { margin-left: 0; padding-top: 58px; }
+      .mobile-bar { position: fixed; inset: 0 0 auto 0; z-index: 70; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: rgba(5,11,16,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+      .mobile-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+      .mobile-brand .brand-mark { width: 32px; height: 32px; font-size: 13px; }
+      .menu-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: #0b141d; }
+      .hero { height: 300px; }
+      .hero-tools { left: 18px; }
+      .live-market { right: 18px; }
+      .hero-copy { padding: 100px 18px 0; width: 70%; }
+      .content { padding: 0 18px 30px; }
+      .filter-top { grid-template-columns: 1fr; gap: 10px; }
+      .filter-middle { gap: 12px; }
+      .quick-row { align-items: flex-end; }
+      .view-filter-button { display: none; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .data-panel:nth-child(2) { grid-column: auto; order: initial; }
+    }
+    @media (max-width: 600px) {
+      .hero { height: 270px; background-position: 41% center; }
+      .hero-tools .tool-button:nth-child(2), .hero-tools .tool-button:nth-child(3), .language-toggle { display: none; }
+      .live-market { min-width: 140px; right: 12px; }
+      .hero-copy { width: 90%; padding-top: 105px; }
+      .hero h1 { font-size: 30px; }
+      .content { padding-inline: 12px; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .kpi-card { min-width: 0; min-height: 85px; gap: 10px; padding: 12px; }
+      .kpi-card > div:last-child { min-width: 0; }
+      .kpi-note { overflow: hidden; text-overflow: ellipsis; }
+      .kpi-card:nth-child(3) { display: none; }
+      .kpi-icon { width: 38px; height: 38px; }
+      .kpi-value { font-size: 19px; }
+      .filter-panel { padding: 13px; }
+      .filter-middle { grid-template-columns: 1fr; }
+      .result-count { display: none; }
+      .advanced-row { grid-template-columns: 1fr; }
+      .manufacturer-grid { grid-template-columns: 1fr; }
+      .manufacturer-card:nth-child(n+2) { display: none; }
+      .insight-list { grid-template-columns: 1fr; }
+      .insight-row:nth-child(odd) { border-right: 0; }
+    }
+  </style>
 </head>
-<body class="has-sidebar">
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></symbol>
+      <symbol id="i-sell" viewBox="0 0 24 24"><path d="m12 3 8 8-9 9-8-8 9-9Z"/><circle cx="13" cy="8" r="1.5"/><path d="M7 12h7m-5 3h3"/></symbol>
+      <symbol id="i-buy" viewBox="0 0 24 24"><path d="M7 6.5A2.5 2.5 0 1 1 10.8 4l2.4 2.4A2.5 2.5 0 1 1 17.5 8l1.4 1.4a2 2 0 0 1 0 2.8L12.2 19a2 2 0 0 1-2.8 0L8 17.5A2.5 2.5 0 1 1 4.5 14L3 12.5a2 2 0 0 1 0-2.8Z"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10m6 10V5m6 15v-8m4 8H2"/><path d="m3 9 6-5 6 6 6-7"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v5h5M9 13h6m-6 4h4"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 3 6.2 6.8 1-4.9 4.8 1.2 6.8-6.1-3.2-6.1 3.2 1.2-6.8-4.9-4.8 6.8-1Z"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.4A8 8 0 0 1 8.6 4 8.5 8.5 0 1 0 20 15.4Z"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+      <symbol id="i-tune" viewBox="0 0 24 24"><path d="M4 7h10m4 0h2M4 17h4m4 0h8M14 5v4M8 15v4"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4Z"/><path d="m4 7 8 4 8-4v10l-8 4-8-4Z"/><path d="M12 11v10"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6m-6 4h6m-6 4h6"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18m0-18a15 15 0 0 0 0 18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-sort" viewBox="0 0 24 24"><path d="M8 4v16m0-16L4 8m4-4 4 4m4 12V4m0 16-4-4m4 4 4-4"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4m3-8a7 7 0 1 0-10 0c1.2.9 2 2 2 3h6c0-1 .8-2.1 2-3Z"/></symbol>
+      <symbol id="i-car" viewBox="0 0 64 30"><path d="M7 21h49l-3-9-10-5H24l-9 6-8 2Z"/><path d="M21 13h28M17 21a5 5 0 1 0 10 0m19 0a5 5 0 1 0 10 0"/></symbol>
+    </defs>
+  </svg>
 
-<!-- Sidebar -->
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <div class="sidebar-logo">CV</div>
-    <div class="sidebar-titles">
-      <div class="sidebar-name">CAR VALUATOR</div>
-      <div class="sidebar-subtitle">Enterprise</div>
+  <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">CV</span>
+      <span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span>
+    </a>
+    <div class="sidebar-scroll">
+      <nav>
+        <div class="nav-group">
+          <div class="nav-heading">Main</div>
+          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span>Home</span></a>
+          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span>Sell</span></a>
+          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span>Buy</span></a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-heading">Analysis</div>
+          <a class="nav-item active" href="browse.html" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg><span>Browse</span></a>
+          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span>Market</span></a>
+          <a class="nav-item" href="reports.html"><svg class="icon"><use href="#i-file"/></svg><span>Reports</span></a>
+          <a class="nav-item" href="watchlist.html"><svg class="icon"><use href="#i-star"/></svg><span>Watchlist</span></a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-heading">Admin</div>
+          <a class="nav-item" href="settings.html"><svg class="icon"><use href="#i-gear"/></svg><span>Settings</span></a>
+        </div>
+      </nav>
     </div>
-  </div>
-  <nav class="sidebar-nav" style="padding: 20px;">
-    <a href="index.html" style="color:white; text-decoration:none; display:flex; gap:10px;">🏠 Home</a>
-    <a href="browse.html" class="active" style="color:white; text-decoration:none; display:flex; gap:10px; margin-top:20px;">🔍 Browse</a>
-  </nav>
-</aside>
+    <div class="sidebar-footer">
+      <div class="account-card"><div class="account-logo">GCC</div><div><div class="account-name">GCC Car Valuator</div><div class="account-plan">Enterprise</div></div></div>
+      <div class="health-card"><div class="health-title"><span class="health-dot"></span>All systems operational</div><div class="health-copy"><span class="health-pulse"></span>All services are running normally</div></div>
+    </div>
+  </aside>
 
-<div class="main-wrap">
-  <!-- Floating Header -->
-  <header class="floating-header">
-      <button style="background:none; border:none; color:white; cursor:pointer;">🔍</button>
-      <button style="background:none; border:none; color:white; cursor:pointer;">🔔</button>
-  </header>
+  <header class="mobile-bar"><div class="mobile-brand"><span class="brand-mark">CV</span>CAR VALUATOR</div><button class="menu-button" id="menuButton" aria-label="Open navigation"><svg class="icon"><use href="#i-menu"/></svg></button></header>
 
-  <main class="main-content" style="padding:0;">
-    <!-- Full-page background hero feel -->
-    <section class="page-hero-container">
-        <h1 style="font-size: 3rem; font-weight: 900; color: white;">Browse Models</h1>
-        <p style="font-size: 1.1rem; color: #ccc;">Explore every make and model across 12 manufacturers in 6 GCC countries.</p>
+  <main class="main" id="mainContent">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-tools">
+        <button class="tool-button" aria-label="Search" onclick="document.getElementById('browseSearch').focus()"><svg class="icon"><use href="#i-search"/></svg></button>
+        <button class="tool-button" aria-label="Notifications" onclick="showToast('You are all caught up')"><svg class="icon"><use href="#i-bell"/></svg></button>
+        <button class="tool-button" aria-label="Display settings" onclick="document.body.classList.toggle('dimmed')"><svg class="icon"><use href="#i-moon"/></svg></button>
+        <div class="language-toggle" role="group" aria-label="Language"><button class="active" data-lang="EN">EN</button><button data-lang="AR">AR</button></div>
+      </div>
+      <div class="live-market"><div class="live-title"><span class="health-dot"></span>GCC LIVE MARKET</div><div class="live-time">Updated 2 min ago</div></div>
+      <div class="hero-copy">
+        <div class="breadcrumb"><span>Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Browse Models</span></div>
+        <h1 id="pageTitle">Browse Models</h1>
+        <p>Explore every make and model across <span id="heroCount">12</span> manufacturers<br>in 6 GCC countries.</p>
+      </div>
     </section>
 
-    <!-- KPI Grid positioned "over" the background -->
-    <div class="kpi-container">
-      <div class="card"><h3>Manufacturers</h3><div style="font-size: 2rem; font-weight: 800;">12</div></div>
-      <div class="card"><h3>Total Models</h3><div style="font-size: 2rem; font-weight: 800;">57</div></div>
-      <div class="card"><h3>Active Listings</h3><div style="font-size: 2rem; font-weight: 800;">0.0M+</div></div>
-      <div class="card"><h3>Countries</h3><div style="font-size: 2rem; font-weight: 800;">6</div></div>
-      <div class="card"><h3>Data Freshness</h3><div style="font-size: 2rem; font-weight: 800;">2 min</div></div>
+    <div class="content">
+      <section class="kpi-grid" aria-label="Market summary">
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-star"/></svg></div><div><div class="kpi-label">Manufacturers</div><div class="kpi-value" id="kpiMakes">12</div><div class="kpi-note">Active brands</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-box"/></svg></div><div><div class="kpi-label">Total Models</div><div class="kpi-value" id="kpiModels">57</div><div class="kpi-note">Across all brands</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-list"/></svg></div><div><div class="kpi-label">Active Listings</div><div class="kpi-value" id="kpiListings">1.0M+</div><div class="kpi-note">Live in market</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-globe"/></svg></div><div><div class="kpi-label">Countries</div><div class="kpi-value">6</div><div class="kpi-note">GCC countries</div></div></article>
+        <article class="kpi-card"><div class="kpi-icon"><svg class="icon lg"><use href="#i-clock"/></svg></div><div><div class="kpi-label">Data Freshness</div><div class="kpi-value">2 min ago</div><div class="kpi-note">Real-time updates</div></div></article>
+      </section>
+
+      <section class="filter-panel" aria-label="Browse filters">
+        <div class="filter-top">
+          <label class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="browseSearch" type="search" placeholder="Search manufacturers, models, or keyword..." autocomplete="off"><svg class="icon tune"><use href="#i-tune"/></svg></label>
+          <button class="advanced-button" id="advancedButton"><svg class="icon"><use href="#i-tune"/></svg>Advanced Filters</button>
+        </div>
+        <div class="filter-middle">
+          <label><span class="field-label">Country</span><span class="control-select"><svg class="icon"><use href="#i-globe"/></svg><select id="countrySelect"><option value="">All GCC Countries</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select><svg class="icon chevron"><use href="#i-chevron"/></svg></span></label>
+          <label><span class="field-label">Sort by</span><span class="control-select"><svg class="icon"><use href="#i-sort"/></svg><select id="sortSelect"><option value="name">Name (A–Z)</option><option value="count">Most listings</option><option value="models">Most models</option></select><svg class="icon chevron"><use href="#i-chevron"/></svg></span></label>
+          <div class="result-count" id="resultCount">12 of 12 manufacturers</div>
+          <button class="clear-button" id="clearButton"><svg class="icon"><use href="#i-close"/></svg>Clear All</button>
+        </div>
+        <div class="advanced-row" id="advancedRow"><label>Minimum listings<input id="minListings" type="number" min="0" placeholder="e.g. 50,000"></label><label>Minimum models<input id="minModels" type="number" min="0" placeholder="e.g. 5"></label><label>Maximum average price<input type="number" min="0" placeholder="AED"></label></div>
+        <div class="filter-divider"></div>
+        <div class="quick-label">Quick filters</div>
+        <div class="quick-row"><div class="chips" id="filterChips"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="popular">Popular</button><button class="chip" data-filter="luxury">Luxury</button><button class="chip" data-filter="japanese">Japanese</button><button class="chip" data-filter="suv">SUV</button><button class="chip" data-filter="sedan">Sedan</button><button class="chip" data-filter="truck">Truck</button><button class="chip" data-filter="coupe">Coupe</button><button class="chip" data-filter="mpv">MPV</button></div><button class="view-filter-button" id="viewFilters">View all filters<svg class="icon sm"><use href="#i-chevron"/></svg></button></div>
+      </section>
+
+      <section aria-labelledby="manufacturersTitle">
+        <div class="section-heading"><h2 id="manufacturersTitle">Featured Manufacturers</h2><button class="section-link" id="viewAllMakes">View all manufacturers<svg class="icon sm"><use href="#i-arrow"/></svg></button></div>
+        <div class="manufacturer-grid" id="manufacturerGrid" aria-live="polite"></div>
+      </section>
+
+      <section class="bottom-grid" aria-label="Market highlights">
+        <article class="data-panel"><div class="panel-header"><span>Popular Models</span><button class="section-link">View all<svg class="icon sm"><use href="#i-arrow"/></svg></button></div><div id="popularModels"></div></article>
+        <article class="data-panel"><div class="panel-header"><span>Market Insights</span></div><div class="insight-list" id="marketInsights"></div></article>
+        <article class="data-panel"><div class="panel-header"><span>Recently Viewed</span><button class="section-link">View all<svg class="icon sm"><use href="#i-arrow"/></svg></button></div><div id="recentlyViewed"></div></article>
+      </section>
     </div>
   </main>
-</div>
 
+  <div class="drill-overlay" id="drillOverlay"></div>
+  <aside class="drill-panel" id="drillPanel" aria-hidden="true"><div class="drill-head"><div class="brand-logo" id="drillLogo">CV</div><div class="drill-title" id="drillTitle">Models</div><button class="drill-close" id="drillClose" aria-label="Close"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="drill-body" id="drillBody"></div></aside>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const FALLBACK_MAKES = [
+      { id: 1, make: 'Toyota', model_count: 21, listing_count: 186000, price: 198000, trend: 4.2, countries: ['AE','SA','QA','KW','BH','OM'], tags: ['popular','japanese','suv','sedan','truck','mpv'] },
+      { id: 2, make: 'Mercedes-Benz', model_count: 18, listing_count: 151000, price: 281000, trend: 2.8, countries: ['AE','SA','QA','KW'], tags: ['popular','luxury','suv','sedan','coupe'] },
+      { id: 3, make: 'BMW', model_count: 16, listing_count: 128000, price: 235000, trend: 1.9, countries: ['AE','SA','QA','KW','BH'], tags: ['popular','luxury','suv','sedan','coupe'] },
+      { id: 4, make: 'Lexus', model_count: 14, listing_count: 96000, price: 245000, trend: 3.6, countries: ['AE','SA','QA','KW','OM'], tags: ['popular','luxury','japanese','suv','sedan','coupe'] },
+      { id: 5, make: 'Nissan', model_count: 15, listing_count: 88000, price: 78000, trend: -1.2, countries: ['AE','SA','QA','KW','BH','OM'], tags: ['popular','japanese','suv','sedan','truck'] },
+      { id: 6, make: 'Hyundai', model_count: 12, listing_count: 76000, price: 92000, trend: 12.4, countries: ['AE','SA','QA','KW','BH','OM'], tags: ['popular','suv','sedan'] },
+      { id: 7, make: 'Kia', model_count: 11, listing_count: 71000, price: 97000, trend: 5.1, countries: ['AE','SA','QA','KW','OM'], tags: ['popular','suv','sedan','mpv'] },
+      { id: 8, make: 'Ford', model_count: 10, listing_count: 66000, price: 156000, trend: 2.2, countries: ['AE','SA','QA','KW','BH'], tags: ['popular','suv','truck','coupe'] },
+      { id: 9, make: 'Honda', model_count: 9, listing_count: 62000, price: 108000, trend: 3.1, countries: ['AE','SA','QA','KW','OM'], tags: ['japanese','suv','sedan','coupe'] },
+      { id: 10, make: 'Audi', model_count: 13, listing_count: 59000, price: 226000, trend: .8, countries: ['AE','SA','QA','KW'], tags: ['luxury','suv','sedan','coupe'] },
+      { id: 11, make: 'Mitsubishi', model_count: 8, listing_count: 52000, price: 89000, trend: 2.7, countries: ['AE','SA','QA','KW','BH','OM'], tags: ['japanese','suv','sedan'] },
+      { id: 12, make: 'Chevrolet', model_count: 9, listing_count: 48000, price: 144000, trend: -0.4, countries: ['AE','SA','QA','KW','BH'], tags: ['suv','sedan','truck','coupe'] }
+    ];
+
+    const MODEL_DATA = {
+      Toyota: [['Land Cruiser','SUV · 5,071 listings','AED 285K avg'],['Camry','Sedan · 6,263 listings','AED 78K avg'],['Prado','SUV · 4,318 listings','AED 210K avg'],['Hilux','Truck · 3,107 listings','AED 126K avg']],
+      'Mercedes-Benz': [['S-Class','Luxury sedan · 2,109 listings','AED 540K avg'],['G-Class','Luxury SUV · 1,844 listings','AED 790K avg'],['E-Class','Sedan · 3,504 listings','AED 270K avg']],
+      BMW: [['X5','Luxury SUV · 3,201 listings','AED 350K avg'],['5 Series','Sedan · 2,806 listings','AED 295K avg'],['X7','Luxury SUV · 1,740 listings','AED 485K avg']],
+      Lexus: [['LX','Luxury SUV · 2,215 listings','AED 510K avg'],['RX','Luxury SUV · 2,907 listings','AED 270K avg'],['ES','Sedan · 3,188 listings','AED 215K avg']],
+      Nissan: [['Patrol','SUV · 5,154 listings','AED 215K avg'],['X-Trail','SUV · 2,710 listings','AED 110K avg'],['Altima','Sedan · 3,419 listings','AED 86K avg']]
+    };
+
+    let allMakes = FALLBACK_MAKES.slice();
+    let activeFilter = 'all';
+    let expandedMakes = false;
+    const els = {
+      grid: document.getElementById('manufacturerGrid'), search: document.getElementById('browseSearch'), country: document.getElementById('countrySelect'), sort: document.getElementById('sortSelect'),
+      count: document.getElementById('resultCount'), minListings: document.getElementById('minListings'), minModels: document.getElementById('minModels')
+    };
+
+    function formatCompact(value) { if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M+'; if (value >= 1000) return Math.round(value / 1000) + 'K'; return String(value); }
+    function initials(name) { return name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase(); }
+    function logoSlug(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
+    function esc(value) { return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function sparkline(index) { const lines = ['M1 15 C12 15 15 13 22 12 S30 4 38 7 45 14 54 13 63 15','M1 15 C12 15 18 13 25 10 S34 5 41 10 50 13 63 14','M1 16 C10 16 18 14 24 12 S32 4 39 8 47 14 63 13']; return lines[index % lines.length]; }
+    function carThumb() { return '<div class="vehicle-thumb"><svg viewBox="0 0 64 30"><use href="#i-car"/></svg></div>'; }
+
+    function normalizeApiMake(item, index) {
+      const fallback = FALLBACK_MAKES.find(m => m.make === item.make) || FALLBACK_MAKES[index % FALLBACK_MAKES.length];
+      return { ...fallback, ...item, id: item.id || index + 1, model_count: Number(item.model_count || fallback.model_count), listing_count: Number(item.listing_count || fallback.listing_count) };
+    }
+
+    function filteredMakes() {
+      const query = els.search.value.trim().toLowerCase();
+      const country = els.country.value;
+      const minListings = Number(els.minListings.value || 0);
+      const minModels = Number(els.minModels.value || 0);
+      const filtered = allMakes.filter(make => (!query || make.make.toLowerCase().includes(query)) && (!country || make.countries.includes(country)) && (activeFilter === 'all' || make.tags.includes(activeFilter)) && make.listing_count >= minListings && make.model_count >= minModels);
+      filtered.sort((a,b) => els.sort.value === 'count' ? b.listing_count - a.listing_count : els.sort.value === 'models' ? b.model_count - a.model_count : a.make.localeCompare(b.make));
+      return filtered;
+    }
+
+    function renderManufacturers() {
+      const data = filteredMakes();
+      els.count.textContent = `${data.length} of ${allMakes.length} manufacturers`;
+      if (!data.length) {
+        els.grid.innerHTML = '<div class="empty-state"><div><strong>No manufacturers found</strong>Try a different search or clear your filters.</div></div>';
+        return;
+      }
+      const isCuratedView = !expandedMakes && activeFilter === 'all' && !els.search.value.trim() && !els.country.value && !els.minListings.value && !els.minModels.value;
+      if (isCuratedView) {
+        const featuredOrder = ['Toyota', 'Mercedes-Benz', 'BMW', 'Lexus', 'Nissan'];
+        data.sort((a, b) => {
+          const aRank = featuredOrder.indexOf(a.make);
+          const bRank = featuredOrder.indexOf(b.make);
+          return (aRank < 0 ? 99 : aRank) - (bRank < 0 ? 99 : bRank);
+        });
+      }
+      const visible = expandedMakes ? data : data.slice(0, 5);
+      els.grid.innerHTML = visible.map((make, index) => `<button class="manufacturer-card" style="animation-delay:${index * 45}ms" onclick="openDrill('${esc(make.make)}')">
+        <span class="rank">#${index + 1}</span><span class="brand-lockup"><span class="brand-logo"><img src="img/brands/${logoSlug(make.make)}.svg" alt="${esc(make.make)} logo" loading="lazy"></span><span class="brand-name">${esc(make.make)}</span></span>
+        <span class="brand-meta"><span>${make.model_count} Models</span><span>${formatCompact(make.listing_count)} Listings</span></span>
+        <span class="brand-market"><span class="price"><strong>AED ${formatCompact(make.price)}</strong> avg</span><svg class="spark" viewBox="0 0 64 18" preserveAspectRatio="none"><path d="${sparkline(index)}"/></svg><span class="trend ${make.trend < 0 ? 'down' : ''}">${make.trend >= 0 ? '↑' : '↓'} ${Math.abs(make.trend)}%</span></span>
+      </button>`).join('');
+    }
+
+    function updateKpis() {
+      const totalModels = allMakes.reduce((sum, m) => sum + m.model_count, 0);
+      const totalListings = allMakes.reduce((sum, m) => sum + m.listing_count, 0);
+      document.getElementById('heroCount').textContent = allMakes.length;
+      document.getElementById('kpiMakes').textContent = allMakes.length;
+      document.getElementById('kpiModels').textContent = totalModels;
+      document.getElementById('kpiListings').textContent = formatCompact(totalListings);
+    }
+
+    function renderBottomPanels() {
+      const popular = [['Toyota Land Cruiser','5,071 listings','AED 285K avg'],['Nissan Patrol','5,154 listings','AED 215K avg'],['Toyota Camry','6,263 listings','AED 78K avg']];
+      document.getElementById('popularModels').innerHTML = popular.map(v => `<button class="vehicle-row" onclick="openDrill('${v[0].split(' ')[0]}')">${carThumb()}<span class="vehicle-copy"><span class="vehicle-name">${v[0]}</span><span class="vehicle-meta">${v[1]}</span></span><span class="vehicle-price">${v[2]}</span></button>`).join('');
+      const insights = [['gold','Most searched brand','Toyota','↑'],['pink','Fastest growing brand','Hyundai','↑ 12.4%'],['pink','Most active marketplace','Dubizzle',''],['blue','Highest inventory','SUV','']];
+      document.getElementById('marketInsights').innerHTML = insights.map(v => `<div class="insight-row"><span class="insight-icon ${v[0]}"><svg class="icon sm"><use href="#${v[0] === 'gold' ? 'i-bulb' : v[0] === 'blue' ? 'i-box' : 'i-home'}"/></svg></span><span class="insight-copy"><span class="insight-label">${v[1]}</span><span class="insight-value">${v[2]}</span></span>${v[3] ? `<span class="insight-change">${v[3]}</span>` : ''}</div>`).join('');
+      const recent = [['BMW X5','Luxury SUV','BMW'],['Mercedes S-Class','Luxury Sedan','Mercedes-Benz'],['Toyota Land Cruiser','SUV','Toyota']];
+      document.getElementById('recentlyViewed').innerHTML = recent.map(v => `<button class="recent-row" onclick="openDrill('${v[2]}')">${carThumb()}<span class="vehicle-copy"><span class="vehicle-name">${v[0]}</span><span class="vehicle-meta">${v[1]}</span></span><span class="row-arrow"><svg class="icon sm"><use href="#i-arrow"/></svg></span></button>`).join('');
+    }
+
+    function clearFilters() {
+      els.search.value = ''; els.country.value = ''; els.sort.value = 'name'; els.minListings.value = ''; els.minModels.value = ''; activeFilter = 'all';
+      document.querySelectorAll('.chip').forEach(chip => chip.classList.toggle('active', chip.dataset.filter === 'all'));
+      renderManufacturers();
+    }
+
+    async function loadData() {
+      renderManufacturers(); updateKpis(); renderBottomPanels();
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 1800);
+        const response = await fetch('/v1/models', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (!response.ok) throw new Error('API unavailable');
+        const payload = await response.json();
+        if (Array.isArray(payload.makes) && payload.makes.length) allMakes = payload.makes.map(normalizeApiMake);
+        updateKpis(); renderManufacturers();
+      } catch (_) { /* The polished demo data remains visible when the API is offline. */ }
+    }
+
+    async function openDrill(make) {
+      document.getElementById('drillLogo').textContent = initials(make);
+      document.getElementById('drillTitle').textContent = `${make} Models`;
+      document.getElementById('drillBody').innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">Loading models…</div>';
+      document.getElementById('drillOverlay').classList.add('open');
+      document.getElementById('drillPanel').classList.add('open');
+      document.getElementById('drillPanel').setAttribute('aria-hidden','false');
+
+      const BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 3000);
+        const res = await fetch(`${BASE}/v1/models/${encodeURIComponent(make)}`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        const data = await res.json();
+        if (Array.isArray(data.models) && data.models.length) {
+          document.getElementById('drillBody').innerHTML = data.models.map(m =>
+            `<button class="model-row"><span><span class="model-name">${esc(m.model)}</span><span class="model-meta">${m.year_range} · ${formatCompact(m.listing_count)} listings</span></span></button>`
+          ).join('');
+          return;
+        }
+      } catch (_) { /* fall through to static data */ }
+      drillFallback(make);
+    }
+    function drillFallback(make) {
+      const models = MODEL_DATA[make] || [[`${make} Flagship`,'2022–2026 · Live listings','View market'],[`${make} SUV`,'2021–2026 · GCC specs','View market'],[`${make} Sedan`,'2020–2026 · Live listings','View market']];
+      document.getElementById('drillBody').innerHTML = models.map(model => `<button class="model-row"><span><span class="model-name">${model[0]}</span><span class="model-meta">${model[1]}</span></span><span class="model-price">${model[2]}</span></button>`).join('');
+    }
+    function closeDrill() { document.getElementById('drillOverlay').classList.remove('open'); document.getElementById('drillPanel').classList.remove('open'); document.getElementById('drillPanel').setAttribute('aria-hidden','true'); }
+    let toastTimer;
+    function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2200); }
+
+    [els.search, els.country, els.sort, els.minListings, els.minModels].forEach(el => el.addEventListener(el === els.search ? 'input' : 'change', renderManufacturers));
+    document.getElementById('filterChips').addEventListener('click', event => { const chip = event.target.closest('.chip'); if (!chip) return; activeFilter = chip.dataset.filter; document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === chip)); renderManufacturers(); });
+    document.getElementById('clearButton').addEventListener('click', clearFilters);
+    document.getElementById('advancedButton').addEventListener('click', event => { event.currentTarget.classList.toggle('active'); document.getElementById('advancedRow').classList.toggle('open'); });
+    document.getElementById('viewFilters').addEventListener('click', () => document.getElementById('advancedButton').click());
+    document.getElementById('viewAllMakes').addEventListener('click', event => { expandedMakes = !expandedMakes; event.currentTarget.firstChild.textContent = expandedMakes ? 'Show featured' : 'View all manufacturers'; renderManufacturers(); });
+    document.querySelector('.language-toggle').addEventListener('click', event => { if (event.target.tagName !== 'BUTTON') return; document.querySelectorAll('.language-toggle button').forEach(b => b.classList.toggle('active', b === event.target)); showToast(event.target.dataset.lang === 'AR' ? 'Arabic interface selected' : 'English interface selected'); });
+    document.getElementById('menuButton').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+    document.getElementById('drillClose').addEventListener('click', closeDrill);
+    document.getElementById('drillOverlay').addEventListener('click', closeDrill);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDrill(); });
+    if (location.hash === '#search') els.search.focus();
+    loadData();
+  </script>
 </body>
 </html>
