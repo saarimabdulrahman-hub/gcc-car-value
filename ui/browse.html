@@ -801,20 +801,20 @@
       <nav>
         <div class="nav-group">
           <div class="nav-heading">Main</div>
-          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span>Home</span></a>
-          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span>Sell</span></a>
-          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span>Buy</span></a>
+          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span data-i18n="home">Home</span></a>
+          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span data-i18n="sell">Sell</span></a>
+          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span data-i18n="buy">Buy</span></a>
         </div>
         <div class="nav-group">
           <div class="nav-heading">Analysis</div>
-          <a class="nav-item active" href="browse.html" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg><span>Browse</span></a>
-          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span>Market</span></a>
-          <a class="nav-item" href="reports.html"><svg class="icon"><use href="#i-file"/></svg><span>Reports</span></a>
-          <a class="nav-item" href="watchlist.html"><svg class="icon"><use href="#i-star"/></svg><span>Watchlist</span></a>
+          <a class="nav-item active" href="browse.html" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg><span data-i18n="browse">Browse</span></a>
+          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span data-i18n="market">Market</span></a>
+          <a class="nav-item" href="reports.html"><svg class="icon"><use href="#i-file"/></svg><span data-i18n="reports">Reports</span></a>
+          <a class="nav-item" href="watchlist.html"><svg class="icon"><use href="#i-star"/></svg><span data-i18n="watchlist">Watchlist</span></a>
         </div>
         <div class="nav-group">
           <div class="nav-heading">Admin</div>
-          <a class="nav-item" href="settings.html"><svg class="icon"><use href="#i-gear"/></svg><span>Settings</span></a>
+          <a class="nav-item" href="settings.html"><svg class="icon"><use href="#i-gear"/></svg><span data-i18n="settings">Settings</span></a>
         </div>
       </nav>
     </div>
@@ -829,14 +829,11 @@
   <main class="main" id="mainContent">
     <section class="hero" aria-labelledby="pageTitle">
       <div class="hero-tools">
-        <button class="tool-button" aria-label="Search" onclick="document.getElementById('browseSearch').focus()"><svg class="icon"><use href="#i-search"/></svg></button>
-        <button class="tool-button" aria-label="Notifications" onclick="showToast('You are all caught up')"><svg class="icon"><use href="#i-bell"/></svg></button>
-        <button class="tool-button" aria-label="Display settings" onclick="document.body.classList.toggle('dimmed')"><svg class="icon"><use href="#i-moon"/></svg></button>
-        <div class="language-toggle" role="group" aria-label="Language"><button class="active" data-lang="EN">EN</button><button data-lang="AR">AR</button></div>
+        <div class="language-toggle" role="group" aria-label="Language"><button data-lang-btn="en" class="active" onclick="setLang('en')">EN</button><button data-lang-btn="ar" onclick="setLang('ar')">AR</button></div>
       </div>
       <div class="live-market"><div class="live-title"><span class="health-dot"></span>GCC LIVE MARKET</div><div class="live-time">Updated 2 min ago</div></div>
       <div class="hero-copy">
-        <div class="breadcrumb"><span>Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Browse Models</span></div>
+        <div class="breadcrumb"><span data-i18n="home">Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Browse Models</span></div>
         <h1 id="pageTitle">Browse Models</h1>
         <p>Discover every make and model across <span id="heroCount">12</span> manufacturers<br>in 6 GCC countries.</p>
       </div>
@@ -1050,7 +1047,6 @@
     document.getElementById('advancedButton').addEventListener('click', event => { event.currentTarget.classList.toggle('active'); document.getElementById('advancedRow').classList.toggle('open'); });
     document.getElementById('viewFilters').addEventListener('click', () => document.getElementById('advancedButton').click());
     document.getElementById('viewAllMakes').addEventListener('click', event => { expandedMakes = !expandedMakes; event.currentTarget.firstChild.textContent = expandedMakes ? 'Show featured' : 'View all manufacturers'; renderManufacturers(); });
-    document.querySelector('.language-toggle').addEventListener('click', event => { if (event.target.tagName !== 'BUTTON') return; document.querySelectorAll('.language-toggle button').forEach(b => b.classList.toggle('active', b === event.target)); showToast(event.target.dataset.lang === 'AR' ? 'Arabic interface selected' : 'English interface selected'); });
     document.getElementById('menuButton').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
     document.getElementById('drillClose').addEventListener('click', closeDrill);
     document.getElementById('drillOverlay').addEventListener('click', closeDrill);
@@ -1058,5 +1054,6 @@
     if (location.hash === '#search') els.search.focus();
     loadData();
   </script>
+<script src="js/lang.js"></script>
 </body>
 </html>

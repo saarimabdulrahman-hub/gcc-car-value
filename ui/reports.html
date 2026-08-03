@@ -13,16 +13,16 @@
     <a class="brand" href="index.html"><span class="brand-mark">CV</span><span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span></a>
     <nav class="nav">
       <div class="nav-label">Main</div>
-      <a class="nav-item" href="index.html">⌂ <span>Home</span></a>
-      <a class="nav-item" href="index.html#buy">▱ <span>Buy</span></a>
-      <a class="nav-item" href="index.html#sell">♧ <span>Sell</span></a>
+      <a class="nav-item" href="index.html">⌂ <span data-i18n="home">Home</span></a>
+      <a class="nav-item" href="index.html#buy">▱ <span data-i18n="buy">Buy</span></a>
+      <a class="nav-item" href="index.html#sell">♧ <span data-i18n="sell">Sell</span></a>
       <div class="nav-label">Analysis</div>
-      <a class="nav-item" href="browse.html">▦ <span>Browse</span></a>
-      <a class="nav-item" href="market.html">⌁ <span>Market</span></a>
-      <a class="nav-item active" href="reports.html">▤ <span>Reports</span></a>
-      <a class="nav-item" href="watchlist.html">♡ <span>Watchlist</span></a>
+      <a class="nav-item" href="browse.html">▦ <span data-i18n="browse">Browse</span></a>
+      <a class="nav-item" href="market.html">⌁ <span data-i18n="market">Market</span></a>
+      <a class="nav-item active" href="reports.html">▤ <span data-i18n="reports">Reports</span></a>
+      <a class="nav-item" href="watchlist.html">♡ <span data-i18n="watchlist">Watchlist</span></a>
       <div class="nav-label">Admin</div>
-      <a class="nav-item" href="settings.html">⚙ <span>Settings</span></a>
+      <a class="nav-item" href="settings.html">⚙ <span data-i18n="settings">Settings</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="account"><span class="avatar">GCC</span><div><strong>GCC Car Valuator</strong><span>Enterprise</span></div></div>
@@ -32,11 +32,10 @@
 
   <main class="main">
     <header class="toolbar">
-      <button class="tool" aria-label="Menu">☰</button>
-      <button class="tool" aria-label="Search">⌕</button>
-      <button class="tool" aria-label="Notifications" onclick="location.href='notifications.html'">♧</button>
-      <button class="tool" aria-label="Dark mode">☾</button>
-      <button class="lang"><strong>EN</strong> &nbsp; AR</button>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button data-lang-btn="en" class="active" onclick="setLang('en')">EN</button>
+        <button data-lang-btn="ar" onclick="setLang('ar')">AR</button>
+      </div>
     </header>
 
     <div class="content">
@@ -139,6 +138,7 @@
       .catch(function () { done(); });
   })();
   </script>
+<script src="js/lang.js"></script>
 <script src="js/index.js"></script>
 <script>document.addEventListener('DOMContentLoaded',function(){goPage('reports');});</script>
 </body>

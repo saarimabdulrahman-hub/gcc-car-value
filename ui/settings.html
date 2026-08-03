@@ -413,20 +413,20 @@
       <nav>
         <div class="nav-group">
           <div class="nav-heading">Main</div>
-          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span>Home</span></a>
-          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span>Buy</span></a>
-          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span>Sell</span></a>
+          <a class="nav-item" href="index.html"><svg class="icon"><use href="#i-home"/></svg><span data-i18n="home">Home</span></a>
+          <a class="nav-item" href="index.html#buy"><svg class="icon"><use href="#i-buy"/></svg><span data-i18n="buy">Buy</span></a>
+          <a class="nav-item" href="index.html#sell"><svg class="icon"><use href="#i-sell"/></svg><span data-i18n="sell">Sell</span></a>
         </div>
         <div class="nav-group">
           <div class="nav-heading">Analysis</div>
-          <a class="nav-item" href="browse.html"><svg class="icon"><use href="#i-grid"/></svg><span>Browse</span></a>
-          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span>Market</span></a>
-          <a class="nav-item" href="index.html#reports"><svg class="icon"><use href="#i-file"/></svg><span>Reports</span></a>
-          <a class="nav-item" href="watchlist.html"><svg class="icon"><use href="#i-star"/></svg><span>Watchlist</span></a>
+          <a class="nav-item" href="browse.html"><svg class="icon"><use href="#i-grid"/></svg><span data-i18n="browse">Browse</span></a>
+          <a class="nav-item" href="market.html"><svg class="icon"><use href="#i-chart"/></svg><span data-i18n="market">Market</span></a>
+          <a class="nav-item" href="index.html#reports"><svg class="icon"><use href="#i-file"/></svg><span data-i18n="reports">Reports</span></a>
+          <a class="nav-item" href="watchlist.html"><svg class="icon"><use href="#i-star"/></svg><span data-i18n="watchlist">Watchlist</span></a>
         </div>
         <div class="nav-group">
           <div class="nav-heading">Admin</div>
-          <a class="nav-item active" href="settings.html" aria-current="page"><svg class="icon"><use href="#i-gear"/></svg><span>Settings</span></a>
+          <a class="nav-item active" href="settings.html" aria-current="page"><svg class="icon"><use href="#i-gear"/></svg><span data-i18n="settings">Settings</span></a>
         </div>
       </nav>
     </div>
@@ -441,14 +441,11 @@
   <main class="main" id="mainContent">
     <section class="hero" aria-labelledby="pageTitle">
       <div class="hero-tools">
-        <button class="tool-button" aria-label="Search"><svg class="icon"><use href="#i-search"/></svg></button>
-        <button class="tool-button" aria-label="Notifications" onclick="showToast('You have 3 active price alerts')"><svg class="icon"><use href="#i-bell"/></svg></button>
-        <button class="tool-button" aria-label="Toggle dim" onclick="document.body.classList.toggle('dimmed')"><svg class="icon"><use href="#i-moon"/></svg></button>
-        <div class="language-toggle" role="group" aria-label="Language"><button class="active" data-lang="EN">EN</button><button data-lang="AR">AR</button></div>
+        <div class="language-toggle" role="group" aria-label="Language"><button data-lang-btn="en" class="active" onclick="setLang('en')">EN</button><button data-lang-btn="ar" onclick="setLang('ar')">AR</button></div>
       </div>
       <div class="live-market"><div class="live-title"><span class="health-dot"></span>GCC LIVE MARKET</div><div class="live-time">Updated 2 min ago</div></div>
       <div class="hero-copy">
-        <div class="breadcrumb"><span>Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Settings</span></div>
+        <div class="breadcrumb"><span data-i18n="home">Home</span><svg class="icon"><use href="#i-arrow"/></svg><span data-i18n="settings">Settings</span></div>
         <h1 id="pageTitle">Settings</h1>
         <p>Manage your account, organization, billing, and market preferences.</p>
       </div>
@@ -703,17 +700,11 @@
     document.addEventListener('change', e => { if (e.target.matches('[data-key="role"]')) refreshIdentity(); });
 
     let toastTimer;
-    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200); }
-
-    document.querySelector('.language-toggle').addEventListener('click', e => {
-      if (e.target.tagName !== 'BUTTON') return;
-      document.querySelectorAll('.language-toggle button').forEach(b => b.classList.toggle('active', b === e.target));
-      showToast(e.target.dataset.lang === 'AR' ? 'Arabic interface selected' : 'English interface selected');
-    });
-    document.getElementById('menuButton').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200); }    document.getElementById('menuButton').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
 
     hydrate();
     openFromHash();
   </script>
+<script src="js/lang.js"></script>
 </body>
 </html>
