@@ -1,0 +1,23 @@
+name: Weekly DB Backup
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"  # Sundays at 3am UTC
+  workflow_dispatch:       # manual trigger for ad-hoc backups
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Run backup
+        env:
+          DATABASE_URL_SYNC: ${{ secrets.DATABASE_URL_SYNC }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          S3_BUCKET: ${{ secrets.S3_BACKUP_BUCKET }}
+        run: bash scripts/backup_db.sh
