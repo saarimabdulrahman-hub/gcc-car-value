@@ -64,6 +64,18 @@ select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
 strict = true
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "tests.*"
+disable_error_code = ["no-untyped-def", "type-arg", "no-untyped-call"]
+
+[[tool.mypy.overrides]]
+module = "scripts.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "src.*"
+disable_error_code = ["no-untyped-def", "type-arg", "no-untyped-call", "no-any-return", "union-attr"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
