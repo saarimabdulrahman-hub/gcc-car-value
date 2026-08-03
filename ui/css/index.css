@@ -1,4 +1,3 @@
-<style>
 /* ══════════════════════════════════════════════════════════════════
    GCC Car Value — Premium Enterprise Design System
    ══════════════════════════════════════════════════════════════════ */
@@ -473,6 +472,8 @@ body.has-sidebar { display: flex; }
 
 .main-wrap {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -492,6 +493,7 @@ body.has-sidebar { display: flex; }
 .has-sidebar .main-content { max-width: 1060px; padding: 0 40px var(--space-8); }
 
 .hidden { display: none !important; }
+.mobile-menu-btn { display: none; }
 
 /* ══════════════════════════════════════════════════════════════════
    12-COLUMN GRID — Enterprise layout system
@@ -3598,7 +3600,26 @@ body.has-sidebar { display: flex; }
   .home-hero-badge .badge-sep { margin: 0 2px; }
   .home-hero-badge .live-dot { width: 6px; height: 6px; }
   .form-row { grid-template-columns: 1fr; }
-  .sidebar { width: 250px; }
+  body.has-sidebar { display: block; }
+  .has-sidebar .sidebar {
+    display: flex;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 900;
+    width: min(280px, 84vw);
+    transform: translateX(-100%);
+    transition: transform var(--duration-slow);
+    box-shadow: 20px 0 50px rgba(0,0,0,.55);
+  }
+  .has-sidebar .sidebar.mobile-open { transform: translateX(0); }
+  .mobile-menu-btn { display: inline-flex; }
+  .top-toolbar { padding: 0 12px; }
+  .top-toolbar-left { width: 100%; }
+  .lang-btn { margin-left: auto; }
+  .main-content, .has-sidebar .main-content { max-width: 100%; padding: 0 16px 32px; overflow-x: hidden; }
+  .page-header { padding-top: 24px; }
+  .buy-grid, .sell-grid { min-width: 0; }
+  .buy-main, .sell-main, .buy-rail, .sell-rail { min-width: 0; }
   .price-hero .amount { font-size: 2.5rem; }
   .result-amount { font-size: 2.5rem; }
   .result-actions { flex-direction: column; align-items: stretch; }
@@ -3788,4 +3809,121 @@ body.has-sidebar { display: flex; }
 /* Display face — Archivo gives headings/brand a distinctive voice; Inter stays the body workhorse, JetBrains Mono stays on numeric data. */
 .sidebar-name, .page-title, .home-hero-title,
 .home-section-title, .make-card-name { font-family: var(--font-display); }
-</style>
+
+/* ══════════════════════════════════════════════════════════════════
+   HOME HERO — reference alignment
+   Appended last so it wins the cascade without editing shared rules.
+   Scope note: index.js:42 removes `has-sidebar` on the home page only,
+   so `body:not(.has-sidebar)` targets home exclusively. Every rule below
+   is either home-scoped or on a home-only class — no other page shifts.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Live badge dot reads gold, not green — it signals brand, not system health. */
+.home-hero-badge .live-dot {
+  background: var(--gold-light);
+  box-shadow: 0 0 10px rgba(233, 165, 10, 0.75);
+}
+
+/* Full-bleed hero: release the 1340px cap that leaves black gutters. */
+body:not(.has-sidebar) .main-content {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Toolbar sits over the hero as circular outlined controls. */
+body:not(.has-sidebar) .top-toolbar {
+  background: transparent;
+  border-bottom: none;
+  padding: 0 var(--space-5);
+}
+body:not(.has-sidebar) .toolbar-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+body:not(.has-sidebar) .toolbar-btn:hover {
+  border-color: rgba(233, 165, 10, 0.38);
+  background: rgba(233, 165, 10, 0.08);
+  color: var(--gold-light);
+}
+
+/* Choice cards: gold hairline along the top edge + soft outer glow. */
+.choice-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(200, 148, 53, 0.18);
+  box-shadow: 0 18px 44px -28px rgba(233, 165, 10, 0.30);
+}
+.choice-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(233, 165, 10, 0.55) 22%,
+    rgba(242, 181, 42, 0.85) 50%, rgba(233, 165, 10, 0.55) 78%, transparent);
+  pointer-events: none;
+}
+.choice-card:hover {
+  border-color: rgba(233, 165, 10, 0.42);
+  box-shadow: 0 22px 56px -26px rgba(233, 165, 10, 0.46);
+}
+
+/* Stats strip: gold-edged panel with an outer glow, floating over the hero. */
+.home-kpi-strip {
+  border-color: rgba(233, 165, 10, 0.26);
+  box-shadow:
+    0 0 0 1px rgba(233, 165, 10, 0.06),
+    0 24px 60px -34px rgba(233, 165, 10, 0.42);
+}
+
+/* All five stats now carry an icon — keep them bright and evenly spaced. */
+.kpi-icon { opacity: 1; margin-right: 0; }
+.kpi-row { gap: 10px; }
+
+/* Source row is left-aligned under the strip, with a labelled icon. */
+.home-trust-strip {
+  text-align: left;
+  padding-left: 56px;
+  padding-right: 56px;
+}
+.home-trust-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-secondary);
+}
+.home-marketplace-row { justify-content: flex-start; gap: 10px; }
+
+/* Brand marks: no logo assets exist for these six sources, so monogram
+   chips carry each brand's colour instead of shipping fake logos. */
+.marketplace-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px 8px 10px;
+  color: var(--text-secondary);
+}
+.mp-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  body:not(.has-sidebar) .main-content { padding-left: 0; padding-right: 0; }
+  .home-trust-strip { padding-left: 24px; padding-right: 24px; }
+  .home-marketplace-row { justify-content: center; }
+  .home-trust-strip { text-align: center; }
+  .home-trust-label { justify-content: center; }
+}

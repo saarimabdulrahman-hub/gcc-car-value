@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+
 import pandera as pa
 
 
@@ -22,11 +23,11 @@ class ListingSchema(pa.DataFrameModel):
         coerce = True
 
     @pa.dataframe_check
-    def year_not_future(cls, df):
+    def year_not_future(self, df):
         return df["year"] <= datetime.now().year + 1
 
     @pa.dataframe_check
-    def reasonable_price(cls, df):
+    def reasonable_price(self, df):
         suspicious = df["asking_price"].isin([1, 123, 1234, 12345, 123456])
         return ~suspicious.any()
 

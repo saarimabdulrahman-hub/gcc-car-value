@@ -1,13 +1,14 @@
-import uuid
 import asyncio
-import structlog
+import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from src.scrapers.rate_limiter import RateLimiter
-from src.scrapers.session import create_scraper_session
-from src.scrapers.raw_storage import RawStorage
+from datetime import UTC, datetime
+
+import structlog
+
 from src.config import get_settings
+from src.scrapers.raw_storage import RawStorage
+from src.scrapers.session import create_scraper_session
 
 settings = get_settings()
 
@@ -32,6 +33,7 @@ class BaseScraper(ABC):
 
     def __init__(self, session_factory=None):
         from urllib.parse import urlparse
+
         from src.scrapers.rate_limiter import get_limiter
         host = urlparse(self.base_url).hostname or self.source
         self.rate_limiter = get_limiter(host, settings.scraper_rate_limit_rps)
@@ -58,7 +60,7 @@ class BaseScraper(ABC):
 
     async def run(self) -> ScraperResult:
         result = ScraperResult(source=self.source)
-        result.started_at = datetime.now(timezone.utc)
+        result.started_at = datetime.now(UTC)
         _consecutive_failures = 0
         _MAX_CONSECUTIVE_FAILURES = 10
         try:
@@ -118,7 +120,7 @@ class BaseScraper(ABC):
                     break
                 page += 1
         finally:
-            result.completed_at = datetime.now(timezone.utc)
+            result.completed_at = datetime.now(UTC)
             if self._session:
                 await self._session.aclose()
         return result
@@ -129,8 +131,8 @@ class BaseScraper(ABC):
 
     async def _robots_allows(self, url: str) -> bool:
         """Check robots.txt once per host. Fails open on fetch error."""
-        from urllib.robotparser import RobotFileParser
         from urllib.parse import urlparse
+        from urllib.robotparser import RobotFileParser
         parsed = urlparse(url)
         host = f"{parsed.scheme}://{parsed.netloc}"
         if not hasattr(self, "_robots_cache"):
@@ -157,10 +159,10 @@ class BaseScraper(ABC):
         if self._session_factory is None:
             return "rejected"
 
-        from src.pipeline.validator import validate_listing
         from src.pipeline.normalizer import normalize_listing
-        from src.pipeline.quality import score_quality
         from src.pipeline.promoter import promote_listing
+        from src.pipeline.quality import score_quality
+        from src.pipeline.validator import validate_listing
 
         validation = validate_listing(parsed)
         if not validation.is_valid:

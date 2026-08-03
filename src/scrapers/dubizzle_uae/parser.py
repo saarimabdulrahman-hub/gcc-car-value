@@ -1,6 +1,8 @@
 """Dubizzle UAE listing parser."""
-from bs4 import BeautifulSoup
 import re
+
+from bs4 import BeautifulSoup
+
 from src.scrapers.title_parser import extract_make_model
 
 

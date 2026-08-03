@@ -1,7 +1,9 @@
 """Test metric types — Counter, Gauge, Histogram, Timer, Info."""
-import pytest
 from src.core.metrics.types import (
-    Counter, Gauge, Histogram, Timer, Info, MetricValue,
+    Counter,
+    Gauge,
+    Histogram,
+    Info,
 )
 
 
@@ -114,6 +116,7 @@ class TestTimer:
     def test_timer_records_elapsed(self):
         """Timer context manager records duration."""
         import time
+
         from src.core.metrics import Metrics
 
         Metrics.histogram("test.timer.ms", buckets=[1, 10, 100, 1000])

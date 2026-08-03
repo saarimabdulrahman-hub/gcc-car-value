@@ -3,14 +3,15 @@
 Run once: python -m src.knowledge.seed
 Populates: car_specs, car_issues, maintenance_costs, depreciation_curves, model_ratings
 """
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.models.car_spec import CarSpec
-from src.models.car_issue import CarIssue
-from src.models.maintenance_cost import MaintenanceCost
-from src.models.depreciation_curve import DepreciationCurve
-from src.models.model_rating import ModelRating
-from src.db.session import async_session_factory
 import structlog
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.session import async_session_factory
+from src.models.car_issue import CarIssue
+from src.models.car_spec import CarSpec
+from src.models.depreciation_curve import DepreciationCurve
+from src.models.maintenance_cost import MaintenanceCost
+from src.models.model_rating import ModelRating
 
 logger = structlog.get_logger()
 

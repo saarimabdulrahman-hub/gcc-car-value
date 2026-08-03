@@ -22,7 +22,7 @@ def inject_trace_into_context(span) -> None:
         otel_span = span._otel_span
         ctx = otel_span.get_span_context()
         if ctx.is_valid:
-            from src.core.context.storage import update_context, set_context
+            from src.core.context.storage import set_context, update_context
             updated = update_context(
                 **{"trace_id": format(ctx.trace_id, '032x'),
                    "span_id": format(ctx.span_id, '016x')}

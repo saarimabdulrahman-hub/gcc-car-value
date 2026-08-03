@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, DateTime, func
-from src.db.base import UniversalUUID
-from src.db.base import Base
+
+from sqlalchemy import Column, DateTime, Float, Integer, Text, func
+
+from src.db.base import Base, UniversalUUID
+
 
 class ModelRating(Base):
     __tablename__ = "model_ratings"

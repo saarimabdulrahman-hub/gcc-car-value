@@ -3,10 +3,12 @@
 Spec Section 5: Finds comparable listings for a target vehicle.
 Returns scored and ranked comps with platform attribution (no URLs).
 """
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
+
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, text
+
 from src.models.listing import Listing
 
 
@@ -144,11 +146,11 @@ async def find_comps(
 
 def _compute_days_on_market(listing) -> int | None:
     if listing.first_seen_at:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         fs = listing.first_seen_at
         # Handle naive datetimes from SQLite
         if fs.tzinfo is None:
-            fs = fs.replace(tzinfo=timezone.utc)
+            fs = fs.replace(tzinfo=UTC)
         delta = now - fs
         return delta.days
     return None

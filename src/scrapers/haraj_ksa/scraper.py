@@ -1,8 +1,11 @@
 """Haraj KSA scraper — Saudi Arabia's largest car marketplace."""
 import re
+
 from bs4 import BeautifulSoup
+
 from src.scrapers.base import BaseScraper
 from src.scrapers.title_parser import extract_make_model
+
 
 class HarajKSAScraper(BaseScraper):
     source = "haraj_ksa"

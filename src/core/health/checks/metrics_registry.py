@@ -1,7 +1,8 @@
 """Metrics registry health check — verifies the metrics framework is operational."""
 
 import time
-from src.core.health.base import HealthCheck, CheckResult, CheckSeverity
+
+from src.core.health.base import CheckResult, CheckSeverity, HealthCheck
 
 
 class MetricsRegistryCheck(HealthCheck):

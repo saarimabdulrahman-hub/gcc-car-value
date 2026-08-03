@@ -1,5 +1,6 @@
 """Test YallaMotor listing parser."""
 from pathlib import Path
+
 from src.scrapers.yallamotor.scraper import YallaMotorScraper
 
 FIXTURES = Path(__file__).parent / "fixtures"

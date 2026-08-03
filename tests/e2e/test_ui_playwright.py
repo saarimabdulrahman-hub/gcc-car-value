@@ -4,8 +4,9 @@ Tests the actual HTML pages served by the app.
 Run with: pytest tests/e2e/test_ui_playwright.py --headed
 """
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 # playwright may not be importable in CI — skip gracefully
 try:

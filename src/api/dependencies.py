@@ -1,13 +1,15 @@
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+
 from src.db.session import get_session as get_db
 
 limiter = Limiter(key_func=get_remote_address)
 
-from fastapi import Security, HTTPException, Depends
+import hashlib
+
+from fastapi import Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader
 from sqlalchemy.ext.asyncio import AsyncSession
-import hashlib
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 

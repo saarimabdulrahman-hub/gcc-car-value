@@ -1,16 +1,29 @@
+import sys
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+
 from src.api.dependencies import limiter
-from src.api.routes import health, valuation, models, admin, url_valuate, metrics, auth, notifications, watchlist
-from src.observability.logging import setup_logging
-from src.core.context.middleware import CorrelationMiddleware
+from src.api.routes import (
+    admin,
+    auth,
+    health,
+    metrics,
+    models,
+    notifications,
+    url_valuate,
+    valuation,
+    watchlist,
+)
 from src.config import get_settings
-import time, os, sys
+from src.core.context.middleware import CorrelationMiddleware
+from src.observability.logging import setup_logging
 
 settings = get_settings()
 setup_logging()
@@ -145,6 +158,7 @@ app.include_router(watchlist.router, prefix="/v1", tags=["watchlist"])
 
 # Serve UI directly from route — zero caching
 from fastapi.responses import HTMLResponse
+
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui():

@@ -31,6 +31,9 @@ loadHomeKPIs();
 
 function goPage(p,el){
 curPage=p;
+if(window.location.hash!=='#'+p)history.pushState(null,'','#'+p);
+document.querySelector('.sidebar')?.classList.remove('mobile-open');
+document.querySelector('.mobile-menu-btn')?.setAttribute('aria-expanded','false');
 document.querySelectorAll('.sidebar-nav a').forEach(function(a){a.classList.remove('active');a.removeAttribute('aria-current');});
 el.classList.add('active');
 el.setAttribute('aria-current', 'page');
@@ -1719,3 +1722,22 @@ function renderSettings(){
   var content = document.getElementById('settings-content');
   if (content) content.innerHTML = '<div class="card"><div class="card-body">' + h + '</div></div>';
 }
+
+function initIndexRoute(){
+  var route=(window.location.hash||'#home').slice(1).toLowerCase();
+  var allowed=['home','sell','buy','reports','watchlist','settings'];
+  if(allowed.indexOf(route)===-1)route='home';
+  var nav=document.getElementById('nav-'+route);
+  if(nav)goPage(route,nav);
+}
+
+function toggleIndexMenu(){
+  var sidebar=document.querySelector('.sidebar');
+  var button=document.querySelector('.mobile-menu-btn');
+  if(!sidebar||!button)return;
+  var open=sidebar.classList.toggle('mobile-open');
+  button.setAttribute('aria-expanded',open?'true':'false');
+}
+
+window.addEventListener('popstate',initIndexRoute);
+initIndexRoute();

@@ -1,8 +1,9 @@
 """Test statistical valuation engine."""
-import pytest
-from src.engine.statistical import _compute_confidence, _bootstrap_ci, valuate
-from src.engine.comp_finder import CompListing
 import numpy as np
+import pytest
+
+from src.engine.comp_finder import CompListing
+from src.engine.statistical import _bootstrap_ci, _compute_confidence
 
 
 def make_comp(price: float, days: int = 10, status: str = "active",

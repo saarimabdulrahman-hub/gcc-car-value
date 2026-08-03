@@ -12,16 +12,14 @@ Create Date: 2026-07-12
 Blueprint §4.2: listing_snapshots grows ~100K rows/week.
 Monthly RANGE partitioning on captured_at with 2-year retention.
 """
-from typing import Sequence, Union
-from datetime import datetime
-from alembic import op
-import sqlalchemy as sa
+from collections.abc import Sequence
 
+from alembic import op
 
 revision: str = 'a1b2c3d4e5f6'
-down_revision: Union[str, None] = 'c42f2f2afaa8'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = 'c42f2f2afaa8'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:

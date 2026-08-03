@@ -1,16 +1,22 @@
 import hashlib
 from datetime import datetime
+
+import structlog
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db, limiter
 from src.api.schemas.valuation import (
-    ValuationRequest, ValuationResponse, CompSummary, Adjustment, Knowledge,
+    Adjustment,
+    CompSummary,
+    Knowledge,
+    ValuationRequest,
+    ValuationResponse,
 )
-from src.engine.statistical import valuate, ValuationResult
+from src.engine.llm_explainer import ValuationContext, explain_valuation
+from src.engine.statistical import ValuationResult, valuate
 from src.ml.model_loader import ModelLoader
 from src.ml.prediction_service import PredictionService
-from src.engine.llm_explainer import explain_valuation, ValuationContext
-import structlog
 
 router = APIRouter()
 logger = structlog.get_logger()
@@ -35,9 +41,9 @@ def _compute_deal_indicator(asking_price: float | None, result: ValuationResult)
     if asking_price < result.price_low:
         return "great_deal", f"This car is priced below the market range ({asking_price:,.0f} vs {result.price_low:,.0f}–{result.price_high:,.0f} AED)."
     elif asking_price <= result.price_high:
-        return "fair_deal", f"This car is priced within the normal market range."
+        return "fair_deal", "This car is priced within the normal market range."
     else:
-        return "above_market", f"This car is priced above the market range. Consider negotiating."
+        return "above_market", "This car is priced above the market range. Consider negotiating."
 
 
 @router.post("/valuate", response_model=ValuationResponse)
@@ -51,6 +57,7 @@ async def valuate_vehicle(
 
     # Check cache
     from sqlalchemy import select
+
     from src.models.valuation_query import ValuationQuery
     stmt = select(ValuationQuery).where(ValuationQuery.cache_key == cache_key)
     stmt = stmt.limit(1)

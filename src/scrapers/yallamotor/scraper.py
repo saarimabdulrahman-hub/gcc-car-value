@@ -1,6 +1,8 @@
 """YallaMotor scraper — one scraper covers UAE, KSA, QA, KW, BH, OM."""
 import re
+
 from bs4 import BeautifulSoup
+
 from src.scrapers.base import BaseScraper
 from src.scrapers.title_parser import extract_make_model
 

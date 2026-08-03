@@ -1,6 +1,8 @@
 """Price alerts — notify users when market prices move."""
 import uuid
-from sqlalchemy import Column, Text, DateTime, func, Float, Integer, Boolean, ForeignKey
+
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Text, func
+
 from src.db.base import Base, UniversalUUID
 
 

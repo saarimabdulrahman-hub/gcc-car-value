@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, DateTime, func
-from src.db.base import UniversalUUID, UniversalJSONB
-from src.db.base import Base
+
+from sqlalchemy import Column, DateTime, Float, Integer, Text, func
+
+from src.db.base import Base, UniversalJSONB, UniversalUUID
+
 
 class MaintenanceCost(Base):
     __tablename__ = "maintenance_costs"

@@ -1,6 +1,6 @@
 """Pydantic schemas for valuation request/response."""
+
 from pydantic import BaseModel, Field
-from typing import Optional
 
 
 class ValuationRequest(BaseModel):

@@ -1,9 +1,10 @@
 """Model listing endpoints."""
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
-from src.api.dependencies import get_db
 import structlog
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.api.dependencies import get_db
 
 logger = structlog.get_logger()
 router = APIRouter()

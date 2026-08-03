@@ -1,10 +1,12 @@
 import uuid
-from datetime import datetime, timezone
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import UTC, datetime
+
 from sqlalchemy import select
-from src.models.listing import Listing
-from src.models.dead_letter import DeadLetter
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.config import get_settings
+from src.models.dead_letter import DeadLetter
+from src.models.listing import Listing
 
 settings = get_settings()
 
@@ -32,7 +34,7 @@ async def promote_listing(
     )
     result = await session.execute(stmt)
     existing = result.scalar_one_or_none()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     if existing:
         existing.last_seen_at = now

@@ -1,6 +1,13 @@
 """Test Dubizzle UAE listing parser."""
 from pathlib import Path
-from src.scrapers.dubizzle_uae.parser import parse_listing, _extract_year, _extract_mileage, _extract_spec, _extract_price
+
+from src.scrapers.dubizzle_uae.parser import (
+    _extract_mileage,
+    _extract_price,
+    _extract_spec,
+    _extract_year,
+    parse_listing,
+)
 from src.scrapers.title_parser import extract_make_model as _extract_make_model
 
 FIXTURES = Path(__file__).parent / "fixtures"

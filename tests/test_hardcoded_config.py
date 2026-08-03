@@ -3,7 +3,6 @@
 These tests enforce that our findings about hardcoded values don't regress.
 """
 
-import ast
 import os
 from pathlib import Path
 
@@ -38,6 +37,7 @@ class TestSettingsOverride:
             Settings.model_config["env_file"] = None  # skip .env in tests
             # Empty JWT secret should fail validation in production
             import importlib
+
             from src.config import settings as settings_module
             importlib.reload(settings_module)
         except ValueError:
@@ -85,7 +85,7 @@ class TestNoHardcodedProductionURLs:
                 if needle in content:
                     prod_urls.append(f"{py_file}: {needle}")
         assert len(prod_urls) == 0, (
-            f"Hardcoded production URLs in src/:\n" + "\n".join(prod_urls)
+            "Hardcoded production URLs in src/:\n" + "\n".join(prod_urls)
         )
 
     # skip test: index.html is a static UI file, not src — the prod URL there
@@ -143,5 +143,5 @@ class TestScriptHygiene:
             if "localhost:8000" in content:
                 offenders.append(str(py_file.relative_to(SRC.parent)))
         assert len(offenders) == 0, (
-            f"src/ files with hardcoded localhost:8000:\n" + "\n".join(offenders)
+            "src/ files with hardcoded localhost:8000:\n" + "\n".join(offenders)
         )

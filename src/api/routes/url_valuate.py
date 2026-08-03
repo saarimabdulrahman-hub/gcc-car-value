@@ -2,16 +2,18 @@
 import re
 from datetime import datetime
 from urllib.parse import urlparse
+
+import httpx
+import structlog
+from bs4 import BeautifulSoup
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
-from bs4 import BeautifulSoup
-import httpx
-from src.api.dependencies import get_db, require_api_key, limiter
+
+from src.api.dependencies import get_db, limiter, require_api_key
 from src.api.security import validate_public_url
 from src.engine.statistical import valuate
 from src.pipeline.normalizer import normalize_listing
-import structlog
 
 router = APIRouter()
 logger = structlog.get_logger()
@@ -99,8 +101,7 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
         result["city"] = "Dubai"
 
     # Country
-    if "haraj" in url: result["country"] = "SA"
-    elif "ksa" in url or "saudi" in url: result["country"] = "SA"
+    if "haraj" in url or "ksa" in url or "saudi" in url: result["country"] = "SA"
     elif "dubizzle" in url: result["country"] = "AE"
     elif "yallamotor" in url:
         if "ksa" in url: result["country"] = "SA"

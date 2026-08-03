@@ -7,7 +7,6 @@ they require via FastAPI dependencies; no permission checks are hardcoded.
 
 from enum import StrEnum
 
-
 # ---------------------------------------------------------------------------
 # Roles (hierarchical — each role inherits from those below it)
 # ---------------------------------------------------------------------------

@@ -214,6 +214,7 @@
       box-shadow: 0 12px 30px rgba(0,0,0,.23);
       animation: rise .5s both;
     }
+    .kpi-card > div:last-child { min-width: 0; flex: 1 1 auto; }
     .kpi-card:nth-child(2) { animation-delay: .04s; }
     .kpi-card:nth-child(3) { animation-delay: .08s; }
     .kpi-card:nth-child(4) { animation-delay: .12s; }
@@ -222,8 +223,8 @@
       width: 46px; height: 46px; display: grid; place-items: center; flex: 0 0 auto;
       color: var(--gold); background: rgba(225, 154, 12, .095); border: 1px solid rgba(225,154,12,.13); border-radius: 50%;
     }
-    .kpi-label { color: var(--muted); font-size: 11px; text-transform: uppercase; }
-    .kpi-value { margin-top: 3px; font-size: 23px; font-weight: 600; line-height: 1.1; letter-spacing: -.025em; }
+    .kpi-label { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .kpi-value { overflow: hidden; margin-top: 3px; font-size: 23px; font-weight: 600; line-height: 1.1; letter-spacing: -.025em; text-overflow: ellipsis; white-space: nowrap; }
     .kpi-note { margin-top: 5px; color: var(--muted-2); font-size: 11px; white-space: nowrap; }
 
     .filter-panel {
@@ -234,7 +235,6 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
-    .filter-top { display: grid; grid-template-columns: 1fr 170px; gap: 24px; }
     .search-box, .control-select {
       height: 43px;
       background: rgba(4,10,15,.64);
@@ -256,11 +256,10 @@
     .advanced-button { height: 43px; display: flex; align-items: center; justify-content: center; gap: 11px; border-color: var(--gold); color: var(--text); font-size: 12px; font-weight: 600; }
     .advanced-button .icon { color: var(--gold); }
     .advanced-button.active { background: var(--gold-soft); }
-    .filter-middle { display: grid; grid-template-columns: 290px 280px 1fr 123px; gap: 24px; align-items: end; margin-top: 17px; }
     .field-label { display: block; margin: 0 0 5px 46px; color: var(--muted-2); font-size: 9px; text-transform: uppercase; }
     .control-select { position: relative; display: flex; align-items: center; }
     .control-select > .icon:first-child { margin-left: 12px; color: var(--muted); }
-    .control-select select { width: 100%; height: 100%; padding: 0 36px 0 14px; appearance: none; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 12px; font-weight: 600; }
+    .control-select select { width: auto; min-width: 0; height: 100%; flex: 1 1 auto; padding: 0 36px 0 14px; appearance: none; background: transparent; color: var(--text); border: 0; outline: 0; font-size: 12px; font-weight: 600; }
     .control-select select option { background: var(--surface-2); color: var(--text); }
     .control-select .chevron { position: absolute; right: 12px; width: 13px; height: 13px; pointer-events: none; }
     .result-count { align-self: center; justify-self: end; color: var(--muted); font-size: 12px; white-space: nowrap; }
@@ -405,7 +404,6 @@
       .kpi-card:nth-child(4), .kpi-card:nth-child(5) { display: none; }
       .manufacturer-grid { grid-template-columns: repeat(3, 1fr); }
       .manufacturer-card:nth-child(n+4) { display: none; }
-      .filter-middle { grid-template-columns: 1fr 1fr; }
       .result-count { justify-self: start; }
       .bottom-grid { grid-template-columns: 1fr 1fr; }
       .data-panel:nth-child(2) { grid-column: 1 / -1; order: 3; }
@@ -423,8 +421,6 @@
       .live-market { right: 18px; }
       .hero-copy { padding: 100px 18px 0; width: 70%; }
       .content { padding: 0 18px 30px; }
-      .filter-top { grid-template-columns: 1fr; gap: 10px; }
-      .filter-middle { gap: 12px; }
       .quick-row { align-items: flex-end; }
       .view-filter-button { display: none; }
       .bottom-grid { grid-template-columns: 1fr; }
@@ -445,13 +441,325 @@
       .kpi-icon { width: 38px; height: 38px; }
       .kpi-value { font-size: 19px; }
       .filter-panel { padding: 13px; }
-      .filter-middle { grid-template-columns: 1fr; }
       .result-count { display: none; }
       .advanced-row { grid-template-columns: 1fr; }
       .manufacturer-grid { grid-template-columns: 1fr; }
       .manufacturer-card:nth-child(n+2) { display: none; }
       .insight-list { grid-template-columns: 1fr; }
       .insight-row:nth-child(odd) { border-right: 0; }
+    }
+
+    /* Reference-matched browse composition. The navigation rail remains intact. */
+    :root {
+      --browse-gutter: clamp(18px, 2.25vw, 36px);
+      --browse-amber: #ffad12;
+      --browse-amber-deep: #b96c00;
+      --browse-panel: rgba(7, 10, 14, .88);
+      --browse-stroke: rgba(255, 188, 75, .18);
+    }
+    .main {
+      position: relative;
+      background:
+        radial-gradient(circle at 70% 15%, rgba(255, 117, 0, .08), transparent 32%),
+        #04070a;
+    }
+    .hero {
+      height: 392px;
+      isolation: isolate;
+      background: #04070a;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('img/browse-hero.png') 42% center / cover no-repeat;
+      filter: saturate(.78) contrast(1.1) brightness(1.03);
+      transform: scale(1.002);
+      pointer-events: none;
+    }
+    .hero::after {
+      z-index: 1;
+      background:
+        radial-gradient(circle at 43% 62%, rgba(255, 177, 54, .17) 0%, rgba(255, 145, 20, .07) 25%, transparent 48%),
+        radial-gradient(circle at 77% 23%, rgba(255, 191, 93, .12) 0%, transparent 32%),
+        linear-gradient(90deg, rgba(2,6,10,.78) 0%, rgba(2,6,10,.38) 24%, rgba(2,6,10,.04) 52%, transparent 78%),
+        linear-gradient(180deg, rgba(2,5,8,.12) 0%, transparent 58%, rgba(4,7,10,.3) 82%, #04070a 100%);
+    }
+    .hero-copy {
+      width: min(490px, 48%);
+      padding: 104px 0 0 var(--browse-gutter);
+      text-shadow: 0 3px 24px rgba(0,0,0,.95);
+    }
+    .breadcrumb { display: none; }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(38px, 3.35vw, 54px);
+      line-height: 1;
+      letter-spacing: -.045em;
+      text-shadow: 0 2px 0 rgba(255,255,255,.12), 0 8px 30px rgba(0,0,0,.88);
+    }
+    .hero p { max-width: 450px; font-size: 15px; line-height: 1.5; color: rgba(255,255,255,.92); }
+    .hero-tools {
+      top: 22px;
+      left: var(--browse-gutter);
+      gap: 10px;
+    }
+    .tool-button, .language-toggle {
+      height: 44px;
+      border-color: rgba(255,255,255,.12);
+      background: linear-gradient(145deg, rgba(21,25,31,.88), rgba(5,8,12,.85));
+      box-shadow: inset 0 1px rgba(255,255,255,.05), 0 10px 24px rgba(0,0,0,.34);
+    }
+    .tool-button { width: 45px; border-radius: 8px; }
+    .live-market {
+      top: 18px;
+      right: var(--browse-gutter);
+      min-width: 190px;
+      padding: 10px 18px;
+      border-color: rgba(255,255,255,.12);
+      background: rgba(3, 7, 10, .7);
+      box-shadow: inset 0 1px rgba(255,255,255,.04), 0 12px 32px rgba(0,0,0,.3);
+    }
+    .live-title { font-size: 12px; letter-spacing: .025em; }
+    .live-time { font-size: 11px; }
+    .content {
+      z-index: 5;
+      margin-top: -34px;
+      padding: 0 var(--browse-gutter) 34px;
+    }
+    .kpi-grid { grid-template-columns: .95fr .95fr 1fr .82fr 1.15fr; gap: 14px; }
+    .kpi-card {
+      min-width: 0;
+      min-height: 108px;
+      gap: 16px;
+      padding: 15px 17px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(18,18,20,.88), rgba(5,8,11,.94)),
+        radial-gradient(circle at 18% 50%, rgba(255,164,0,.08), transparent 40%);
+      border-color: var(--browse-stroke);
+      border-radius: 6px;
+      box-shadow: inset 0 1px rgba(255,255,255,.035), 0 17px 34px rgba(0,0,0,.43), 0 0 26px rgba(255,123,0,.035);
+      backdrop-filter: blur(13px);
+    }
+    .kpi-icon {
+      width: 52px;
+      height: 52px;
+      color: var(--browse-amber);
+      background: radial-gradient(circle, rgba(255,174,0,.15), rgba(255,139,0,.035));
+      border-color: rgba(255,173,18,.42);
+      box-shadow: 0 0 22px rgba(255,139,0,.13), inset 0 0 12px rgba(255,184,43,.08);
+    }
+    .kpi-label { color: #bbb8b8; font-size: 12px; font-weight: 700; letter-spacing: .015em; }
+    .kpi-value { margin-top: 2px; font-size: clamp(21px, 1.8vw, 28px); font-weight: 700; }
+    .kpi-note { margin-top: 4px; color: #9a9a9d; font-size: 12px; }
+    .filter-panel {
+      margin-top: 16px;
+      padding: 13px 16px 10px;
+      background:
+        linear-gradient(110deg, rgba(13,16,21,.94), rgba(4,7,10,.92)),
+        radial-gradient(circle at 68% 0, rgba(255,127,0,.07), transparent 43%);
+      border-color: rgba(255, 174, 45, .22);
+      border-radius: 6px;
+      box-shadow: inset 0 1px rgba(255,255,255,.035), 0 18px 42px rgba(0,0,0,.42);
+    }
+    .filter-controls {
+      display: grid;
+      grid-template-columns: minmax(190px, 1.1fr) minmax(145px, .78fr) minmax(145px, .78fr) minmax(135px, .72fr) minmax(155px, .86fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .filter-search-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .filter-static {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 13px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 5px;
+      background: rgba(2,5,8,.72);
+      color: #f3f3f3;
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 0;
+      overflow: hidden;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .filter-static span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .filter-static .chevron { width: 13px; height: 13px; margin-left: auto; }
+    .filter-static .icon:first-child { color: var(--muted); }
+    .advanced-button {
+      grid-column: 5;
+      grid-row: 1;
+      height: 46px;
+      border-color: rgba(255,255,255,.12);
+      border-radius: 5px;
+      background: linear-gradient(145deg, rgba(20,23,28,.86), rgba(5,8,12,.86));
+      color: #aaa;
+      box-shadow: inset 0 1px rgba(255,255,255,.04);
+      min-width: 0;
+      overflow: hidden;
+      padding-inline: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .field-label { display: none; }
+    .control-select { min-width: 0; height: 46px; overflow: hidden; border-radius: 5px; background: rgba(2,5,8,.72); }
+    .control-select select { font-size: 13px; }
+    .result-count { display: none; }
+    .clear-button {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .filter-divider, .quick-label { display: none; }
+    .quick-row { margin-top: 9px; gap: 12px; }
+    .chips { gap: 10px; }
+    .chip {
+      min-width: 88px;
+      height: 36px;
+      padding: 0 21px;
+      border-radius: 5px;
+      border-color: rgba(255,255,255,.08);
+      background: rgba(4,7,10,.45);
+      color: #bcbcc0;
+      font-size: 12px;
+    }
+    .chip.active {
+      color: #171006;
+      background: linear-gradient(180deg, #ffca38, #f09c00);
+      box-shadow: 0 0 20px rgba(255,163,0,.5), inset 0 1px rgba(255,255,255,.55);
+    }
+    .view-filter-button {
+      min-width: 154px;
+      height: 36px;
+      justify-content: center;
+      border-radius: 5px;
+      background: rgba(9,12,16,.84);
+    }
+    .section-heading { margin: 11px 4px 6px; }
+    .section-heading h2 { color: #aaa8aa; font-size: 12px; font-weight: 700; }
+    .section-link { color: #a9a7aa; }
+    .manufacturer-grid { gap: 14px; }
+    .manufacturer-card {
+      height: 151px;
+      padding: 9px 13px;
+      background:
+        radial-gradient(circle at 50% 0, rgba(255,126,0,.08), transparent 42%),
+        linear-gradient(145deg, rgba(18,18,20,.95), rgba(5,7,10,.98));
+      border-color: rgba(255,173,55,.2);
+      border-radius: 6px;
+      box-shadow: inset 0 1px rgba(255,255,255,.035), 0 12px 26px rgba(0,0,0,.33);
+    }
+    .manufacturer-card:hover { border-color: rgba(255,173,55,.52); background: linear-gradient(145deg, #191719, #08090b); }
+    .rank { top: 8px; right: 8px; padding: 2px 5px; color: var(--browse-amber); background: rgba(255,164,0,.08); border: 1px solid rgba(255,164,0,.16); border-radius: 3px; font-size: 12px; }
+    .manufacturer-card .brand-logo { width: 70px; height: 47px; margin-bottom: 0; filter: drop-shadow(0 4px 10px rgba(0,0,0,.42)); }
+    .manufacturer-card .brand-logo { margin-bottom: 4px; }
+    .manufacturer-card:nth-child(1) .brand-logo { height: 43px; overflow: hidden; margin-bottom: 8px; }
+    .manufacturer-card:nth-child(1) .brand-logo img { width: 70px; height: 70px; object-fit: contain; transform: translateY(-3px); }
+    .manufacturer-card:nth-child(2) .brand-logo { width: 55px; height: 36px; margin-bottom: 13px; }
+    .brand-name { font-size: 14px; font-weight: 700; }
+    .brand-meta { margin-top: 6px; font-size: 10px; }
+    .brand-market { margin-top: 7px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,.045); }
+    .spark { filter: drop-shadow(0 0 5px rgba(255,139,0,.45)); }
+    .spark path { stroke: #ff9f00; }
+    .bottom-grid { gap: 14px; margin-top: 10px; }
+    .data-panel {
+      min-height: 176px;
+      background:
+        radial-gradient(circle at 65% 100%, rgba(255,126,0,.05), transparent 43%),
+        linear-gradient(145deg, rgba(16,16,18,.96), rgba(5,8,11,.98));
+      border-color: rgba(255,173,55,.18);
+      border-radius: 5px;
+    }
+    .panel-header { color: #b8b5b6; border-color: rgba(255,170,45,.12); font-size: 12px; font-weight: 700; }
+    .vehicle-row, .insight-row, .recent-row { min-height: 46px; }
+    .vehicle-thumb {
+      position: relative;
+      width: 82px;
+      height: 42px;
+      background: #0b0d10 center/cover no-repeat;
+      border: 0;
+      border-radius: 2px;
+    }
+    .vehicle-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 55%, rgba(5,7,9,.75)); }
+    .vehicle-thumb svg { display: none; }
+    .vehicle-row:nth-child(1) .vehicle-thumb { background-image: url('img/cars/land-cruiser.jpg'); }
+    .vehicle-row:nth-child(2) .vehicle-thumb { background-image: url('img/cars/nissan-patrol.jpg'); }
+    .vehicle-row:nth-child(3) .vehicle-thumb { background-image: url('img/cars/toyota-camry.jpg'); }
+    .recent-row:nth-child(1) .vehicle-thumb { background-image: url('img/cars/bmw-x5.jpg'); }
+    .recent-row:nth-child(2) .vehicle-thumb { background-image: url('img/cars/mercedes-s-class.jpg'); }
+    .recent-row:nth-child(3) .vehicle-thumb { background-image: url('img/cars/land-cruiser.jpg'); }
+    .vehicle-name { font-size: 12px; font-weight: 600; }
+    .vehicle-price { color: var(--browse-amber); font-size: 12px; }
+    .insight-list { grid-template-columns: 1fr; }
+    .insight-row { min-height: 35px; padding-inline: 14px; }
+    .insight-row:nth-child(odd) { border-right: 0; }
+    .insight-label { color: #dedbdd; font-size: 11px; }
+    .insight-value { display: inline; margin-left: 4px; color: #fff; font-size: 11px; font-weight: 700; }
+    .insight-copy { display: flex; align-items: baseline; }
+    .insight-change { font-size: 12px; font-weight: 700; }
+    .row-arrow { width: 36px; height: 36px; }
+
+    @media (max-width: 1220px) {
+      .hero { height: 370px; }
+      .content { margin-top: -26px; }
+      .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .filter-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .advanced-button { grid-column: auto; grid-row: auto; }
+    }
+    @media (max-width: 860px) {
+      .hero { height: 350px; }
+      .hero::before { background-position: 39% center; }
+      .hero-copy { padding-top: 112px; }
+      .content { margin-top: -20px; }
+      .filter-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .advanced-button { grid-column: 1 / -1; }
+    }
+    @media (max-width: 600px) {
+      .hero { height: 330px; }
+      .hero::before { background-position: 37% center; filter: saturate(.76) contrast(1.08) brightness(.98); }
+      .hero::after {
+        background:
+          radial-gradient(circle at 43% 60%, rgba(255, 177, 54, .15), transparent 43%),
+          radial-gradient(circle at 82% 23%, rgba(255, 191, 93, .1), transparent 32%),
+          linear-gradient(180deg, rgba(2,5,8,.12), rgba(2,5,8,.01) 48%, #04070a 100%);
+      }
+      .hero-copy { width: 96%; padding-top: 122px; }
+      .hero p { max-width: 320px; font-size: 13px; }
+      .content { margin-top: -12px; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .kpi-card { min-width: 0; min-height: 94px; gap: 7px; padding: 10px 8px; overflow: hidden; }
+      .kpi-card > div:last-child { min-width: 0; }
+      .kpi-icon { width: 36px; height: 36px; }
+      .kpi-label { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+      .kpi-value { font-size: 21px; }
+      .kpi-note { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+      .filter-panel { min-width: 0; overflow: hidden; }
+      .filter-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .filter-controls > * { min-width: 0; }
+      .control-select, .filter-static, .advanced-button { height: 43px; }
+      .control-select select, .filter-static, .advanced-button { font-size: 11px; }
+      .control-select > .icon:first-child { width: 15px; height: 15px; margin-left: 9px; }
+      .control-select select { padding: 0 23px 0 7px; font-size: 10px; }
+      .control-select .chevron { right: 7px; width: 11px; height: 11px; }
+      .quick-row, .chips { min-width: 0; }
+      .chips { gap: 8px; }
+      .chip { min-width: auto; }
+      .manufacturer-card { height: 151px; }
     }
   </style>
 </head>
@@ -530,7 +838,7 @@
       <div class="hero-copy">
         <div class="breadcrumb"><span>Home</span><svg class="icon"><use href="#i-arrow"/></svg><span>Browse Models</span></div>
         <h1 id="pageTitle">Browse Models</h1>
-        <p>Explore every make and model across <span id="heroCount">12</span> manufacturers<br>in 6 GCC countries.</p>
+        <p>Discover every make and model across <span id="heroCount">12</span> manufacturers<br>in 6 GCC countries.</p>
       </div>
     </section>
 
@@ -544,16 +852,27 @@
       </section>
 
       <section class="filter-panel" aria-label="Browse filters">
-        <div class="filter-top">
-          <label class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="browseSearch" type="search" placeholder="Search manufacturers, models, or keyword..." autocomplete="off"><svg class="icon tune"><use href="#i-tune"/></svg></label>
-          <button class="advanced-button" id="advancedButton"><svg class="icon"><use href="#i-tune"/></svg>Advanced Filters</button>
+        <label class="filter-search-hidden">
+          <span>Search manufacturers</span>
+          <input id="browseSearch" type="search" autocomplete="off">
+        </label>
+        <div class="filter-controls">
+          <label class="control-select">
+            <svg class="icon"><use href="#i-globe"/></svg>
+            <select id="countrySelect" aria-label="Country"><option value="">All GCC Countries</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select>
+            <svg class="icon chevron"><use href="#i-chevron"/></svg>
+          </label>
+          <label class="control-select">
+            <svg class="icon"><use href="#i-sort"/></svg>
+            <select id="sortSelect" aria-label="Sort manufacturers"><option value="name">Name (A–Z)</option><option value="count">Most listings</option><option value="models">Most models</option></select>
+            <svg class="icon chevron"><use href="#i-chevron"/></svg>
+          </label>
+          <button class="filter-static" type="button"><svg class="icon"><use href="#i-box"/></svg><span>Price Range</span><svg class="icon chevron"><use href="#i-chevron"/></svg></button>
+          <button class="filter-static" type="button"><svg class="icon"><use href="#i-chart"/></svg><span>Mileage</span><svg class="icon chevron"><use href="#i-chevron"/></svg></button>
+          <button class="advanced-button" id="advancedButton" type="button"><svg class="icon"><use href="#i-tune"/></svg>Advanced Filters</button>
         </div>
-        <div class="filter-middle">
-          <label><span class="field-label">Country</span><span class="control-select"><svg class="icon"><use href="#i-globe"/></svg><select id="countrySelect"><option value="">All GCC Countries</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select><svg class="icon chevron"><use href="#i-chevron"/></svg></span></label>
-          <label><span class="field-label">Sort by</span><span class="control-select"><svg class="icon"><use href="#i-sort"/></svg><select id="sortSelect"><option value="name">Name (A–Z)</option><option value="count">Most listings</option><option value="models">Most models</option></select><svg class="icon chevron"><use href="#i-chevron"/></svg></span></label>
-          <div class="result-count" id="resultCount">12 of 12 manufacturers</div>
-          <button class="clear-button" id="clearButton"><svg class="icon"><use href="#i-close"/></svg>Clear All</button>
-        </div>
+        <div class="result-count" id="resultCount">12 of 12 manufacturers</div>
+        <button class="clear-button" id="clearButton" type="button"><svg class="icon"><use href="#i-close"/></svg>Clear All</button>
         <div class="advanced-row" id="advancedRow"><label>Minimum listings<input id="minListings" type="number" min="0" placeholder="e.g. 50,000"></label><label>Minimum models<input id="minModels" type="number" min="0" placeholder="e.g. 5"></label><label>Maximum average price<input type="number" min="0" placeholder="AED"></label></div>
         <div class="filter-divider"></div>
         <div class="quick-label">Quick filters</div>

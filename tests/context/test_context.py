@@ -1,14 +1,21 @@
 """Test request context — storage, isolation, propagation, helpers."""
 import asyncio
+
 import pytest
-from src.core.context.models import RequestContext
-from src.core.context.storage import (
-    set_context, get_context, clear_context,
-    update_context, clone_context,
-)
+
 from src.core.context import clear_context  # ensure available in all test methods
 from src.core.context.context import (
-    correlation_id, run_with_context, run_sync_with_context,
+    correlation_id,
+    run_sync_with_context,
+    run_with_context,
+)
+from src.core.context.models import RequestContext
+from src.core.context.storage import (
+    clear_context,
+    clone_context,
+    get_context,
+    set_context,
+    update_context,
 )
 
 

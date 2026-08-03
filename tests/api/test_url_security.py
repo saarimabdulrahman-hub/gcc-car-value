@@ -1,5 +1,6 @@
 """Test URL security validation — SSRF protection."""
 import pytest
+
 from src.api.security import validate_public_url
 
 

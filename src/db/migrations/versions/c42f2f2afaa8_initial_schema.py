@@ -7,15 +7,16 @@ Create Date: 2026-07-04
 Creates all 15 tables from the GCC Car Value Platform spec,
 plus pgvector and uuid-ossp extensions.
 """
-from typing import Sequence, Union
-from alembic import op
+from collections.abc import Sequence
+
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
 
 revision: str = 'c42f2f2afaa8'
-down_revision: Union[str, None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -25,8 +26,8 @@ def upgrade() -> None:
 
     # Use declarative metadata to create all tables
     # This is the recommended pattern for initial schema from SQLAlchemy models
-    from src.db.base import Base
     import src.models  # noqa: F401
+    from src.db.base import Base
 
     # Create all tables from metadata
     # Note: listing_snapshots is partitioned — created via partition DDL below
@@ -86,6 +87,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_table("listing_snapshots")
     # Remaining tables dropped via metadata
-    from src.db.base import Base
     import src.models  # noqa: F401
+    from src.db.base import Base
     Base.metadata.drop_all(bind=op.get_bind())

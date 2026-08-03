@@ -3,11 +3,13 @@
 Spec Section 7.3: Computes PSI (Population Stability Index) and distribution changes.
 """
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import numpy as np
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.models.drift_event import DriftEvent
 import structlog
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.models.drift_event import DriftEvent
 
 logger = structlog.get_logger()
 
@@ -120,7 +122,7 @@ def check_market_drift(current_volume: int, baseline_volume: int,
 async def log_drift_event(session: AsyncSession, result: DriftResult) -> DriftEvent:
     """Record a drift event in the database."""
     event = DriftEvent(
-        detected_at=datetime.now(timezone.utc),
+        detected_at=datetime.now(UTC),
         drift_type=result.drift_type,
         feature_name=result.feature_name,
         psi_value=result.psi_value,

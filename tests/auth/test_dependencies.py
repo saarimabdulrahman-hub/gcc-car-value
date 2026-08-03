@@ -1,8 +1,10 @@
 """Test auth dependencies — token creation, verification, and dependency behavior."""
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
-from fastapi import HTTPException
-from src.auth.jwt import create_access_token, verify_token, create_api_key, verify_api_key
+
+from src.auth.jwt import create_access_token, create_api_key, verify_api_key, verify_token
+
 
 @pytest.fixture(autouse=True)
 def mock_is_token_revoked():

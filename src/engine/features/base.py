@@ -1,6 +1,7 @@
 """Base feature class — every feature inherits from this."""
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+
 import pandas as pd
 
 

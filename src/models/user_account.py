@@ -1,6 +1,10 @@
 """User account model — simple email/password with hashed passwords."""
-import uuid, hashlib, secrets
-from sqlalchemy import Column, Text, DateTime, func
+import hashlib
+import secrets
+import uuid
+
+from sqlalchemy import Column, DateTime, Text, func
+
 from src.db.base import Base, UniversalUUID
 
 

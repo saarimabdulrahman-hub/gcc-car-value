@@ -1,5 +1,6 @@
 """Test Haraj KSA listing parser."""
 from pathlib import Path
+
 from src.scrapers.haraj_ksa.scraper import HarajKSAScraper
 
 FIXTURES = Path(__file__).parent / "fixtures"

@@ -9,9 +9,13 @@ Usage (in main.py, before app = FastAPI()):
 """
 
 import re
+
 import structlog
+
 from src.config.secrets import (
-    SecretName, SECRET_POLICIES, get_secret_provider, mask_sensitive_value,
+    SECRET_POLICIES,
+    SecretName,
+    get_secret_provider,
 )
 
 logger = structlog.get_logger()
@@ -102,8 +106,8 @@ def _validate_jwt_secret_strength(value: str, errors: list[str]) -> None:
         categories += 1
     if categories < 2:
         errors.append(
-            f"JWT_SECRET: insufficient complexity. "
-            f"Use at least 2 of: uppercase, lowercase, digits, special chars."
+            "JWT_SECRET: insufficient complexity. "
+            "Use at least 2 of: uppercase, lowercase, digits, special chars."
         )
 
     # Check length
@@ -129,8 +133,8 @@ def _validate_database_url(db_url: str, errors: list[str]) -> None:
     if not db_url.startswith(("postgresql://", "postgresql+asyncpg://",
                               "sqlite://")):
         errors.append(
-            f"DATABASE_URL: must start with postgresql://, "
-            f"postgresql+asyncpg://, or sqlite://"
+            "DATABASE_URL: must start with postgresql://, "
+            "postgresql+asyncpg://, or sqlite://"
         )
 
 

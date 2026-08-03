@@ -1,5 +1,7 @@
-import structlog
 import logging
+
+import structlog
+
 from src.config import get_settings
 
 settings = get_settings()

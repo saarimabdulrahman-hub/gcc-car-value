@@ -16,11 +16,12 @@ Usage:
     jwt_secret = await provider.get("JWT_SECRET")
 """
 
+import os
+import re
 from abc import ABC, abstractmethod
 from enum import StrEnum
 from typing import Any
-import os
-import re
+
 import structlog
 
 logger = structlog.get_logger()

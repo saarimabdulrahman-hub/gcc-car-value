@@ -10,11 +10,16 @@ Thread safety: all registration and mutation operations use a reentrant lock.
 from __future__ import annotations
 
 import threading
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from src.core.metrics.types import (
-    Metric, Counter, Gauge, Histogram, Timer, Info,
-    MetricType, MetricValue,
+    Counter,
+    Gauge,
+    Histogram,
+    Info,
+    Metric,
+    Timer,
 )
 
 

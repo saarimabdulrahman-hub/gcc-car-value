@@ -1,7 +1,8 @@
 """Configuration health check — validates critical settings."""
 
 import time
-from src.core.health.base import HealthCheck, CheckResult, CheckSeverity
+
+from src.core.health.base import CheckResult, CheckSeverity, HealthCheck
 
 
 class ConfigurationCheck(HealthCheck):

@@ -1,15 +1,18 @@
 """JWT auth and API key tests."""
 import os
+
 import src.auth.jwt as jwt_mod
 
 # Force-set JWT secret and reset the module-level cache
 os.environ["JWT_SECRET"] = "test-jwt-secret-" + "x" * 40
 jwt_mod._jwt_secret = None
 
-from src.auth.jwt import create_access_token, verify_token, create_api_key, verify_api_key
 from unittest.mock import patch
 
 import pytest
+
+from src.auth.jwt import create_access_token, create_api_key, verify_api_key, verify_token
+
 
 @pytest.fixture(autouse=True)
 def mock_is_token_revoked():

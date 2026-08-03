@@ -4,10 +4,11 @@ All authorization decisions flow through this module. Routes never check
 roles directly — they declare required permissions via FastAPI dependencies.
 """
 
-from src.auth.roles import Role, Permission, ROLE_PERMISSIONS
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 import structlog
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.auth.roles import ROLE_PERMISSIONS, Permission, Role
 
 logger = structlog.get_logger()
 

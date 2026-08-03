@@ -17,6 +17,6 @@ Usage:
 """
 
 from src.core.logging.config import configure_logging
-from src.core.logging.logger import get_logger, Logger
+from src.core.logging.logger import Logger, get_logger
 
 __all__ = ["configure_logging", "get_logger", "Logger"]

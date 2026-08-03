@@ -1,6 +1,5 @@
 """Test knowledge base seed data."""
-import pytest
-from src.knowledge.seed import MODELS, DEPRECIATION
+from src.knowledge.seed import DEPRECIATION, MODELS
 
 
 def test_all_makes_have_models():

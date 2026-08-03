@@ -1,12 +1,15 @@
 """Test Prometheus exporter and formatter."""
 import pytest
-from src.core.metrics.registry import MetricsRegistry
-from src.core.metrics.types import Counter, Gauge, Histogram, Info
-from src.core.metrics.prometheus_formatter import (
-    format_metrics, format_metrics as _fmt,
-    _prometheus_name, _format_value, CONTENT_TYPE,
-)
+
 from src.core.metrics.exporters.prometheus import PrometheusExporter
+from src.core.metrics.prometheus_formatter import (
+    CONTENT_TYPE,
+    _format_value,
+    _prometheus_name,
+    format_metrics,
+)
+from src.core.metrics.registry import MetricsRegistry
+from src.core.metrics.types import Counter, Gauge, Info
 
 
 @pytest.fixture

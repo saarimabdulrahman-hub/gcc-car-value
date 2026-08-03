@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, Boolean, DateTime, func
-from src.db.base import UniversalUUID, UniversalJSONB, UniversalDATERANGE
-from src.db.base import Base
+
+from sqlalchemy import Boolean, Column, DateTime, Float, Text, func
+
+from src.db.base import Base, UniversalDATERANGE, UniversalJSONB, UniversalUUID
+
 
 class DriftEvent(Base):
     __tablename__ = "drift_events"

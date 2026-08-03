@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Callable
 
 import structlog
 
 from src.core.health.base import (
-    HealthCheck, CheckResult, HealthStatus, CheckSeverity,
+    CheckResult,
+    CheckSeverity,
+    HealthCheck,
+    HealthStatus,
 )
 
 logger = structlog.get_logger()
@@ -138,7 +140,7 @@ class HealthRegistry:
                 check.check(),
                 timeout=check.timeout_seconds,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             duration_ms = (time.perf_counter() - check_start) * 1000
             result = CheckResult.unhealthy(
                 name=check.name,

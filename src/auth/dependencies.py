@@ -11,15 +11,17 @@ Routes declare what they need via Depends():
 Consumer endpoints remain unchanged — no auth dependency required.
 """
 
-from typing import Callable
+from collections.abc import Callable
+
+import structlog
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db
 from src.auth.jwt import verify_token
-from src.auth.roles import Role, Permission
-from src.auth.rbac import rbac, get_user_role
-import structlog
+from src.auth.rbac import get_user_role, rbac
+from src.auth.roles import Permission, Role
 
 logger = structlog.get_logger()
 

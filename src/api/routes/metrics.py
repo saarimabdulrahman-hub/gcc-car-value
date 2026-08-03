@@ -5,10 +5,11 @@ The endpoint never accesses the registry directly — it delegates to the
 exporter, which is the only component that serializes metric values.
 """
 
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends, Response
+
+from src.api.dependencies import require_api_key
 from src.core.metrics import Metrics
 from src.core.metrics.exporters.prometheus import PrometheusExporter
-from src.api.dependencies import require_api_key
 
 router = APIRouter()
 

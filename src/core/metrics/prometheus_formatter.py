@@ -103,7 +103,6 @@ def _format_value(value: float) -> str:
 
 def _format_counter(metric: "Counter") -> list[str]:
     """Counter → metric_total line(s) + optional HELP/TYPE."""
-    from src.core.metrics.types import MetricValue
     name = _prometheus_name(metric, "_total")
     lines = [
         f"# HELP {name} {metric.description or metric.full_name}",

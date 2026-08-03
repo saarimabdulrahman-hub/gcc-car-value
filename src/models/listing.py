@@ -1,8 +1,19 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, Boolean, DateTime, ForeignKey, func, UniqueConstraint
-from src.db.base import UniversalUUID, UniversalJSONB
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import relationship
-from src.db.base import Base, LineageMixin
+
+from src.db.base import Base, LineageMixin, UniversalJSONB, UniversalUUID
+
 
 class Listing(Base, LineageMixin):
     __tablename__ = "listings"

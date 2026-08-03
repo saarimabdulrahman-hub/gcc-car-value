@@ -1,8 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, ForeignKey, Integer, Text, DateTime, func
-from sqlalchemy.types import TypeDecorator, JSON, String, CHAR
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB, DATERANGE
 import uuid as _uuid
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text, func
+from sqlalchemy.dialects.postgresql import DATERANGE, JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.types import CHAR, JSON, String, TypeDecorator
 
 
 class UniversalUUID(TypeDecorator):

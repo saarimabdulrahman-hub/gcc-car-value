@@ -1,9 +1,9 @@
 """Health check abstractions — status enum, result dataclass, check interface."""
 
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import StrEnum
-import time
 
 
 class HealthStatus(StrEnum):

@@ -2,15 +2,16 @@
 
 Uses SQLite (in-memory) to avoid Docker/PostgreSQL dependency for local testing.
 """
+from datetime import UTC, datetime
+
 import pytest
 import pytest_asyncio
-from datetime import datetime, timezone
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.db.base import Base
-from src.models.listing import Listing
 from src.engine.comp_finder import find_comps
 from src.engine.statistical import valuate
+from src.models.listing import Listing
 
 
 @pytest_asyncio.fixture
@@ -24,7 +25,7 @@ async def populated_db():
 
     session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     # Seed: 30 Land Cruiser 2018 listings across GCC
     listings_data = [

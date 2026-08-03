@@ -20,11 +20,21 @@ def test_all_expected_tables_in_metadata():
 def test_all_models_importable():
     """All 15 model classes exist and can be instantiated."""
     from src.models import (
-        CanonicalVehicle, Listing, ListingSnapshot,
-        PipelineRun, DeadLetter, ValuationQuery,
-        ModelRegistry, ScraperHealth, DriftEvent,
-        FeatureFlag, CarSpec, CarIssue,
-        MaintenanceCost, DepreciationCurve, ModelRating,
+        CanonicalVehicle,
+        CarIssue,
+        CarSpec,
+        DeadLetter,
+        DepreciationCurve,
+        DriftEvent,
+        FeatureFlag,
+        Listing,
+        ListingSnapshot,
+        MaintenanceCost,
+        ModelRating,
+        ModelRegistry,
+        PipelineRun,
+        ScraperHealth,
+        ValuationQuery,
     )
     classes = [
         CanonicalVehicle, Listing, ListingSnapshot,

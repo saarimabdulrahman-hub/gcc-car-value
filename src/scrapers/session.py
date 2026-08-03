@@ -1,5 +1,7 @@
-import httpx
 import random
+
+import httpx
+
 from src.config import get_settings
 
 settings = get_settings()

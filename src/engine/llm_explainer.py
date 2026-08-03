@@ -4,6 +4,7 @@ Uses Claude API when available, falls back to template-based explanations.
 API key configured via CLAUDE_API_KEY env var.
 """
 from dataclasses import dataclass
+
 from src.config import get_settings
 
 settings = get_settings()
@@ -93,8 +94,8 @@ def _explain_with_template(ctx: ValuationContext) -> str:
 def _explain_with_claude(ctx: ValuationContext, api_key: str) -> str:
     """Use Claude API for a more natural explanation. Falls back to template on error."""
     try:
+
         import httpx
-        import json
 
         prompt = _build_claude_prompt(ctx)
         response = httpx.post(

@@ -1,8 +1,12 @@
 """Test MetricsRegistry — registration, lookup, mutation, thread safety."""
-import pytest
 import threading
+
+import pytest
+
 from src.core.metrics.registry import (
-    MetricsRegistry, DuplicateMetricError, MetricNotFoundError,
+    DuplicateMetricError,
+    MetricNotFoundError,
+    MetricsRegistry,
 )
 from src.core.metrics.types import Counter, Gauge, Histogram
 

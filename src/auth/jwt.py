@@ -6,7 +6,8 @@ It is never read directly from environment variables or config defaults.
 import hashlib
 import secrets
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
 import jwt
 import structlog
 
@@ -23,6 +24,7 @@ _revoked_jtis: set[str] = set()
 _jwt_secret: str | None = None
 
 from sqlalchemy import text
+
 from src.db.session import async_session_factory
 
 
@@ -85,8 +87,8 @@ def create_access_token(user_id: str, tier: str = "registered",
         "role": role,
         "jti": secrets.token_hex(8),
         "type": "access",
-        "iat": datetime.now(timezone.utc),
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        "iat": datetime.now(UTC),
+        "exp": datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     }
     return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
@@ -99,8 +101,8 @@ def create_refresh_token(user_id: str) -> str:
         "aud": "gcc-car-value-api",
         "jti": secrets.token_hex(16),
         "type": "refresh",
-        "iat": datetime.now(timezone.utc),
-        "exp": datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        "iat": datetime.now(UTC),
+        "exp": datetime.now(UTC) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
     }
     return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
@@ -144,7 +146,7 @@ async def is_token_revoked(jti: str) -> bool:
         return False
     if revoked:
         _revoked_jtis.add(jti)   # cache the hit
-    return True if revoked else False
+    return bool(revoked)
 
 
 async def verify_token(token: str, check_revoked: bool = True) -> dict | None:

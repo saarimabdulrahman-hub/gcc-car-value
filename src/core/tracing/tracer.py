@@ -9,7 +9,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from typing import Any
 
-from src.core.tracing.span import Span, NoOpSpan
+from src.core.tracing.span import Span
 
 
 class Tracer:

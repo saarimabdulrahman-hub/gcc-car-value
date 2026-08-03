@@ -1,9 +1,16 @@
 """Test SecretProvider — environment provider, masking, policies."""
 import os
+
 import pytest
+
 from src.config.secrets import (
-    EnvironmentProvider, SecretName, mask_sensitive_value, MASKED,
-    SECRET_POLICIES, get_secret_provider, reset_secret_provider,
+    MASKED,
+    SECRET_POLICIES,
+    EnvironmentProvider,
+    SecretName,
+    get_secret_provider,
+    mask_sensitive_value,
+    reset_secret_provider,
 )
 
 

@@ -29,8 +29,13 @@ Usage:
 
 from src.core.metrics.registry import MetricsRegistry
 from src.core.metrics.types import (
-    MetricType, MetricValue, Metric,
-    Counter, Gauge, Histogram, Timer,
+    Counter,
+    Gauge,
+    Histogram,
+    Metric,
+    MetricType,
+    MetricValue,
+    Timer,
 )
 
 # Global singleton — all application code uses this

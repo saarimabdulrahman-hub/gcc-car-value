@@ -1,16 +1,17 @@
 """LightGBM training pipeline with evaluation, shadow deployment, and model registry."""
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import numpy as np
 import pandas as pd
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 import structlog
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.engine.features.base import FeatureRegistry, MarketContext
 from src.models.listing import Listing
 from src.models.model_registry import ModelRegistry
-from src.engine.features.base import FeatureRegistry, MarketContext
 
 logger = structlog.get_logger()
 
@@ -46,8 +47,8 @@ async def build_training_dataset(session: AsyncSession, min_listings: int = 1000
     for (make, model_name, country), segment in segments:
         if len(segment) < 20:
             continue
-        mask = (df["make"] == make) & (df["model"] == model_name) & (df["country"] == country)
-        ctx = MarketContext(
+        (df["make"] == make) & (df["model"] == model_name) & (df["country"] == country)
+        MarketContext(
             make=make, model=model_name, year=int(segment["year"].median()),
             country=country,
             segment_median_price=segment["asking_price_aed"].median(),
@@ -115,7 +116,7 @@ def train_model(df: pd.DataFrame, feature_names: list[str]) -> tuple[object, dic
         "r2": float(np.corrcoef(y_pred, y_holdout)[0, 1] ** 2),
         "training_rows": len(X_train),
         "holdout_rows": len(X_holdout),
-        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist())),
+        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist(), strict=False)),
     }
 
     return model, metrics, mae
@@ -133,7 +134,7 @@ async def train_and_register(
 ) -> ModelRegistry | None:
     """Full training pipeline: build dataset → train → register in model_registry."""
     import src.engine.features.listing_features  # noqa: F401 — register features
-    import src.engine.features.market_features   # noqa: F401
+    import src.engine.features.market_features  # noqa: F401
     import src.engine.features.vehicle_features  # noqa: F401
 
     df = await build_training_dataset(session)
@@ -146,11 +147,11 @@ async def train_and_register(
     # Persist model to stable directory (not tempfile).
     # Models are saved under src/ml/models/{model_name}.pkl
     from src.ml.model_persistence import save_model
-    model_name = f"lightgbm_v{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M')}"
+    model_name = f"lightgbm_v{datetime.now(UTC).strftime('%Y%m%d_%H%M')}"
     model_path = save_model(model, model_name)
 
     registry = ModelRegistry(
-        trained_at=datetime.now(timezone.utc),
+        trained_at=datetime.now(UTC),
         model_type="lightgbm",
         model_path=model_path,
         model_name=model_name,

@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, DateTime, ForeignKey, func
-from src.db.base import UniversalUUID, UniversalJSONB
-from src.db.base import Base
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text
+
+from src.db.base import Base, UniversalJSONB, UniversalUUID
+
 
 class ScraperHealth(Base):
     __tablename__ = "scraper_health"

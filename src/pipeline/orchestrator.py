@@ -1,8 +1,9 @@
 import uuid
-from datetime import datetime, timezone
-from src.scrapers.base import BaseScraper, ScraperResult
-from src.models.pipeline_run import PipelineRun
+
 import structlog
+
+from src.models.pipeline_run import PipelineRun
+from src.scrapers.base import BaseScraper, ScraperResult
 
 logger = structlog.get_logger()
 

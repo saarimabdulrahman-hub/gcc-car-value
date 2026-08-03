@@ -1,5 +1,5 @@
 """Normalize scraped data to canonical forms. All normalization is idempotent."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 MAKE_ALIASES: dict[str, str] = {
     "toyota": "Toyota", "nissan": "Nissan",
@@ -82,7 +82,7 @@ def normalize_listing(data: dict) -> dict:
     data["original_currency"] = original_currency
     data["exchange_rate"] = exchange_rate
     data["exchange_timestamp"] = data.get(
-        "exchange_timestamp", datetime.now(timezone.utc).isoformat()
+        "exchange_timestamp", datetime.now(UTC).isoformat()
     )
     data["normalized_price_aed"] = float(data["asking_price"]) * exchange_rate
     data["original_price"] = float(data["asking_price"])

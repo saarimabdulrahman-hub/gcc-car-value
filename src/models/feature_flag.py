@@ -1,6 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Text, Boolean, DateTime, func
-from src.db.base import UniversalUUID, UniversalJSONB, Base
+
+from sqlalchemy import Boolean, Column, DateTime, Integer, Text, func
+
+from src.db.base import Base, UniversalJSONB, UniversalUUID
+
 
 class FeatureFlag(Base):
     __tablename__ = "feature_flags"

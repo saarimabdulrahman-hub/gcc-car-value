@@ -2,19 +2,21 @@
 
 All endpoints require authentication + admin-level permissions.
 """
-from fastapi import APIRouter, Depends, Request
+from datetime import UTC, datetime, timedelta
+
+import structlog
+from fastapi import APIRouter, Depends
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+
 from src.api.dependencies import get_db
 from src.auth.dependencies import require_permission
 from src.auth.roles import Permission
-from src.models.pipeline_run import PipelineRun
-from src.models.listing import Listing
-from src.models.valuation_query import ValuationQuery
 from src.models.drift_event import DriftEvent
+from src.models.listing import Listing
+from src.models.pipeline_run import PipelineRun
 from src.models.scraper_health import ScraperHealth
-from datetime import datetime, timedelta, timezone
-import structlog
+from src.models.valuation_query import ValuationQuery
 
 router = APIRouter()
 logger = structlog.get_logger()
@@ -26,7 +28,7 @@ async def platform_stats(
     user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),
 ):
     """Overall platform statistics."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     week_ago = now - timedelta(days=7)
 
     total_listings = (await db.execute(select(func.count()).select_from(Listing))).scalar()
@@ -49,7 +51,7 @@ async def platform_stats(
     # Active drift events
     drift_count = (await db.execute(
         select(func.count()).select_from(DriftEvent)
-        .where(DriftEvent.acknowledged == False, DriftEvent.threshold_exceeded == True)
+        .where(not DriftEvent.acknowledged, DriftEvent.threshold_exceeded)
     )).scalar()
 
     return {
@@ -84,7 +86,7 @@ async def scraper_status(
     ).order_by(subquery.c.last_run.desc()))
     rows = result.all()
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     scrapers = []
     for row in rows:
         hours_ago = ((now - row.last_run).total_seconds() / 3600) if row.last_run else None

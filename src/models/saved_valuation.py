@@ -1,6 +1,8 @@
 """Saved valuations — users can bookmark and track valuations."""
 import uuid
-from sqlalchemy import Column, Text, DateTime, func, Float, Integer, ForeignKey
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text, func
+
 from src.db.base import Base, UniversalUUID
 
 

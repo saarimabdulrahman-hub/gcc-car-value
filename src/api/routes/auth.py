@@ -3,9 +3,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db, limiter
-from src.auth.jwt import create_access_token, create_refresh_token, revoke_token_jti, verify_token
 from src.auth.dependencies import get_current_user
+from src.auth.jwt import create_access_token, create_refresh_token, revoke_token_jti, verify_token
 from src.models.user_account import UserAccount
 
 router = APIRouter()

@@ -2,6 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db, limiter
 from src.auth.dependencies import get_current_user
 
