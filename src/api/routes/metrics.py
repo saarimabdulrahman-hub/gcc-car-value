@@ -5,9 +5,10 @@ The endpoint never accesses the registry directly — it delegates to the
 exporter, which is the only component that serializes metric values.
 """
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Depends
 from src.core.metrics import Metrics
 from src.core.metrics.exporters.prometheus import PrometheusExporter
+from src.api.dependencies import require_api_key
 
 router = APIRouter()
 
@@ -16,7 +17,7 @@ _exporter = PrometheusExporter(Metrics)
 
 
 @router.get("/metrics")
-async def metrics():
+async def metrics(_: dict = Depends(require_api_key)):
     """Prometheus metrics endpoint.
 
     Returns all registered metrics in Prometheus exposition format.
