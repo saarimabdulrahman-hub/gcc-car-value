@@ -1,21 +1,22 @@
 """LightGBM training pipeline with evaluation, shadow deployment, and model registry."""
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import numpy as np
 import pandas as pd
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 import structlog
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.engine.features.base import FeatureRegistry, MarketContext
 from src.models.listing import Listing
 from src.models.model_registry import ModelRegistry
-from src.engine.features.base import FeatureRegistry, MarketContext
 
 logger = structlog.get_logger()
 
 
-async def build_training_dataset(session: AsyncSession, min_listings: int = 1000) -> pd.DataFrame | None:
+async def build_training_dataset(session: AsyncSession, min_listings: int = 1000) -> pd.DataFrame | None:  # noqa: E501
     """Build training dataset from production listings with constructed targets."""
     stmt = (select(Listing)
             .where(Listing.quality_score >= 60,
@@ -46,13 +47,13 @@ async def build_training_dataset(session: AsyncSession, min_listings: int = 1000
     for (make, model_name, country), segment in segments:
         if len(segment) < 20:
             continue
-        mask = (df["make"] == make) & (df["model"] == model_name) & (df["country"] == country)
-        ctx = MarketContext(
+        (df["make"] == make) & (df["model"] == model_name) & (df["country"] == country)
+        MarketContext(
             make=make, model=model_name, year=int(segment["year"].median()),
             country=country,
             segment_median_price=segment["asking_price_aed"].median(),
             segment_listing_count=len(segment),
-            segment_price_volatility=float(segment["asking_price_aed"].std() / segment["asking_price_aed"].mean())
+            segment_price_volatility=float(segment["asking_price_aed"].std() / segment["asking_price_aed"].mean())  # noqa: E501
             if segment["asking_price_aed"].mean() > 0 else 0.05,
         )
 
@@ -82,13 +83,13 @@ def train_model(df: pd.DataFrame, feature_names: list[str]) -> tuple[object, dic
     import lightgbm as lgb
     from sklearn.model_selection import train_test_split
 
-    X = df[feature_names].fillna(0)
+    X = df[feature_names].fillna(0)  # noqa: N806
     y = df["target"]
 
     if len(X) < 100:
         raise ValueError(f"Insufficient training data: {len(X)} rows")
 
-    X_train, X_holdout, y_train, y_holdout = train_test_split(
+    X_train, X_holdout, y_train, y_holdout = train_test_split(  # noqa: N806
         X, y, test_size=0.15, random_state=42
     )
 
@@ -115,7 +116,7 @@ def train_model(df: pd.DataFrame, feature_names: list[str]) -> tuple[object, dic
         "r2": float(np.corrcoef(y_pred, y_holdout)[0, 1] ** 2),
         "training_rows": len(X_train),
         "holdout_rows": len(X_holdout),
-        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist())),
+        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist(), strict=False)),  # noqa: E501
     }
 
     return model, metrics, mae
@@ -133,7 +134,7 @@ async def train_and_register(
 ) -> ModelRegistry | None:
     """Full training pipeline: build dataset → train → register in model_registry."""
     import src.engine.features.listing_features  # noqa: F401 — register features
-    import src.engine.features.market_features   # noqa: F401
+    import src.engine.features.market_features  # noqa: F401
     import src.engine.features.vehicle_features  # noqa: F401
 
     df = await build_training_dataset(session)
@@ -146,11 +147,11 @@ async def train_and_register(
     # Persist model to stable directory (not tempfile).
     # Models are saved under src/ml/models/{model_name}.pkl
     from src.ml.model_persistence import save_model
-    model_name = f"lightgbm_v{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M')}"
+    model_name = f"lightgbm_v{datetime.now(UTC).strftime('%Y%m%d_%H%M')}"
     model_path = save_model(model, model_name)
 
     registry = ModelRegistry(
-        trained_at=datetime.now(timezone.utc),
+        trained_at=datetime.now(UTC),
         model_type="lightgbm",
         model_path=model_path,
         model_name=model_name,

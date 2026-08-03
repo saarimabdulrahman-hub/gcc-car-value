@@ -4,6 +4,7 @@ Uses Claude API when available, falls back to template-based explanations.
 API key configured via CLAUDE_API_KEY env var.
 """
 from dataclasses import dataclass
+
 from src.config import get_settings
 
 settings = get_settings()
@@ -75,15 +76,15 @@ def _explain_with_template(ctx: ValuationContext) -> str:
         body += " Key factors affecting this price: "
         adj_texts = []
         for adj in ctx.adjustments:
-            adj_texts.append(adj.get("detail", f"{adj.get('reason')}: {adj.get('amount'):+,.0f} AED"))
+            adj_texts.append(adj.get("detail", f"{adj.get('reason')}: {adj.get('amount'):+,.0f} AED"))  # noqa: E501
         body += ". ".join(adj_texts) + "."
 
     # Knowledge base insights
     if ctx.knowledge:
         if ctx.knowledge.get("known_issues"):
-            body += f" Note: This model has {len(ctx.knowledge['known_issues'])} known issues to watch for. "
+            body += f" Note: This model has {len(ctx.knowledge['known_issues'])} known issues to watch for. "  # noqa: E501
         if ctx.knowledge.get("annual_maintenance_estimate"):
-            body += f"Annual maintenance is estimated at {ctx.knowledge['annual_maintenance_estimate']}. "
+            body += f"Annual maintenance is estimated at {ctx.knowledge['annual_maintenance_estimate']}. "  # noqa: E501
         if ctx.knowledge.get("market_liquidity"):
             body += f"Similar cars typically sell within {ctx.knowledge['market_liquidity']}. "
 
@@ -93,8 +94,8 @@ def _explain_with_template(ctx: ValuationContext) -> str:
 def _explain_with_claude(ctx: ValuationContext, api_key: str) -> str:
     """Use Claude API for a more natural explanation. Falls back to template on error."""
     try:
+
         import httpx
-        import json
 
         prompt = _build_claude_prompt(ctx)
         response = httpx.post(
@@ -123,9 +124,9 @@ def _explain_with_claude(ctx: ValuationContext, api_key: str) -> str:
 def _build_claude_prompt(ctx: ValuationContext) -> str:
     return (
         f"Explain this car valuation in 3-4 sentences for a consumer audience. "
-        f"Car: {ctx.year} {ctx.make} {ctx.model}, {ctx.mileage_km}km, {ctx.spec or 'unknown'} spec, "
+        f"Car: {ctx.year} {ctx.make} {ctx.model}, {ctx.mileage_km}km, {ctx.spec or 'unknown'} spec, "  # noqa: E501
         f"in {ctx.city or 'GCC'}. "
-        f"Estimated value: {ctx.estimate:,.0f} AED (range: {ctx.price_low:,.0f}-{ctx.price_high:,.0f}). "
+        f"Estimated value: {ctx.estimate:,.0f} AED (range: {ctx.price_low:,.0f}-{ctx.price_high:,.0f}). "  # noqa: E501
         f"Confidence: {ctx.confidence} based on {ctx.comp_count} comparable listings. "
         + ("Adjustments: " + "; ".join(
             a.get("detail", "") for a in ctx.adjustments

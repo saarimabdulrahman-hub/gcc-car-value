@@ -1,8 +1,9 @@
 import uuid
-from datetime import datetime, timezone
-from src.scrapers.base import BaseScraper, ScraperResult
-from src.models.pipeline_run import PipelineRun
+
 import structlog
+
+from src.models.pipeline_run import PipelineRun
+from src.scrapers.base import BaseScraper, ScraperResult
 
 logger = structlog.get_logger()
 
@@ -17,12 +18,24 @@ class PipelineOrchestrator:
         pipeline_runs = []
         for scraper in scrapers:
             logger.info("scraper_starting", source=scraper.source)
-            scraper_result = await scraper.run()
-            run = await self._record_run(scraper_result, scraper.source)
-            pipeline_runs.append(run)
-            logger.info("scraper_complete", source=scraper.source,
-                        records=scraper_result.records_ingested,
-                        run_id=str(run.run_id))
+            if getattr(scraper, "_session_factory", None) is None:
+                scraper._session_factory = self.session_factory
+            try:
+                scraper_result = await scraper.run()
+                if scraper_result.records_ingested == 0:
+                    logger.critical(
+                        "scraper_zero_yield", source=scraper.source,
+                        pages_crawled=scraper_result.pages_crawled,
+                        errors=len(scraper_result.errors),
+                        hint="selectors broken, blocked, or JS-rendered page")
+                run = await self._record_run(scraper_result, scraper.source)
+                pipeline_runs.append(run)
+                logger.info("scraper_complete", source=scraper.source,
+                            records=scraper_result.records_ingested,
+                            run_id=str(run.run_id))
+            except Exception:
+                logger.exception("scraper_fatal", source=scraper.source)
+                # One broken scraper must not kill the rest of the pipeline
         return pipeline_runs
 
     async def _record_run(self, result: ScraperResult, source: str) -> PipelineRun:
@@ -34,9 +47,12 @@ class PipelineOrchestrator:
                 completed_at=result.completed_at,
                 pages_crawled=result.pages_crawled,
                 records_ingested=result.records_ingested,
+                records_new=result.records_new,
+                records_updated=result.records_updated,
+                records_rejected=result.records_rejected,
                 error_count=len(result.errors),
                 errors=result.errors,
-                success=len(result.errors) == 0,
+                success=len(result.errors) == 0 and result.records_ingested > 0,
                 parser_version="1.0.0",
                 normalizer_version="1.0.0",
             )

@@ -5,16 +5,27 @@ It is never read directly from environment variables or config defaults.
 """
 import hashlib
 import secrets
-from datetime import datetime, timedelta, timezone
+import uuid
+from datetime import UTC, datetime, timedelta
+
 import jwt
 import structlog
 
 logger = structlog.get_logger()
 JWT_ALGORITHM = "HS256"
-TOKEN_EXPIRE_HOURS = 24
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+# In-memory cache of revoked JTIs. The DB is the source of truth; this is a
+# fast path that also keeps auth working during a brief DB outage.
+_revoked_jtis: set[str] = set()
 
 # Lazy-loaded JWT secret — resolved on first use via SecretProvider
 _jwt_secret: str | None = None
+
+from sqlalchemy import text  # noqa: E402
+
+from src.db.session import async_session_factory  # noqa: E402
 
 
 async def _get_jwt_secret() -> str:
@@ -61,7 +72,7 @@ def _get_jwt_secret_sync() -> str:
 
 def create_access_token(user_id: str, tier: str = "registered",
                         role: str = "consumer") -> str:
-    """Create a JWT access token for a user.
+    """Create a short-lived JWT access token (15 minutes).
 
     Args:
         user_id: User UUID string.
@@ -71,19 +82,87 @@ def create_access_token(user_id: str, tier: str = "registered",
     secret = _get_jwt_secret_sync()
     payload = {
         "sub": user_id,
+        "aud": "gcc-car-value-api",
         "tier": tier,
         "role": role,
-        "iat": datetime.now(timezone.utc),
-        "exp": datetime.now(timezone.utc) + timedelta(hours=TOKEN_EXPIRE_HOURS),
+        "jti": secrets.token_hex(8),
+        "type": "access",
+        "iat": datetime.now(UTC),
+        "exp": datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     }
     return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
 
-def verify_token(token: str) -> dict | None:
-    """Verify JWT token. Returns payload or None if invalid/expired."""
+def create_refresh_token(user_id: str) -> str:
+    """Create a long-lived refresh token (7 days)."""
+    secret = _get_jwt_secret_sync()
+    payload = {
+        "sub": user_id,
+        "aud": "gcc-car-value-api",
+        "jti": secrets.token_hex(16),
+        "type": "refresh",
+        "iat": datetime.now(UTC),
+        "exp": datetime.now(UTC) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+    }
+    return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
+
+
+async def revoke_token_jti(jti: str) -> None:
+    """Revoke a token by its JTI. Writes through to the DB, caches in memory."""
+    _revoked_jtis.add(jti)
+    try:
+        async with async_session_factory() as db:
+            await db.execute(
+                text("INSERT INTO dead_letter (id, source, external_id, rejection_reason, raw_data) "  # noqa: E501
+                     "VALUES (:id, 'auth', :jti, 'revoked_token', '{}')"),
+                {"id": str(uuid.uuid4()), "jti": jti},
+            )
+            await db.commit()
+    except Exception as exc:
+        # Never let a DB failure block logout. The in-memory set still holds
+        # for this process; the revocation is lost on restart.
+        logger.error("token_revoke_persist_failed", jti=jti[:8] + "...", error=str(exc)[:200])
+    logger.info("token_revoked", jti=jti[:8] + "...")
+
+
+async def is_token_revoked(jti: str) -> bool:
+    """Check revocation. Memory first, then DB. Fails open on DB error."""
+    if jti in _revoked_jtis:
+        return True
+    try:
+        async with async_session_factory() as db:
+            result = await db.execute(
+                text("SELECT id FROM dead_letter WHERE source = 'auth' "
+                     "AND external_id = :jti AND rejection_reason = 'revoked_token'"),
+                {"jti": jti},
+            )
+            revoked = result.fetchone() is not None
+    except Exception as exc:
+        # Fail OPEN: a DB outage must not 500 every authenticated request.
+        # Trade-off: a revoked token stays usable until the DB recovers.
+        # ponytail: acceptable for a 15-minute access token; revisit if
+        # revocation ever needs to be hard-guaranteed.
+        logger.error("token_revocation_check_failed", error=str(exc)[:200])
+        return False
+    if revoked:
+        _revoked_jtis.add(jti)   # cache the hit
+    return bool(revoked)
+
+
+async def verify_token(token: str, check_revoked: bool = True) -> dict | None:
+    """Verify JWT token. Returns payload or None if invalid/expired/revoked."""
     try:
         secret = _get_jwt_secret_sync()
-        return jwt.decode(token, secret, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(
+            token, secret,
+            algorithms=[JWT_ALGORITHM],
+            audience="gcc-car-value-api",
+        )
+        if check_revoked:
+            jti = payload.get("jti")
+            if jti and await is_token_revoked(jti):
+                return None
+        return payload
     except jwt.PyJWTError:
         return None
 

@@ -1,9 +1,10 @@
 """Memory health check — process memory usage and system thresholds."""
 
 import time
+
 import psutil
 
-from src.core.health.base import HealthCheck, CheckResult, CheckSeverity
+from src.core.health.base import CheckResult, CheckSeverity, HealthCheck
 
 
 class MemoryCheck(HealthCheck):

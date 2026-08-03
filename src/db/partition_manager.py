@@ -12,9 +12,10 @@ Usage from scheduler or CLI:
 """
 
 from datetime import datetime
+
 import structlog
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = structlog.get_logger()
 
@@ -114,7 +115,7 @@ class PartitionManager:
             return []
 
         detached = []
-        for part_name, part_from, _ in expired:
+        for part_name, _part_from, _ in expired:
             await self._detach_partition(table_name, part_name)
             detached.append(part_name)
 
@@ -263,6 +264,7 @@ class PartitionManager:
 async def _cli_main():
     """CLI for partition management. Intended for cron/scheduler use."""
     import argparse
+
     from src.db.session import async_session_factory
 
     parser = argparse.ArgumentParser(

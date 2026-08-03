@@ -1,5 +1,5 @@
 """Test comp finder scoring and platform attribution."""
-from src.engine.comp_finder import _platform_name, _score_comp, CompListing
+from src.engine.comp_finder import CompListing, _platform_name, _score_comp
 
 
 def test_platform_names():

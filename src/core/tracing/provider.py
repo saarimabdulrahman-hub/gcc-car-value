@@ -13,6 +13,7 @@ Configuration via Settings:
 from __future__ import annotations
 
 import structlog
+
 from src.config import get_settings
 
 logger = structlog.get_logger()
@@ -61,8 +62,8 @@ def init_tracing() -> None:
 def _do_init() -> None:
     """Internal OpenTelemetry SDK initialization."""
     from opentelemetry import trace
+    from opentelemetry.sdk.resources import SERVICE_NAME, Resource
     from opentelemetry.sdk.trace import TracerProvider
-    from opentelemetry.sdk.resources import Resource, SERVICE_NAME
 
     settings = get_settings()
 
@@ -75,7 +76,7 @@ def _do_init() -> None:
 
     # Sampler
     sample_rate = getattr(settings, 'otel_sample_rate', 1.0)
-    from opentelemetry.sdk.trace.sampling import TraceIdRatioBased, ALWAYS_ON, ALWAYS_OFF
+    from opentelemetry.sdk.trace.sampling import ALWAYS_OFF, ALWAYS_ON, TraceIdRatioBased
     if sample_rate >= 1.0:
         sampler = ALWAYS_ON
     elif sample_rate <= 0.0:

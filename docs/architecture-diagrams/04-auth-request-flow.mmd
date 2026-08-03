@@ -1,0 +1,28 @@
+flowchart LR
+    B["Browser<br/>Bearer access token"]
+    C["Explicit CORS allowlist"]
+    H["Security headers<br/>CSP · HSTS · frame deny"]
+    T["Correlation + tracing<br/>request context"]
+    R["Rate limiter"]
+    J["JWT verification<br/>audience · expiry · JTI"]
+    U[("User account<br/>authoritative role")]
+    P{"RBAC permission<br/>granted?"}
+    W["Protected route<br/>admin · watchlist · alerts"]
+    D["401 / 403<br/>audited denial"]
+
+    B --> C --> H --> T --> R --> J
+    J -->|"valid"| U --> P
+    J -->|"missing / invalid"| D
+    P -->|"yes"| W
+    P -->|"no"| D
+
+    classDef browser fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef guard fill:#102a43,stroke:#4f86c6,color:#fff,stroke-width:2px;
+    classDef store fill:#f0f5f9,stroke:#66788a,color:#14202b,stroke-width:2px;
+    classDef success fill:#173f35,stroke:#58a88c,color:#fff,stroke-width:2px;
+    classDef denied fill:#fff0f0,stroke:#cf5c5c,color:#5b1515,stroke-width:2px;
+    class B browser;
+    class C,H,T,R,J,P guard;
+    class U store;
+    class W success;
+    class D denied;

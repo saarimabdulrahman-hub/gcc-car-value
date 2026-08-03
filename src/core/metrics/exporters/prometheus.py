@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from src.core.metrics.exporters.base import MetricExporter
-from src.core.metrics.prometheus_formatter import format_metrics, CONTENT_TYPE
+from src.core.metrics.prometheus_formatter import CONTENT_TYPE, format_metrics
 
 if TYPE_CHECKING:
     from src.core.metrics.registry import MetricsRegistry
@@ -27,7 +27,7 @@ class PrometheusExporter(MetricExporter):
         text = await exporter.export()  # Returns (content_type, body)
     """
 
-    def __init__(self, registry: "MetricsRegistry"):
+    def __init__(self, registry: MetricsRegistry):
         super().__init__(registry)
 
     def format_name(self) -> str:

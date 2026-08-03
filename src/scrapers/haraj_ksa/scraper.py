@@ -1,7 +1,11 @@
 """Haraj KSA scraper — Saudi Arabia's largest car marketplace."""
 import re
+
 from bs4 import BeautifulSoup
+
 from src.scrapers.base import BaseScraper
+from src.scrapers.title_parser import extract_make_model
+
 
 class HarajKSAScraper(BaseScraper):
     source = "haraj_ksa"
@@ -39,13 +43,18 @@ class HarajKSAScraper(BaseScraper):
         title = soup.select_one("h1, .title, [class*='title']")
         title_text = title.get_text(strip=True) if title else ""
 
-        result["make"], result["model"] = self._extract_make_model(title_text)
+        result["make"], result["model"] = extract_make_model(title_text)
         result["year"] = self._extract_year(title_text)
-        result["spec"] = self._extract_spec(title_text + " " + html)
-        result["mileage_km"] = self._extract_mileage(title_text + " " + html)
+
+        # Scope to the listing body; fall back to the title only, never whole HTML.
+        body = soup.select_one("[class*='postBody'], [class*='post-body'], article, main")
+        scope_text = body.get_text(" ", strip=True) if body else title_text
+
+        result["spec"] = self._extract_spec(scope_text)
+        result["mileage_km"] = self._extract_mileage(scope_text)
 
         # Price — Haraj prices are in SAR
-        price_elem = soup.select_one("[class*='price'], .price-value, td:contains('السعر') + td")
+        price_elem = soup.select_one("[class*='price'], .price-value")
         if price_elem:
             price_text = price_elem.get_text(strip=True)
             result["asking_price"] = self._extract_number(price_text)
@@ -57,19 +66,20 @@ class HarajKSAScraper(BaseScraper):
         result["external_id"] = match.group(1) if match else ""
 
         # Body type
-        if "suv" in html.lower() or "دفع رباعي" in html:
+        scope_lower = scope_text.lower()
+        if "suv" in scope_lower or "دفع رباعي" in scope_text:
             result["body_type"] = "SUV"
-        elif "sedan" in html.lower() or "سيدان" in html:
+        elif "sedan" in scope_lower or "سيدان" in scope_text:
             result["body_type"] = "sedan"
 
         # Transmission
-        if "automatic" in html.lower() or "اوتوماتيك" in html or "أوتوماتيك" in html:
+        if "automatic" in scope_lower or "اوتوماتيك" in scope_text or "أوتوماتيك" in scope_text:
             result["transmission"] = "automatic"
-        elif "manual" in html.lower() or "عادي" in html:
+        elif "manual" in scope_lower or "عادي" in scope_text:
             result["transmission"] = "manual"
 
         # City
-        city_match = re.search(r'(الرياض|جدة|الدمام|مكة|المدينة|القصيم|تبوك|الخبر)', html)
+        city_match = re.search(r'(الرياض|جدة|الدمام|مكة|المدينة|القصيم|تبوك|الخبر)', scope_text)
         if city_match:
             city_map = {
                 "الرياض": "Riyadh", "جدة": "Jeddah", "الدمام": "Dammam",
@@ -82,11 +92,6 @@ class HarajKSAScraper(BaseScraper):
         result["schema_version"] = 1
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
-
-    def _extract_make_model(self, title: str) -> tuple[str, str]:
-        # Handle both Arabic and English titles
-        tokens = title.split()
-        return (tokens[0], tokens[1]) if len(tokens) >= 2 else ("", "")
 
     def _extract_year(self, text: str) -> int | None:
         match = re.search(r'\b(19\d{2}|20[0-2]\d)\b', text)
@@ -105,7 +110,7 @@ class HarajKSAScraper(BaseScraper):
 
     def _extract_spec(self, text: str) -> str | None:
         t = text.lower()
-        if "gcc" in t or "خليجي" in t: return "GCC"
-        if "american" in t or "us spec" in t or "امريكي" in t: return "US"
-        if "japan" in t or "ياباني" in t: return "Japan"
+        if "gcc" in t or "خليجي" in t: return "GCC"  # noqa: E701
+        if "american" in t or "us spec" in t or "امريكي" in t: return "US"  # noqa: E701
+        if "japan" in t or "ياباني" in t: return "Japan"  # noqa: E701
         return None

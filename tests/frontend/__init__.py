@@ -1,0 +1,1 @@
+"""Static production frontend tests."""

@@ -1,6 +1,6 @@
 """Pydantic schemas for valuation request/response."""
+
 from pydantic import BaseModel, Field
-from typing import Optional
 
 
 class ValuationRequest(BaseModel):
@@ -12,7 +12,7 @@ class ValuationRequest(BaseModel):
     trim: str | None = Field(None, description="Trim level, e.g. VXR")
     city: str | None = Field(None, description="City, e.g. Dubai")
     country: str | None = Field(None, description="Country code: AE, SA, QA, KW, BH, OM")
-    asking_price: float | None = Field(None, gt=0, description="Price to evaluate for deal indicator")
+    asking_price: float | None = Field(None, gt=0, description="Price to evaluate for deal indicator")  # noqa: E501
 
 
 class CompSummary(BaseModel):

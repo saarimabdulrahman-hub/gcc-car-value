@@ -4,8 +4,8 @@ Replaces the tempfile approach in trainer.py with a stable directory.
 Models are stored under src/ml/models/ (gitignored) and identified by model_name.
 """
 import pickle
-import os
 from pathlib import Path
+
 import structlog
 
 logger = structlog.get_logger()

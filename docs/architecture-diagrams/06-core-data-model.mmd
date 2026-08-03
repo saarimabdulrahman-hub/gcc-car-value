@@ -1,0 +1,30 @@
+flowchart TD
+    U["user_accounts"]
+    W["saved_valuations"]
+    A["price_alerts"]
+    C["canonical_vehicles"]
+    L["listings"]
+    S["listing_snapshots"]
+    P["pipeline_runs"]
+    D["dead_letter"]
+    H["scraper_health"]
+    V["valuation_queries"]
+    M["model_registry"]
+
+    U -->|"owns"| W
+    U -->|"owns"| A
+    C -->|"groups"| L
+    L -->|"has history"| S
+    P -->|"records rejected rows"| D
+    P -->|"feeds health history"| H
+    L -->|"supplies comparables"| V
+    M -->|"optional active model"| V
+
+    classDef account fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef market fill:#173f35,stroke:#58a88c,color:#fff,stroke-width:2px;
+    classDef ops fill:#102a43,stroke:#4f86c6,color:#fff,stroke-width:2px;
+    classDef intelligence fill:#f7f1fb,stroke:#8f6bb3,color:#2f1c40,stroke-width:2px;
+    class U,W,A account;
+    class C,L,S market;
+    class P,D,H ops;
+    class V,M intelligence;

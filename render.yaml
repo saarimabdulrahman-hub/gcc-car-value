@@ -3,17 +3,28 @@ services:
     name: gcc-car-value-api
     runtime: docker
     repo: https://github.com/saarimabdulrahman-hub/gcc-car-value.git
-    branch: feature-url-valuation
+    branch: master
     rootDir: .
     dockerfilePath: docker/Dockerfile.api
-    healthCheckPath: /v1/health
-    plan: free
+    healthCheckPath: /v1/health/live
+    plan: starter
     envVars:
+      - key: SECRET_PROVIDER
+        value: environment
+      - key: API_CORS_ORIGINS
+        value: https://gcc-car-value.vercel.app
       - key: DATABASE_URL
         sync: false
       - key: DATABASE_URL_SYNC
         sync: false
       - key: JWT_SECRET
-        generateValue: true
+        generateValue: true   # Render generates a 256-bit hex value (64 chars)
       - key: ENVIRONMENT
         value: production
+      # S3 credentials for scraper raw data storage
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+      - key: S3_REGION
+        value: me-central-1

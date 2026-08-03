@@ -3,14 +3,15 @@
 Run once: python -m src.knowledge.seed
 Populates: car_specs, car_issues, maintenance_costs, depreciation_curves, model_ratings
 """
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.models.car_spec import CarSpec
-from src.models.car_issue import CarIssue
-from src.models.maintenance_cost import MaintenanceCost
-from src.models.depreciation_curve import DepreciationCurve
-from src.models.model_rating import ModelRating
-from src.db.session import async_session_factory
 import structlog
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.session import async_session_factory
+from src.models.car_issue import CarIssue
+from src.models.car_spec import CarSpec
+from src.models.depreciation_curve import DepreciationCurve
+from src.models.maintenance_cost import MaintenanceCost
+from src.models.model_rating import ModelRating
 
 logger = structlog.get_logger()
 
@@ -25,7 +26,7 @@ MODELS = {
             "J200 (2008-2021)": {
                 "year_start": 2008, "year_end": 2021,
                 "body_type": "SUV",
-                "engine": [{"size": 5.7, "cylinders": 8, "fuel": "petrol", "hp": 362, "torque": 530}],
+                "engine": [{"size": 5.7, "cylinders": 8, "fuel": "petrol", "hp": 362, "torque": 530}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "4WD",
                 "fuel_economy": 14.5, "fuel_tank": 138, "seats": 8,
@@ -36,10 +37,10 @@ MODELS = {
                      "desc": "Rattling noise on cold start. Replace tensioner before chain jumps."},
                     {"title": "Radiator cracking", "severity": "moderate",
                      "mileage": 150000, "cost": 2500,
-                     "desc": "Plastic top tank cracks in GCC heat. Replace with all-aluminum radiator."},
+                     "desc": "Plastic top tank cracks in GCC heat. Replace with all-aluminum radiator."},  # noqa: E501
                     {"title": "Air suspension pump failure", "severity": "major",
                      "mileage": 180000, "cost": 6000,
-                     "desc": "VXR models only. Pump motor burns out. Convert to coil springs for reliability."},
+                     "desc": "VXR models only. Pump motor burns out. Convert to coil springs for reliability."},  # noqa: E501
                     {"title": "Water pump leak", "severity": "minor",
                      "mileage": 100000, "cost": 1500,
                      "desc": "Slow coolant leak from weep hole. Replace with timing belt service."},
@@ -55,7 +56,7 @@ MODELS = {
             "J300 (2022-present)": {
                 "year_start": 2022, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 409, "torque": 650}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 409, "torque": 650}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "4WD",
                 "fuel_economy": 12.0, "fuel_tank": 110, "seats": 7,
@@ -78,8 +79,8 @@ MODELS = {
             "J150 (2010-present)": {
                 "year_start": 2010, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 4.0, "cylinders": 6, "fuel": "petrol", "hp": 271, "torque": 381},
-                           {"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],
+                "engine": [{"size": 4.0, "cylinders": 6, "fuel": "petrol", "hp": 271, "torque": 381},  # noqa: E501
+                           {"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "4WD",
                 "fuel_economy": 12.5, "fuel_tank": 150, "seats": 7,
@@ -87,13 +88,13 @@ MODELS = {
                 "issues": [
                     {"title": "Front brake rotor warping", "severity": "moderate",
                      "mileage": 60000, "cost": 2000,
-                     "desc": "Steering wheel vibration under braking. Replace with aftermarket rotors."},
+                     "desc": "Steering wheel vibration under braking. Replace with aftermarket rotors."},  # noqa: E501
                     {"title": "KDSS suspension lean", "severity": "minor",
                      "mileage": 100000, "cost": 3000,
                      "desc": "Vehicle leans to one side. KDSS valve replacement needed."},
                     {"title": "Injector failure", "severity": "major",
                      "mileage": 150000, "cost": 8000,
-                     "desc": "Diesel models only. Rough idle, white smoke. Replace all 4 injectors."},
+                     "desc": "Diesel models only. Rough idle, white smoke. Replace all 4 injectors."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -108,7 +109,7 @@ MODELS = {
             "XV70 (2018-present)": {
                 "year_start": 2018, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 204, "torque": 243}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 204, "torque": 243}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "FWD",
                 "fuel_economy": 7.5, "fuel_tank": 60, "seats": 5,
@@ -131,7 +132,7 @@ MODELS = {
             "E210 (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 169, "torque": 200}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 169, "torque": 200}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 7}],
                 "drivetrain": "FWD",
                 "fuel_economy": 6.5, "fuel_tank": 50, "seats": 5,
@@ -150,7 +151,7 @@ MODELS = {
             "AN120 (2016-present)": {
                 "year_start": 2016, "year_end": None,
                 "body_type": "pickup",
-                "engine": [{"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],
+                "engine": [{"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "4WD",
                 "fuel_economy": 9.0, "fuel_tank": 80, "seats": 5,
@@ -176,7 +177,7 @@ MODELS = {
             "AN160 (2016-present)": {
                 "year_start": 2016, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],
+                "engine": [{"size": 2.8, "cylinders": 4, "fuel": "diesel", "hp": 201, "torque": 500}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "4WD",
                 "fuel_economy": 8.5, "fuel_tank": 80, "seats": 7,
@@ -184,7 +185,7 @@ MODELS = {
                 "issues": [
                     {"title": "Rear suspension harshness", "severity": "minor",
                      "mileage": 50000, "cost": 1500,
-                     "desc": "Harsh ride over bumps. Aftermarket shocks improve comfort significantly."},
+                     "desc": "Harsh ride over bumps. Aftermarket shocks improve comfort significantly."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -199,7 +200,7 @@ MODELS = {
             "XA50 (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "hybrid", "hp": 219, "torque": 221}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "hybrid", "hp": 219, "torque": 221}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 5.5, "fuel_tank": 55, "seats": 5,
@@ -224,7 +225,7 @@ MODELS = {
             "Y62 (2010-present)": {
                 "year_start": 2010, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 5.6, "cylinders": 8, "fuel": "petrol", "hp": 400, "torque": 560}],
+                "engine": [{"size": 5.6, "cylinders": 8, "fuel": "petrol", "hp": 400, "torque": 560}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 7}],
                 "drivetrain": "4WD",
                 "fuel_economy": 14.5, "fuel_tank": 140, "seats": 8,
@@ -232,7 +233,7 @@ MODELS = {
                 "issues": [
                     {"title": "Transmission shudder", "severity": "major",
                      "mileage": 120000, "cost": 12000,
-                     "desc": "Torque converter shudder at 40-60 km/h. Full transmission rebuild often needed."},
+                     "desc": "Torque converter shudder at 40-60 km/h. Full transmission rebuild often needed."},  # noqa: E501
                     {"title": "Catalytic converter failure", "severity": "major",
                      "mileage": 150000, "cost": 8000,
                      "desc": "Check engine light, power loss. GCC fuel quality contributes."},
@@ -256,7 +257,7 @@ MODELS = {
             "B18 (2020-present)": {
                 "year_start": 2020, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 1.6, "cylinders": 4, "fuel": "petrol", "hp": 118, "torque": 149}],
+                "engine": [{"size": 1.6, "cylinders": 4, "fuel": "petrol", "hp": 118, "torque": 149}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 5}],
                 "drivetrain": "FWD",
                 "fuel_economy": 6.0, "fuel_tank": 41, "seats": 5,
@@ -279,7 +280,7 @@ MODELS = {
             "L34 (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 188, "torque": 244}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 188, "torque": 244}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "FWD",
                 "fuel_economy": 7.0, "fuel_tank": 62, "seats": 5,
@@ -304,7 +305,7 @@ MODELS = {
             "10th Gen (2018-present)": {
                 "year_start": 2018, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 1.5, "cylinders": 4, "fuel": "petrol", "hp": 192, "torque": 260}],
+                "engine": [{"size": 1.5, "cylinders": 4, "fuel": "petrol", "hp": 192, "torque": 260}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 7}],
                 "drivetrain": "FWD",
                 "fuel_economy": 7.0, "fuel_tank": 56, "seats": 5,
@@ -327,7 +328,7 @@ MODELS = {
             "11th Gen (2022-present)": {
                 "year_start": 2022, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 158, "torque": 187}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 158, "torque": 187}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 7}],
                 "drivetrain": "FWD",
                 "fuel_economy": 6.5, "fuel_tank": 47, "seats": 5,
@@ -346,7 +347,7 @@ MODELS = {
             "5th Gen (2017-2022)": {
                 "year_start": 2017, "year_end": 2022,
                 "body_type": "SUV",
-                "engine": [{"size": 1.5, "cylinders": 4, "fuel": "petrol", "hp": 190, "torque": 243}],
+                "engine": [{"size": 1.5, "cylinders": 4, "fuel": "petrol", "hp": 190, "torque": 243}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 7}],
                 "drivetrain": "AWD",
                 "fuel_economy": 7.5, "fuel_tank": 57, "seats": 5,
@@ -371,7 +372,7 @@ MODELS = {
             "NX4 (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 241}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 241}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 8.0, "fuel_tank": 54, "seats": 5,
@@ -379,7 +380,7 @@ MODELS = {
                 "issues": [
                     {"title": "DCT hesitation", "severity": "minor",
                      "mileage": 30000, "cost": 0,
-                     "desc": "Dual-clutch hesitation in stop-start traffic. Software update available."},
+                     "desc": "Dual-clutch hesitation in stop-start traffic. Software update available."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -394,7 +395,7 @@ MODELS = {
             "TM (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 277, "torque": 336}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 277, "torque": 336}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 10.0, "fuel_tank": 67, "seats": 7,
@@ -413,7 +414,7 @@ MODELS = {
             "CN7 (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 147, "torque": 179}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 147, "torque": 179}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "FWD",
                 "fuel_economy": 6.5, "fuel_tank": 47, "seats": 5,
@@ -434,7 +435,7 @@ MODELS = {
             "NQ5 (2022-present)": {
                 "year_start": 2022, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 241}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 241}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 8.0, "fuel_tank": 54, "seats": 5,
@@ -453,7 +454,7 @@ MODELS = {
             "MQ4 (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 277, "torque": 336}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 277, "torque": 336}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 10.5, "fuel_tank": 67, "seats": 7,
@@ -474,7 +475,7 @@ MODELS = {
             "V97 (2006-2021)": {
                 "year_start": 2006, "year_end": 2021,
                 "body_type": "SUV",
-                "engine": [{"size": 3.8, "cylinders": 6, "fuel": "petrol", "hp": 247, "torque": 329}],
+                "engine": [{"size": 3.8, "cylinders": 6, "fuel": "petrol", "hp": 247, "torque": 329}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 5}],
                 "drivetrain": "4WD",
                 "fuel_economy": 13.5, "fuel_tank": 88, "seats": 7,
@@ -482,7 +483,7 @@ MODELS = {
                 "issues": [
                     {"title": "Timing belt replacement", "severity": "major",
                      "mileage": 100000, "cost": 3000,
-                     "desc": "Critical maintenance. Belt failure = engine damage. Replace every 100K km."},
+                     "desc": "Critical maintenance. Belt failure = engine damage. Replace every 100K km."},  # noqa: E501
                     {"title": "Intake manifold gasket leak", "severity": "moderate",
                      "mileage": 120000, "cost": 1500,
                      "desc": "Rough idle, vacuum leak. Plastic manifold warps in GCC heat."},
@@ -503,7 +504,7 @@ MODELS = {
             "CY (2007-2017)": {
                 "year_start": 2007, "year_end": 2017,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 150, "torque": 197}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 150, "torque": 197}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "FWD",
                 "fuel_economy": 7.5, "fuel_tank": 59, "seats": 5,
@@ -528,7 +529,7 @@ MODELS = {
             "KF (2017-present)": {
                 "year_start": 2017, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 252}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 187, "torque": 252}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "AWD",
                 "fuel_economy": 7.5, "fuel_tank": 58, "seats": 5,
@@ -551,7 +552,7 @@ MODELS = {
             "TC (2016-present)": {
                 "year_start": 2016, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 250, "torque": 420}],
+                "engine": [{"size": 2.5, "cylinders": 4, "fuel": "petrol", "hp": 250, "torque": 420}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 6}],
                 "drivetrain": "AWD",
                 "fuel_economy": 9.5, "fuel_tank": 74, "seats": 7,
@@ -576,7 +577,7 @@ MODELS = {
             "U625 (2020-present)": {
                 "year_start": 2020, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 365, "torque": 515}],
+                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 365, "torque": 515}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "AWD",
                 "fuel_economy": 11.0, "fuel_tank": 73, "seats": 7,
@@ -587,7 +588,7 @@ MODELS = {
                      "desc": "10-speed harsh 1-2-3 shift. Software TSB fixes most cases."},
                     {"title": "Water pump failure", "severity": "major",
                      "mileage": 100000, "cost": 6000,
-                     "desc": "Internal water pump leaks into oil. Catastrophic if not caught early."},
+                     "desc": "Internal water pump leaks into oil. Catastrophic if not caught early."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -602,7 +603,7 @@ MODELS = {
             "U553 (2018-present)": {
                 "year_start": 2018, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 375, "torque": 637}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 375, "torque": 637}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "4WD",
                 "fuel_economy": 12.5, "fuel_tank": 106, "seats": 8,
@@ -627,7 +628,7 @@ MODELS = {
             "GMT1YC (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 5.3, "cylinders": 8, "fuel": "petrol", "hp": 355, "torque": 519}],
+                "engine": [{"size": 5.3, "cylinders": 8, "fuel": "petrol", "hp": 355, "torque": 519}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "4WD",
                 "fuel_economy": 13.0, "fuel_tank": 106, "seats": 8,
@@ -635,7 +636,7 @@ MODELS = {
                 "issues": [
                     {"title": "AFM lifter failure", "severity": "major",
                      "mileage": 80000, "cost": 9000,
-                     "desc": "Active Fuel Management lifters collapse. Delete AFM for reliability in GCC."},
+                     "desc": "Active Fuel Management lifters collapse. Delete AFM for reliability in GCC."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -652,7 +653,7 @@ MODELS = {
             "G30 (2017-2023)": {
                 "year_start": 2017, "year_end": 2023,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 252, "torque": 350}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 252, "torque": 350}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "RWD",
                 "fuel_economy": 6.5, "fuel_tank": 68, "seats": 5,
@@ -678,7 +679,7 @@ MODELS = {
             "G05 (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 335, "torque": 450}],
+                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 335, "torque": 450}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "AWD",
                 "fuel_economy": 9.0, "fuel_tank": 83, "seats": 5,
@@ -706,7 +707,7 @@ MODELS = {
             "W213 (2016-2023)": {
                 "year_start": 2016, "year_end": 2023,
                 "body_type": "sedan",
-                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 255, "torque": 370}],
+                "engine": [{"size": 2.0, "cylinders": 4, "fuel": "petrol", "hp": 255, "torque": 370}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 9}],
                 "drivetrain": "RWD",
                 "fuel_economy": 7.0, "fuel_tank": 66, "seats": 5,
@@ -732,7 +733,7 @@ MODELS = {
             "W223 (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 429, "torque": 520}],
+                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 429, "torque": 520}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 9}],
                 "drivetrain": "AWD",
                 "fuel_economy": 9.0, "fuel_tank": 76, "seats": 5,
@@ -757,7 +758,7 @@ MODELS = {
             "J310 (2022-present)": {
                 "year_start": 2022, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 409, "torque": 650}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 409, "torque": 650}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "4WD",
                 "fuel_economy": 12.0, "fuel_tank": 110, "seats": 7,
@@ -776,7 +777,7 @@ MODELS = {
             "XZ10 (2019-present)": {
                 "year_start": 2019, "year_end": None,
                 "body_type": "sedan",
-                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 302, "torque": 362}],
+                "engine": [{"size": 3.5, "cylinders": 6, "fuel": "petrol", "hp": 302, "torque": 362}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "FWD",
                 "fuel_economy": 8.5, "fuel_tank": 60, "seats": 5,
@@ -797,7 +798,7 @@ MODELS = {
             "GMT1YC (2021-present)": {
                 "year_start": 2021, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 5.3, "cylinders": 8, "fuel": "petrol", "hp": 355, "torque": 519}],
+                "engine": [{"size": 5.3, "cylinders": 8, "fuel": "petrol", "hp": 355, "torque": 519}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 10}],
                 "drivetrain": "4WD",
                 "fuel_economy": 13.0, "fuel_tank": 106, "seats": 8,
@@ -805,7 +806,7 @@ MODELS = {
                 "issues": [
                     {"title": "AFM lifter failure", "severity": "major",
                      "mileage": 80000, "cost": 9000,
-                     "desc": "Same GM 5.3L AFM issue as Tahoe/Suburban. Delete AFM for reliability."},
+                     "desc": "Same GM 5.3L AFM issue as Tahoe/Suburban. Delete AFM for reliability."},  # noqa: E501
                 ],
                 "maintenance": {
                     "interval_km": 10000,
@@ -822,7 +823,7 @@ MODELS = {
             "L460 (2022-present)": {
                 "year_start": 2022, "year_end": None,
                 "body_type": "SUV",
-                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 395, "torque": 550}],
+                "engine": [{"size": 3.0, "cylinders": 6, "fuel": "petrol", "hp": 395, "torque": 550}],  # noqa: E501
                 "transmission": [{"type": "automatic", "gears": 8}],
                 "drivetrain": "4WD",
                 "fuel_economy": 11.0, "fuel_tank": 90, "seats": 5,

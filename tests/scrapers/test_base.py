@@ -1,5 +1,7 @@
 import time
+
 import pytest
+
 from src.scrapers.rate_limiter import RateLimiter
 
 

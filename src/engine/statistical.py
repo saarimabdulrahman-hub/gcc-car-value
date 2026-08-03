@@ -3,10 +3,12 @@
 Spec Section 6: Computes fair market value from comparable listings.
 Always runs (even when ML is active) as the baseline and explainability layer.
 """
-from dataclasses import dataclass, field
-from src.engine.comp_finder import CompListing, find_comps
-from sqlalchemy.ext.asyncio import AsyncSession
+from dataclasses import dataclass
+
 import numpy as np
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.engine.comp_finder import CompListing, find_comps
 
 
 @dataclass
@@ -55,9 +57,9 @@ async def valuate(
 
     # Step 2: Compute percentile bands from comps
     prices = np.array([c.asking_price_aed for c in comps])
-    p25 = float(np.percentile(prices, 25))
+    float(np.percentile(prices, 25))
     p50 = float(np.percentile(prices, 50))
-    p75 = float(np.percentile(prices, 75))
+    float(np.percentile(prices, 75))
 
     estimate = p50
     adjustments: list[Adjustment] = []
@@ -75,7 +77,7 @@ async def valuate(
             adjustments.append(Adjustment(
                 reason="mileage",
                 amount=mileage_adj,
-                detail=f"{'More' if mileage_delta > 0 else 'Fewer'} km than segment avg. Adjustment: {mileage_adj:+.0f} AED"
+                detail=f"{'More' if mileage_delta > 0 else 'Fewer'} km than segment avg. Adjustment: {mileage_adj:+.0f} AED"  # noqa: E501
             ))
 
     # Step 4: Spec adjustment

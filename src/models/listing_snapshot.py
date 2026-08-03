@@ -1,8 +1,10 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, DateTime, ForeignKey, func
-from src.db.base import UniversalUUID
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text
 from sqlalchemy.orm import relationship
-from src.db.base import Base, LineageMixin
+
+from src.db.base import Base, LineageMixin, UniversalUUID
+
 
 class ListingSnapshot(Base, LineageMixin):
     __tablename__ = "listing_snapshots"

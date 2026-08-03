@@ -1,6 +1,7 @@
 """Logging configuration — structlog processors, dev/prod mode, log levels."""
 
 import logging
+
 import structlog
 
 from src.config import get_settings

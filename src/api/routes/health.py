@@ -5,12 +5,16 @@ The registry executes all registered checks concurrently with per-check timeouts
 """
 
 from fastapi import APIRouter, Response
+
 from src.core.health import HealthRegistry
 from src.core.health.checks import (
-    DatabaseCheck, MemoryCheck, ConfigurationCheck,
-    SecretsCheck, MetricsRegistryCheck,
+    ConfigurationCheck,
+    DatabaseCheck,
+    MemoryCheck,
+    MetricsRegistryCheck,
+    SecretsCheck,
 )
-from src.api.dependencies import async_session_factory
+from src.db.session import async_session_factory
 
 router = APIRouter()
 

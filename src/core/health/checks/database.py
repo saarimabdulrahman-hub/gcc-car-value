@@ -1,11 +1,12 @@
 """Database health check — connectivity, pool health, migration state."""
 
 import time
-from typing import Callable
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
+from collections.abc import Callable
 
-from src.core.health.base import HealthCheck, CheckResult, CheckSeverity
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.core.health.base import CheckResult, CheckSeverity, HealthCheck
 
 
 class DatabaseCheck(HealthCheck):

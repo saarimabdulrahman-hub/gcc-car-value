@@ -1,9 +1,16 @@
 """Test SecretProvider — environment provider, masking, policies."""
 import os
+
 import pytest
+
 from src.config.secrets import (
-    EnvironmentProvider, SecretName, mask_sensitive_value, MASKED,
-    SECRET_POLICIES, get_secret_provider, reset_secret_provider,
+    MASKED,
+    SECRET_POLICIES,
+    EnvironmentProvider,
+    SecretName,
+    get_secret_provider,
+    mask_sensitive_value,
+    reset_secret_provider,
 )
 
 
@@ -94,3 +101,59 @@ class TestProviderFactory:
         # Default environment is development
         provider = get_secret_provider()
         assert isinstance(provider, EnvironmentProvider)
+
+
+class TestProviderSelection:
+    """Provider is chosen by SECRET_PROVIDER, never derived from ENVIRONMENT.
+
+    Regression guard: production on Render must use env vars, not AWS.
+    """
+
+    @pytest.fixture(autouse=True)
+    def clear_settings_cache(self):
+        from src.config.settings import get_settings
+        get_settings.cache_clear()
+        yield
+        get_settings.cache_clear()
+
+    def test_environment_provider_selected_explicitly(self, monkeypatch):
+        monkeypatch.setenv("SECRET_PROVIDER", "environment")
+        monkeypatch.setenv("ENVIRONMENT", "production")  # must NOT force AWS
+        reset_secret_provider()
+        provider = get_secret_provider()
+        assert isinstance(provider, EnvironmentProvider)
+        assert provider.source_name == "environment"
+
+    def test_production_env_does_not_imply_aws(self, monkeypatch):
+        """The old bug: ENVIRONMENT=production selected AWS. It must not."""
+        monkeypatch.setenv("ENVIRONMENT", "production")
+        monkeypatch.delenv("SECRET_PROVIDER", raising=False)  # default applies
+        reset_secret_provider()
+        provider = get_secret_provider()
+        assert isinstance(provider, EnvironmentProvider)
+
+    def test_aws_provider_selected_explicitly(self, monkeypatch):
+        from src.config.secrets import AwsSecretsManagerProvider
+        monkeypatch.setenv("SECRET_PROVIDER", "aws")
+        monkeypatch.setenv("ENVIRONMENT", "production")
+        reset_secret_provider()
+        provider = get_secret_provider()
+        assert isinstance(provider, AwsSecretsManagerProvider)
+        assert provider.source_name == "aws-secrets-manager"
+
+    def test_invalid_provider_rejected(self, monkeypatch):
+        from src.config.settings import Settings
+        with pytest.raises(ValueError, match="SECRET_PROVIDER"):
+            Settings(_env_file=None, secret_provider="vault",
+                     jwt_secret="x" * 40)
+
+    @pytest.mark.asyncio
+    async def test_environment_provider_reads_render_style_secret(self, monkeypatch):
+        """Render supplies JWT_SECRET as an env var; provider must return it."""
+        monkeypatch.setenv("SECRET_PROVIDER", "environment")
+        monkeypatch.setenv("ENVIRONMENT", "production")
+        monkeypatch.setenv("JWT_SECRET", "R3nd3r" + "a" * 40)
+        reset_secret_provider()
+        provider = get_secret_provider()
+        value = await provider.get(SecretName.JWT_SECRET.value)
+        assert value == "R3nd3r" + "a" * 40

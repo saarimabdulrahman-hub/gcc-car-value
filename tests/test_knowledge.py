@@ -1,6 +1,5 @@
 """Test knowledge base seed data."""
-import pytest
-from src.knowledge.seed import MODELS, DEPRECIATION
+from src.knowledge.seed import DEPRECIATION, MODELS
 
 
 def test_all_makes_have_models():
@@ -23,8 +22,8 @@ def test_all_generations_have_specs():
         for model_name, generations in models.items():
             for gen_name, gen_data in generations.items():
                 assert gen_data.get("engine"), f"{make} {model_name} {gen_name}: missing engine"
-                assert gen_data.get("fuel_economy"), f"{make} {model_name} {gen_name}: missing fuel_economy"
-                assert gen_data.get("maintenance"), f"{make} {model_name} {gen_name}: missing maintenance"
+                assert gen_data.get("fuel_economy"), f"{make} {model_name} {gen_name}: missing fuel_economy"  # noqa: E501
+                assert gen_data.get("maintenance"), f"{make} {model_name} {gen_name}: missing maintenance"  # noqa: E501
                 assert gen_data.get("ratings"), f"{make} {model_name} {gen_name}: missing ratings"
 
 
@@ -42,7 +41,7 @@ def test_all_ratings_in_range():
         for model_name, generations in models.items():
             for gen_data in generations.values():
                 r = gen_data["ratings"]
-                for key in ["reliability", "comfort", "performance", "fuel_economy", "resale", "overall"]:
+                for key in ["reliability", "comfort", "performance", "fuel_economy", "resale", "overall"]:  # noqa: E501
                     val = r.get(key)
                     assert val is not None, f"{make} {model_name}: missing rating {key}"
                     assert 1 <= val <= 5, f"{make} {model_name}: {key}={val} out of range"

@@ -11,14 +11,14 @@ from __future__ import annotations
 
 import time
 import uuid
-from typing import Callable
+from collections.abc import Callable
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
 from src.core.context.models import RequestContext
-from src.core.context.storage import set_context, clear_context, get_context
+from src.core.context.storage import clear_context, get_context, set_context
 from src.core.logging.context import bind_context as log_bind
 
 

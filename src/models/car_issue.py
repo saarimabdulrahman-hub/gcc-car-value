@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, Boolean, DateTime, func
-from src.db.base import UniversalUUID
-from src.db.base import Base
+
+from sqlalchemy import Boolean, Column, DateTime, Float, Integer, Text, func
+
+from src.db.base import Base, UniversalUUID
+
 
 class CarIssue(Base):
     __tablename__ = "car_issues"

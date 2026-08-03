@@ -4,7 +4,7 @@ Verifies that UNIQUE, CHECK, and FK constraints are correctly declared
 on SQLAlchemy models and would be enforced by PostgreSQL.
 """
 import pytest
-from sqlalchemy import inspect, UniqueConstraint, CheckConstraint, ForeignKeyConstraint
+from sqlalchemy import UniqueConstraint
 
 
 class TestUniqueConstraints:

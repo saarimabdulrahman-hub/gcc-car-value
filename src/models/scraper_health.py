@@ -1,12 +1,14 @@
 import uuid
-from sqlalchemy import Column, Integer, Float, Text, DateTime, ForeignKey, func
-from src.db.base import UniversalUUID, UniversalJSONB
-from src.db.base import Base
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text
+
+from src.db.base import Base, UniversalJSONB, UniversalUUID
+
 
 class ScraperHealth(Base):
     __tablename__ = "scraper_health"
     id = Column(UniversalUUID, primary_key=True, default=uuid.uuid4)
-    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id", ondelete="SET NULL"), nullable=True)
+    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id", ondelete="SET NULL"), nullable=True)  # noqa: E501
     source = Column(Text, nullable=False)
     captured_at = Column(DateTime(timezone=True), nullable=False)
     pages_crawled = Column(Integer, nullable=True)

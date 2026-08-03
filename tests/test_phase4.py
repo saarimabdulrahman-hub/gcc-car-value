@@ -1,9 +1,7 @@
 """Phase 4 tests — LLM explainer, VIN decoder, user accounts, recommendations."""
-import pytest
-from src.engine.llm_explainer import explain_valuation, ValuationContext
-from src.engine.vin_decoder import validate_vin, decode_vin_basic
+from src.engine.llm_explainer import ValuationContext, explain_valuation
+from src.engine.vin_decoder import decode_vin_basic, validate_vin
 from src.models.user_account import UserAccount
-
 
 # --- LLM Explainer ---
 

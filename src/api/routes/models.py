@@ -1,15 +1,18 @@
 """Model listing endpoints."""
+import structlog
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db
 
+logger = structlog.get_logger()
 router = APIRouter()
 
 
 @router.get("/models")
 async def list_makes(
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None, description="Filter by country: AE, SA, etc."),
 ):
     """List all available makes with model counts."""
@@ -20,7 +23,7 @@ async def list_makes(
         """
         if country:
             query += " AND country = :country"
-            result = await db.execute(text(query + " GROUP BY make ORDER BY make"), {"country": country})
+            result = await db.execute(text(query + " GROUP BY make ORDER BY make"), {"country": country})  # noqa: E501
         else:
             result = await db.execute(text(query + " GROUP BY make ORDER BY make"))
 
@@ -32,13 +35,14 @@ async def list_makes(
             ]
         }
     except Exception:
-        return {"makes": []}
+        logger.exception("models_list_makes_failed")
+        return {"makes": [], "error": "Database temporarily unavailable"}
 
 
 @router.get("/models/{make}")
 async def list_models(
     make: str,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None),
 ):
     """List models for a make."""
@@ -62,18 +66,19 @@ async def list_models(
         return {
             "make": make,
             "models": [
-                {"model": r.model, "year_range": f"{r.year_min}–{r.year_max}", "listing_count": r.listing_count}
+                {"model": r.model, "year_range": f"{r.year_min}–{r.year_max}", "listing_count": r.listing_count}  # noqa: E501
                 for r in rows
             ]
         }
     except Exception:
-        return {"make": make, "models": []}
+        logger.exception("models_list_models_failed", make=make)
+        return {"make": make, "models": [], "error": "Database temporarily unavailable"}
 
 
 @router.get("/models/{make}/{model}")
 async def list_model_years(
     make: str, model: str,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None),
 ):
     """List years for a make/model."""
@@ -86,7 +91,7 @@ async def list_model_years(
             query += " AND country = :country"
             result = await db.execute(
                 text(query + " GROUP BY year ORDER BY year DESC"),
-                {"make": make, "model": model, "country": country} if country else {"make": make, "model": model}
+                {"make": make, "model": model, "country": country} if country else {"make": make, "model": model}  # noqa: E501
             )
         else:
             result = await db.execute(
@@ -100,4 +105,5 @@ async def list_model_years(
             "years": [{"year": r.year, "listing_count": r.listing_count} for r in rows]
         }
     except Exception:
-        return {"make": make, "model": model, "years": []}
+        logger.exception("models_list_years_failed", make=make, model=model)
+        return {"make": make, "model": model, "years": [], "error": "Database temporarily unavailable"}  # noqa: E501

@@ -1,0 +1,26 @@
+flowchart LR
+    U["GCC vehicle buyer<br/>or analyst"]
+    V["Vercel<br/>static ui/ artifact"]
+    A["Render<br/>FastAPI service"]
+    P[("PostgreSQL 16<br/>canonical data")]
+    S[("S3-compatible storage<br/>raw marketplace HTML")]
+    M["GCC marketplaces<br/>Dubizzle · Haraj · YallaMotor"]
+    O["Prometheus / logs / traces<br/>operational visibility"]
+
+    U -->|"browse, compare, valuate"| V
+    V -->|"HTTPS JSON API"| A
+    A -->|"async SQLAlchemy"| P
+    A -->|"health + metrics"| O
+    M -->|"polite HTTP collection"| A
+    A -->|"raw evidence"| S
+
+    classDef actor fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef edge fill:#102a43,stroke:#4f86c6,color:#ffffff,stroke-width:2px;
+    classDef service fill:#173f35,stroke:#58a88c,color:#ffffff,stroke-width:2px;
+    classDef store fill:#f0f5f9,stroke:#66788a,color:#14202b,stroke-width:2px;
+    classDef external fill:#f7f1fb,stroke:#8f6bb3,color:#2f1c40,stroke-width:2px;
+    class U actor;
+    class V edge;
+    class A service;
+    class P,S store;
+    class M,O external;

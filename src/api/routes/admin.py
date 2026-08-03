@@ -2,19 +2,21 @@
 
 All endpoints require authentication + admin-level permissions.
 """
-from fastapi import APIRouter, Depends, Request
+from datetime import UTC, datetime, timedelta
+
+import structlog
+from fastapi import APIRouter, Depends
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+
 from src.api.dependencies import get_db
 from src.auth.dependencies import require_permission
 from src.auth.roles import Permission
-from src.models.pipeline_run import PipelineRun
-from src.models.listing import Listing
-from src.models.valuation_query import ValuationQuery
 from src.models.drift_event import DriftEvent
+from src.models.listing import Listing
+from src.models.pipeline_run import PipelineRun
 from src.models.scraper_health import ScraperHealth
-from datetime import datetime, timedelta, timezone
-import structlog
+from src.models.valuation_query import ValuationQuery
 
 router = APIRouter()
 logger = structlog.get_logger()
@@ -22,11 +24,11 @@ logger = structlog.get_logger()
 
 @router.get("/admin/stats")
 async def platform_stats(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),  # noqa: B008
 ):
     """Overall platform statistics."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     week_ago = now - timedelta(days=7)
 
     total_listings = (await db.execute(select(func.count()).select_from(Listing))).scalar()
@@ -49,7 +51,7 @@ async def platform_stats(
     # Active drift events
     drift_count = (await db.execute(
         select(func.count()).select_from(DriftEvent)
-        .where(DriftEvent.acknowledged == False, DriftEvent.threshold_exceeded == True)
+        .where(not DriftEvent.acknowledged, DriftEvent.threshold_exceeded)
     )).scalar()
 
     return {
@@ -57,8 +59,8 @@ async def platform_stats(
         "valuations": {"total": total_valuations, "last_7_days": recent_valuations},
         "last_pipeline_run": {
             "source": last_run.source if last_run else None,
-            "started_at": last_run.started_at.isoformat() if last_run and last_run.started_at else None,
-            "completed_at": last_run.completed_at.isoformat() if last_run and last_run.completed_at else None,
+            "started_at": last_run.started_at.isoformat() if last_run and last_run.started_at else None,  # noqa: E501
+            "completed_at": last_run.completed_at.isoformat() if last_run and last_run.completed_at else None,  # noqa: E501
             "success": last_run.success if last_run else None,
             "records_ingested": last_run.records_ingested if last_run else 0,
         } if last_run else None,
@@ -69,8 +71,8 @@ async def platform_stats(
 
 @router.get("/admin/scrapers")
 async def scraper_status(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_SCRAPERS)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_SCRAPERS)),  # noqa: B008
 ):
     """Health status of all scrapers."""
     subquery = (select(
@@ -84,7 +86,7 @@ async def scraper_status(
     ).order_by(subquery.c.last_run.desc()))
     rows = result.all()
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     scrapers = []
     for row in rows:
         hours_ago = ((now - row.last_run).total_seconds() / 3600) if row.last_run else None
@@ -99,8 +101,8 @@ async def scraper_status(
 
 @router.get("/admin/quality")
 async def quality_metrics(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_QUALITY)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_QUALITY)),  # noqa: B008
 ):
     """Data quality metrics — quality score distribution, rejection rates."""
     total = (await db.execute(select(func.count()).select_from(Listing))).scalar()

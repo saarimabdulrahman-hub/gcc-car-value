@@ -11,6 +11,7 @@ Usage:
 
 from dataclasses import dataclass
 from datetime import datetime
+
 import numpy as np
 import structlog
 
@@ -112,7 +113,7 @@ class PredictionService:
         }
 
         # Build ordered feature array
-        X = np.array([
+        X = np.array([  # noqa: N806
             feature_values.get(name, 0.0)
             for name in self._feature_names
         ]).reshape(1, -1)

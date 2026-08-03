@@ -1,4 +1,5 @@
 import boto3
+
 from src.config import get_settings
 
 settings = get_settings()

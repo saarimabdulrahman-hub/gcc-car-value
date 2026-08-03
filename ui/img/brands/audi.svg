@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194 64" role="img" aria-labelledby="title">
+  <title id="title">Audi</title>
+  <g fill="none" stroke="#d9dde2" stroke-width="5.5">
+    <circle cx="31" cy="32" r="26"/>
+    <circle cx="75" cy="32" r="26"/>
+    <circle cx="119" cy="32" r="26"/>
+    <circle cx="163" cy="32" r="26"/>
+  </g>
+</svg>

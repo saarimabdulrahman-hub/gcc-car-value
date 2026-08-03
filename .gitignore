@@ -1,8 +1,6 @@
+# ---- Python ----
 __pycache__/
 *.py[cod]
-.env
-.venv/
-venv/
 *.egg-info/
 dist/
 build/
@@ -12,8 +10,61 @@ htmlcov/
 .ruff_cache/
 .pytest_cache/
 *.log
+
+# ---- Secrets / env ----
+.env
+.venv/
+venv/
+
+# ---- Data & local DBs ----
 data/
 *.db
+
+# ---- Scraper runtime artifacts ----
+.*_checkpoint.json
 haraj_debug2.txt
 _test_*.js
-.env
+
+# ---- ML run artifacts (tracked test fixtures under .ml_artifacts/ stay tracked) ----
+.ml_artifacts/
+
+# ---- Local AI/agent tooling (not part of the release) ----
+.agents/
+.claude/
+.codex/
+.impeccable/
+.superpowers/
+.tokensave/
+.vercel/
+graphify-out/
+opencode.json
+skills-lock.json
+.github/hooks/
+.github/skills/
+
+# ---- Local design/QA scratch (ui/img/** production assets stay tracked) ----
+tmp-chrome-brand-check/
+brand-logo-check.png
+
+# ---- Logs & generated files ----
+debug.log
+production_readiness_audit.md
+
+# ---- Generated PDFs / planning scratch (docs/ stays tracked) ----
+/*.pdf
+UI_EXECUTION_PLAN.md
+
+# ---- React/Vite WIP (not the production frontend; vanilla HTML in ui/*.html ships) ----
+ui/src/
+ui/node_modules/
+ui/dist/
+ui/package.json
+ui/package-lock.json
+ui/tsconfig.json
+ui/vite.config.ts
+ui/init.sh
+.gstack/
+
+# ---- Local design/QA scratch (Playwright profiles + audit screenshots) ----
+tmp-*/
+theme-*.png

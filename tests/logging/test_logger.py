@@ -1,7 +1,6 @@
 """Test centralized Logger and masking."""
-import pytest
-from src.core.logging.logger import get_logger, Logger
-from src.core.logging.filters import mask_field, mask_event_dict, MASKED
+from src.core.logging.filters import MASKED, mask_event_dict, mask_field
+from src.core.logging.logger import Logger, get_logger
 
 
 class TestLogger:

@@ -11,15 +11,17 @@ Routes declare what they need via Depends():
 Consumer endpoints remain unchanged — no auth dependency required.
 """
 
-from typing import Callable
+from collections.abc import Callable
+
+import structlog
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db
 from src.auth.jwt import verify_token
-from src.auth.roles import Role, Permission
-from src.auth.rbac import rbac, get_user_role
-import structlog
+from src.auth.rbac import get_user_role, rbac
+from src.auth.roles import Permission, Role
 
 logger = structlog.get_logger()
 
@@ -32,8 +34,8 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 async def get_current_user(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
-    db: AsyncSession = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),  # noqa: B008
+    db: AsyncSession = Depends(get_db),  # noqa: B008
 ) -> dict | None:
     """Extract and validate the current user from JWT Bearer token.
 
@@ -43,7 +45,7 @@ async def get_current_user(
     if credentials is None:
         return None
 
-    payload = verify_token(credentials.credentials)
+    payload = await verify_token(credentials.credentials)
     if payload is None:
         return None
 
@@ -62,8 +64,23 @@ async def get_current_user(
 
     resolved_role = db_role.value if db_role else (role_str or "consumer")
 
+    # Look up email for endpoints that need it (auth/me)
+    email = None
+    try:
+        from sqlalchemy import text
+        result = await db.execute(
+            text("SELECT email FROM user_accounts WHERE id = :uid"),
+            {"uid": user_id},
+        )
+        row = result.fetchone()
+        email = row.email if row else None
+    except Exception:
+        pass  # Non-critical; /auth/me returns email=None if DB unreachable
+
     return {
-        "user_id": user_id,
+        "id": user_id,
+        "user_id": user_id,  # kept for backward compat with _log_denied
+        "email": email,
         "role": resolved_role,
         "tier": tier_str,
         "is_authenticated": True,
@@ -93,7 +110,7 @@ def require_permission(
 
     async def _check(
         request: Request,
-        user: dict | None = Depends(get_current_user),
+        user: dict | None = Depends(get_current_user),  # noqa: B008
     ) -> dict:
         if user is None:
             _log_denied(request, None, permission, "unauthenticated")
@@ -103,7 +120,7 @@ def require_permission(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER
+        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 
         if not rbac.has_permission(user_role, permission):
             _log_denied(request, user, permission, "insufficient_permission")
@@ -133,7 +150,7 @@ def require_role(
 
     async def _check(
         request: Request,
-        user: dict | None = Depends(get_current_user),
+        user: dict | None = Depends(get_current_user),  # noqa: B008
     ) -> dict:
         if user is None:
             _log_denied(request, None, f"role:{role.value}", "unauthenticated")
@@ -143,7 +160,7 @@ def require_role(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER
+        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 
         if not rbac.has_role(user_role, role):
             _log_denied(request, user, f"role:{role.value}",

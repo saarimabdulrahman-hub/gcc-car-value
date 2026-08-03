@@ -1,8 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, Integer, Text, DateTime, func
-from sqlalchemy.types import TypeDecorator, JSON, String, CHAR
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB, DATERANGE
 import uuid as _uuid
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text, func
+from sqlalchemy.dialects.postgresql import DATERANGE, JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.types import CHAR, JSON, String, TypeDecorator
 
 
 class UniversalUUID(TypeDecorator):
@@ -53,5 +55,5 @@ class LineageMixin:
     schema_version = Column(Integer, nullable=False)
     parser_version = Column(Text, nullable=False)
     normalizer_version = Column(Text, nullable=False)
-    pipeline_run_id = Column(UniversalUUID, nullable=False)
+    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id"), nullable=False)
     ingested_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

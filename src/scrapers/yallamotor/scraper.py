@@ -1,16 +1,19 @@
 """YallaMotor scraper — one scraper covers UAE, KSA, QA, KW, BH, OM."""
 import re
-from bs4 import BeautifulSoup
-from src.scrapers.base import BaseScraper
 
-# Country config: base URL suffix → country code + default city
+from bs4 import BeautifulSoup
+
+from src.scrapers.base import BaseScraper
+from src.scrapers.title_parser import extract_make_model
+
+# Country config: url key → (country code, default city, currency)
 COUNTRIES = {
-    "uae": ("AE", "Dubai"),
-    "ksa": ("SA", "Riyadh"),
-    "qatar": ("QA", "Doha"),
-    "kuwait": ("KW", "Kuwait City"),
-    "bahrain": ("BH", "Manama"),
-    "oman": ("OM", "Muscat"),
+    "uae":     ("AE", "Dubai",        "AED"),
+    "ksa":     ("SA", "Riyadh",       "SAR"),
+    "qatar":   ("QA", "Doha",         "QAR"),
+    "kuwait":  ("KW", "Kuwait City",  "KWD"),
+    "bahrain": ("BH", "Manama",       "BHD"),
+    "oman":    ("OM", "Muscat",       "OMR"),
 }
 
 class YallaMotorScraper(BaseScraper):
@@ -18,7 +21,7 @@ class YallaMotorScraper(BaseScraper):
 
     def __init__(self, country_key: str = "uae"):
         self.country_key = country_key
-        self.country_code, self.default_city = COUNTRIES[country_key]
+        self.country_code, self.default_city, self.currency = COUNTRIES[country_key]
         self.base_url = f"https://{country_key}.yallamotor.com"
         super().__init__()
 
@@ -46,13 +49,13 @@ class YallaMotorScraper(BaseScraper):
         soup = BeautifulSoup(html, "lxml")
         result = {"url": url, "source": self.source, "status": "active",
                   "country": self.country_code, "city": self.default_city,
-                  "original_currency": "AED"}
+                  "original_currency": self.currency}
 
         # Title
         title = soup.select_one("h1, .car-title, [class*='title']")
         title_text = title.get_text(strip=True) if title else ""
 
-        result["make"], result["model"] = self._extract_make_model(title_text)
+        result["make"], result["model"] = extract_make_model(title_text)
         result["year"] = self._extract_number(title_text)
         result["spec"] = self._extract_spec(title_text)
         result["mileage_km"] = self._extract_mileage(title_text)
@@ -89,10 +92,6 @@ class YallaMotorScraper(BaseScraper):
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
 
-    def _extract_make_model(self, title: str) -> tuple[str, str]:
-        tokens = title.split()
-        return (tokens[0], tokens[1]) if len(tokens) >= 2 else ("", "")
-
     def _extract_number(self, text: str) -> int | float | None:
         text = re.sub(r'[^\d.]', '', text.replace(",", ""))
         try:
@@ -106,7 +105,7 @@ class YallaMotorScraper(BaseScraper):
 
     def _extract_spec(self, text: str) -> str | None:
         t = text.lower()
-        if "gcc" in t: return "GCC"
-        if "american" in t or "us spec" in t: return "US"
-        if "japan" in t: return "Japan"
+        if "gcc" in t: return "GCC"  # noqa: E701
+        if "american" in t or "us spec" in t: return "US"  # noqa: E701
+        if "japan" in t: return "Japan"  # noqa: E701
         return None

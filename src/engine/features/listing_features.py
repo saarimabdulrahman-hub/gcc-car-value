@@ -1,6 +1,7 @@
 """Features derived from the listing itself."""
 import pandas as pd
-from src.engine.features.base import BaseFeature, MarketContext, FeatureRegistry
+
+from src.engine.features.base import BaseFeature, FeatureRegistry, MarketContext
 
 
 class MileageFeature(BaseFeature):

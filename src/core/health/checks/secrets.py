@@ -1,7 +1,8 @@
 """Secrets health check — verifies secrets provider is operational."""
 
 import time
-from src.core.health.base import HealthCheck, CheckResult, CheckSeverity
+
+from src.core.health.base import CheckResult, CheckSeverity, HealthCheck
 
 
 class SecretsCheck(HealthCheck):
@@ -24,7 +25,7 @@ class SecretsCheck(HealthCheck):
         start = time.perf_counter()
 
         try:
-            from src.config.secrets import get_secret_provider, SecretName
+            from src.config.secrets import SecretName, get_secret_provider
             provider = get_secret_provider()
 
             # Check provider is ready

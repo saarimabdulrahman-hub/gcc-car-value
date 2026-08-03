@@ -1,0 +1,34 @@
+flowchart LR
+    C["Vehicle details<br/>make · model · year"]
+    API["POST /v1/valuate"]
+    K{"Daily cache<br/>hit?"}
+    CF["Comparable finder<br/>tiered filters + ranking"]
+    DB[("Qualified listings<br/>PostgreSQL")]
+    ST["Statistical engine<br/>percentiles + adjustments"]
+    ML{"Active model<br/>available?"}
+    PR["LightGBM prediction<br/>feature encoding"]
+    G{"Difference<br/>≤ 15%?"}
+    EN["Ensemble estimate"]
+    FB["Statistical fallback"]
+    OUT["Valuation response<br/>range · confidence · comps"]
+
+    C --> API --> K
+    K -->|"yes"| OUT
+    K -->|"no"| CF
+    CF <--> DB
+    CF --> ST --> ML
+    ML -->|"no / error"| FB
+    ML -->|"yes"| PR --> G
+    G -->|"yes"| EN --> OUT
+    G -->|"no"| FB --> OUT
+
+    classDef input fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef service fill:#173f35,stroke:#58a88c,color:#fff,stroke-width:2px;
+    classDef decision fill:#102a43,stroke:#4f86c6,color:#fff,stroke-width:2px;
+    classDef store fill:#f0f5f9,stroke:#66788a,color:#14202b,stroke-width:2px;
+    classDef result fill:#f7f1fb,stroke:#8f6bb3,color:#2f1c40,stroke-width:2px;
+    class C input;
+    class API,CF,ST,PR,EN,FB service;
+    class K,ML,G decision;
+    class DB store;
+    class OUT result;

@@ -1,10 +1,13 @@
 """Test health check framework — registry, checks, status aggregation."""
 import pytest
+
 from src.core.health.base import (
-    HealthCheck, CheckResult, HealthStatus, CheckSeverity,
+    CheckResult,
+    CheckSeverity,
+    HealthCheck,
+    HealthStatus,
 )
 from src.core.health.registry import HealthRegistry
-
 
 # ------------------------------------------------------------------
 # Mock checks for testing

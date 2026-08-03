@@ -1,7 +1,8 @@
 """Test tracing framework — all operations work as no-ops without OTel installed."""
 import pytest
-from src.core.tracing.span import Span, NoOpSpan
-from src.core.tracing.tracer import get_tracer, Tracer
+
+from src.core.tracing.span import NoOpSpan
+from src.core.tracing.tracer import Tracer, get_tracer
 
 
 class TestNoOpSpan:
@@ -58,14 +59,13 @@ class TestTracerNoOp:
 
     def test_start_span_with_attributes(self):
         tracer = get_tracer("test.attrs")
-        with tracer.start_span("op", attributes={"db.system": "postgresql"}) as span:
+        with tracer.start_span("op", attributes={"db.system": "postgresql"}):
             pass
 
     def test_span_handles_exception_gracefully(self):
         tracer = get_tracer("test.exc")
-        with pytest.raises(ValueError):
-            with tracer.start_span("failing_op") as span:
-                raise ValueError("boom")
+        with pytest.raises(ValueError), tracer.start_span("failing_op"):
+            raise ValueError("boom")
         # Span should have recorded the exception without crashing
 
     def test_multiple_nested_spans(self):
@@ -79,7 +79,7 @@ class TestTracerNoOp:
     def test_context_injection_does_not_crash(self):
         """Auto-injection of request context attributes into spans."""
         tracer = get_tracer("test.ctx")
-        with tracer.start_span("with_context") as span:
+        with tracer.start_span("with_context"):
             pass  # _inject_context should not raise
 
 
@@ -127,7 +127,7 @@ class TestInstrumentation:
     def test_ml_fallback_span(self):
         from src.core.tracing.instrumentation.ml import MLInstrumentation
         ml = MLInstrumentation()
-        with ml.start_fallback_span("model_not_found") as span:
+        with ml.start_fallback_span("model_not_found"):
             pass
 
     def test_ml_model_load_span(self):

@@ -11,7 +11,7 @@ Usage:
     result = await registry.run_all()
     print(result.status)  # healthy | degraded | unhealthy
 """
-from src.core.health.base import HealthStatus, CheckResult, HealthCheck
+from src.core.health.base import CheckResult, HealthCheck, HealthStatus
 from src.core.health.registry import HealthRegistry
 
 __all__ = ["HealthStatus", "CheckResult", "HealthCheck", "HealthRegistry"]

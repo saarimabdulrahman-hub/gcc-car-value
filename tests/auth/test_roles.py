@@ -1,7 +1,8 @@
 """Test role/permission definitions and RBAC service."""
 import pytest
-from src.auth.roles import Role, Permission, ROLE_PERMISSIONS
+
 from src.auth.rbac import RBACService
+from src.auth.roles import ROLE_PERMISSIONS, Permission, Role
 
 
 @pytest.fixture

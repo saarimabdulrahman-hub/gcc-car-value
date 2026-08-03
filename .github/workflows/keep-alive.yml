@@ -10,4 +10,10 @@ jobs:
     steps:
       - name: Ping API health endpoint
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://gcc-car-value.onrender.com/v1/health || true
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
+            https://gcc-car-value.onrender.com/v1/health/live)
+          if [ "$STATUS" != "200" ]; then
+            echo "Health check failed with status $STATUS"
+            exit 1
+          fi
+          echo "Health check OK ($STATUS)"

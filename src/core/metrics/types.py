@@ -4,11 +4,10 @@ All metric types share a common Metric base class. Types are thread-safe
 for value accumulation but rely on the registry for registration safety.
 """
 
-from dataclasses import dataclass, field
-from enum import StrEnum
-from typing import Any
 import threading
 import time
+from dataclasses import dataclass, field
+from enum import StrEnum
 
 
 class MetricType(StrEnum):
@@ -141,9 +140,7 @@ class Histogram(Metric):
         self._lock = threading.Lock()
         self._count: int = 0
         self._sum: float = 0.0
-        self._bucket_counts: dict[float, int] = {
-            b: 0 for b in self.buckets
-        }
+        self._bucket_counts: dict[float, int] = dict.fromkeys(self.buckets, 0)
         self._bucket_counts[float("inf")] = 0
 
     def observe(self, value: float,
@@ -198,7 +195,7 @@ class Timer:
         t.stop()
     """
 
-    def __init__(self, registry: "MetricsRegistry", metric_name: str,
+    def __init__(self, registry: "MetricsRegistry", metric_name: str,  # noqa: F821
                  tags: dict[str, str] | None = None):
         self._registry = registry
         self._metric_name = metric_name

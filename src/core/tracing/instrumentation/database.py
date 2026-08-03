@@ -11,12 +11,11 @@ Usage (manual, in repository code):
 
 from __future__ import annotations
 
+import re
 from contextlib import contextmanager
 from typing import Any
-import re
 
 from src.core.tracing.tracer import get_tracer
-from src.core.tracing.span import NoOpSpan
 
 
 class DatabaseInstrumentation:

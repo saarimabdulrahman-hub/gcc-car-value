@@ -18,16 +18,16 @@ and RAISES an error with a remediation query. It does NOT delete data.
 
 Blueprint §4.1 + database-audit.md §4, §10.
 """
-from typing import Sequence, Union
-from alembic import op
-import sqlalchemy as sa
+from collections.abc import Sequence
 from datetime import datetime
 
+import sqlalchemy as sa
+from alembic import op
 
 revision: str = 'b7c8d9e0f1a2'
-down_revision: Union[str, None] = 'a1b2c3d4e5f6'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = 'a1b2c3d4e5f6'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -227,7 +227,7 @@ def downgrade() -> None:
         op.drop_constraint(f"ck_model_ratings_{col}_range", "model_ratings", type_="check")
 
     # --- UNIQUEs ---
-    op.execute("ALTER TABLE canonical_vehicles DROP CONSTRAINT IF EXISTS uq_canonical_vehicles_make_model_year_gen")
+    op.execute("ALTER TABLE canonical_vehicles DROP CONSTRAINT IF EXISTS uq_canonical_vehicles_make_model_year_gen")  # noqa: E501
     op.drop_constraint("uq_listings_source_external_id", "listings", type_="unique")
 
 
@@ -243,8 +243,11 @@ def _add_unique_constraint_with_dedup_check(
 ) -> None:
     """Add UNIQUE constraint, checking for duplicates first.
 
-    If duplicates exist, RAISES an error with description and a
-    sample query to identify them. No data is deleted.
+    Idempotent: skips if the constraint already exists — the initial
+    schema migration builds tables from Base.metadata.create_all(), which
+    already creates model-declared unique constraints. If duplicates exist,
+    RAISES an error with description and a sample query to identify them.
+    No data is deleted.
     """
     col_list = ", ".join(columns)
     op.execute(sa.text(f"""
@@ -252,6 +255,12 @@ def _add_unique_constraint_with_dedup_check(
         DECLARE
             dup_count INTEGER;
         BEGIN
+            IF EXISTS (
+                SELECT 1 FROM pg_constraint WHERE conname = '{constraint_name}'
+            ) THEN
+                RETURN;  -- already present (initial-schema create_all)
+            END IF;
+
             SELECT count(*) INTO dup_count FROM (
                 SELECT {col_list}, count(*) AS cnt
                 FROM {table}
@@ -264,11 +273,9 @@ def _add_unique_constraint_with_dedup_check(
                     '% duplicate groups found. %',
                     dup_count, '{description}';
             END IF;
+
+            EXECUTE format(
+                'ALTER TABLE {table} ADD CONSTRAINT {constraint_name} UNIQUE ({col_list})'
+            );
         END $$;
     """))
-
-    op.create_unique_constraint(
-        constraint_name=constraint_name,
-        table_name=table,
-        columns=columns,
-    )

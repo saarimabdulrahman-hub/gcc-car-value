@@ -1,15 +1,22 @@
 import hashlib
 from datetime import datetime
+
+import structlog
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.dependencies import get_db, limiter
 from src.api.schemas.valuation import (
-    ValuationRequest, ValuationResponse, CompSummary, Adjustment, Knowledge,
+    Adjustment,
+    CompSummary,
+    Knowledge,
+    ValuationRequest,
+    ValuationResponse,
 )
-from src.engine.statistical import valuate, ValuationResult
+from src.engine.llm_explainer import ValuationContext, explain_valuation
+from src.engine.statistical import ValuationResult, valuate
 from src.ml.model_loader import ModelLoader
 from src.ml.prediction_service import PredictionService
-import structlog
 
 router = APIRouter()
 logger = structlog.get_logger()
@@ -26,17 +33,17 @@ def _compute_cache_key(req: ValuationRequest) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def _compute_deal_indicator(asking_price: float | None, result: ValuationResult) -> tuple[str | None, str | None]:
+def _compute_deal_indicator(asking_price: float | None, result: ValuationResult) -> tuple[str | None, str | None]:  # noqa: E501
     """Compute Good Deal / Fair Deal / Above Market indicator from spec Section 6.3."""
     if asking_price is None or result.confidence == "insufficient" or result.confidence == "low":
         return None, None
 
     if asking_price < result.price_low:
-        return "great_deal", f"This car is priced below the market range ({asking_price:,.0f} vs {result.price_low:,.0f}–{result.price_high:,.0f} AED)."
+        return "great_deal", f"This car is priced below the market range ({asking_price:,.0f} vs {result.price_low:,.0f}–{result.price_high:,.0f} AED)."  # noqa: E501
     elif asking_price <= result.price_high:
-        return "fair_deal", f"This car is priced within the normal market range."
+        return "fair_deal", "This car is priced within the normal market range."
     else:
-        return "above_market", f"This car is priced above the market range. Consider negotiating."
+        return "above_market", "This car is priced above the market range. Consider negotiating."
 
 
 @router.post("/valuate", response_model=ValuationResponse)
@@ -44,12 +51,13 @@ def _compute_deal_indicator(asking_price: float | None, result: ValuationResult)
 async def valuate_vehicle(
     request: Request,
     valuation_req: ValuationRequest,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
 ):
     cache_key = _compute_cache_key(valuation_req)
 
     # Check cache
     from sqlalchemy import select
+
     from src.models.valuation_query import ValuationQuery
     stmt = select(ValuationQuery).where(ValuationQuery.cache_key == cache_key)
     stmt = stmt.limit(1)
@@ -97,7 +105,7 @@ async def valuate_vehicle(
                 # Cross-reference: if ML and statistical disagree by >15%,
                 # default to statistical and flag the discrepancy
                 if valuation.estimate > 0:
-                    pct_diff = abs(ml_result.predicted_value - valuation.estimate) / valuation.estimate
+                    pct_diff = abs(ml_result.predicted_value - valuation.estimate) / valuation.estimate  # noqa: E501
                     if pct_diff > 0.15:
                         logger.warning("ml_statistical_disagreement",
                             make=valuation_req.make, model=valuation_req.model,
@@ -122,6 +130,23 @@ async def valuate_vehicle(
             fallback_used = True
             prediction_source = "statistical"
 
+    # Generate human-readable explanation (best-effort, never block)
+    explanation = None
+    try:
+        ctx = ValuationContext(
+            make=valuation_req.make, model=valuation_req.model,
+            year=valuation_req.year, mileage_km=valuation_req.mileage_km,
+            spec=valuation_req.spec, city=valuation_req.city,
+            estimate=valuation.estimate, price_low=valuation.price_low,
+            price_high=valuation.price_high, confidence=valuation.confidence,
+            comp_count=valuation.comp_count,
+            adjustments=[{"reason": a.reason, "amount": a.amount, "detail": a.detail}
+                        for a in valuation.adjustments],
+        )
+        explanation = explain_valuation(ctx)
+    except Exception:
+        pass
+
     deal_indicator, deal_description = _compute_deal_indicator(
         valuation_req.asking_price, valuation
     )
@@ -129,7 +154,7 @@ async def valuate_vehicle(
     if valuation.confidence == "insufficient":
         raise HTTPException(
             status_code=422,
-            detail="Not enough comparable listings for this vehicle. Try a more common make/model or broader criteria."
+            detail="Not enough comparable listings for this vehicle. Try a more common make/model or broader criteria."  # noqa: E501
         )
 
     # Store in cache
@@ -150,7 +175,12 @@ async def valuate_vehicle(
         api_version="v1",
     )
     db.add(cache)
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        logger.warning("valuation_cache_write_failed",
+                       make=valuation_req.make, model=valuation_req.model)
 
     logger.info("valuation_computed",
         make=valuation_req.make, model=valuation_req.model, year=valuation_req.year,
@@ -170,7 +200,7 @@ async def valuate_vehicle(
         comps=[CompSummary(**c) for c in valuation.comps],
         adjustments=[Adjustment(**a.__dict__) for a in valuation.adjustments],
         confidence_interval_80=valuation.confidence_interval_80,
-        knowledge=Knowledge(),
+        knowledge=Knowledge(generation=explanation or None),
         deal_indicator=deal_indicator,
         deal_description=deal_description,
         prediction_source=prediction_source,

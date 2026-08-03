@@ -12,10 +12,11 @@ Usage:
 """
 
 import structlog
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from src.models.model_registry import ModelRegistry
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.ml.model_persistence import load_model, model_exists
+from src.models.model_registry import ModelRegistry
 
 logger = structlog.get_logger()
 

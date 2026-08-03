@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import asyncio
-from typing import Awaitable, Callable
+from collections.abc import Awaitable, Callable
 
-from src.core.context.storage import (
-    get_context, set_context, clear_context, clone_context,
-)
 from src.core.context.models import RequestContext
+from src.core.context.storage import (
+    get_context,
+    set_context,
+)
 
 
 def correlation_id() -> str:

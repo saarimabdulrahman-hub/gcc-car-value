@@ -1,7 +1,9 @@
 import uuid
-from sqlalchemy import Column, Integer, Text, DateTime, func, UniqueConstraint
-from src.db.base import UniversalUUID
-from src.db.base import Base
+
+from sqlalchemy import Column, DateTime, Integer, Text, UniqueConstraint, func
+
+from src.db.base import Base, UniversalUUID
+
 
 class CanonicalVehicle(Base):
     __tablename__ = "canonical_vehicles"

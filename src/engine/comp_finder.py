@@ -3,10 +3,12 @@
 Spec Section 5: Finds comparable listings for a target vehicle.
 Returns scored and ranked comps with platform attribution (no URLs).
 """
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
+
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, text
+
 from src.models.listing import Listing
 
 
@@ -73,6 +75,7 @@ async def find_comps(
     ]
 
     all_comps: list[CompListing] = []
+    seen_ids: set = set()
 
     for tier in tiers:
         year_min = year - tier["year_range"]
@@ -83,7 +86,7 @@ async def find_comps(
             Listing.model == model,
             Listing.year.between(year_min, year_max),
             Listing.status.in_(["active", "probably_sold", "sold_confirmed"]),
-            Listing.quality_score >= 60,
+            Listing.quality_score >= 45,  # ponytail: 45 matches quality_promotion_threshold; raise both once scrapers extract optional fields  # noqa: E501
         ]
 
         if tier["same_country"] and country:
@@ -107,6 +110,9 @@ async def find_comps(
         rows = result.scalars().all()
 
         for row in rows:
+            if row.id in seen_ids:
+                continue
+            seen_ids.add(row.id)
             comp = CompListing(
                 source=row.source,
                 make=row.make,
@@ -140,11 +146,11 @@ async def find_comps(
 
 def _compute_days_on_market(listing) -> int | None:
     if listing.first_seen_at:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         fs = listing.first_seen_at
         # Handle naive datetimes from SQLite
         if fs.tzinfo is None:
-            fs = fs.replace(tzinfo=timezone.utc)
+            fs = fs.replace(tzinfo=UTC)
         delta = now - fs
         return delta.days
     return None

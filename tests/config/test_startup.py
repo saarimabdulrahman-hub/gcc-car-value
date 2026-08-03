@@ -1,11 +1,15 @@
 """Test startup validation — ensures insecure config is rejected."""
 import os
+
 import pytest
+
+from src.config.secrets import reset_secret_provider
 from src.config.startup import (
-    validate_startup, StartupError, _validate_jwt_secret_strength,
+    StartupError,
+    _validate_jwt_secret_strength,
     generate_secure_jwt_secret,
+    validate_startup,
 )
-from src.config.secrets import reset_secret_provider, SecretName
 
 
 @pytest.fixture(autouse=True)

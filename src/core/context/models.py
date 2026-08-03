@@ -44,7 +44,7 @@ class RequestContext:
     environment: str = ""
 
     @classmethod
-    def empty(cls) -> "RequestContext":
+    def empty(cls) -> RequestContext:
         """Create an empty context (used for background tasks without a request)."""
         return cls()
 
