@@ -10,7 +10,7 @@ from src.core.health.checks import (
     DatabaseCheck, MemoryCheck, ConfigurationCheck,
     SecretsCheck, MetricsRegistryCheck,
 )
-from src.api.dependencies import async_session_factory
+from src.db.session import async_session_factory
 
 router = APIRouter()
 

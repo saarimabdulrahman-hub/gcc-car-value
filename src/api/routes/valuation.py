@@ -150,7 +150,12 @@ async def valuate_vehicle(
         api_version="v1",
     )
     db.add(cache)
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        logger.warning("valuation_cache_write_failed",
+                       make=valuation_req.make, model=valuation_req.model)
 
     logger.info("valuation_computed",
         make=valuation_req.make, model=valuation_req.model, year=valuation_req.year,

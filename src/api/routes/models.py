@@ -3,7 +3,9 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from src.api.dependencies import get_db
+import structlog
 
+logger = structlog.get_logger()
 router = APIRouter()
 
 
@@ -32,7 +34,8 @@ async def list_makes(
             ]
         }
     except Exception:
-        return {"makes": []}
+        logger.exception("models_list_makes_failed")
+        return {"makes": [], "error": "Database temporarily unavailable"}
 
 
 @router.get("/models/{make}")
@@ -67,7 +70,8 @@ async def list_models(
             ]
         }
     except Exception:
-        return {"make": make, "models": []}
+        logger.exception("models_list_models_failed", make=make)
+        return {"make": make, "models": [], "error": "Database temporarily unavailable"}
 
 
 @router.get("/models/{make}/{model}")
@@ -100,4 +104,5 @@ async def list_model_years(
             "years": [{"year": r.year, "listing_count": r.listing_count} for r in rows]
         }
     except Exception:
-        return {"make": make, "model": model, "years": []}
+        logger.exception("models_list_years_failed", make=make, model=model)
+        return {"make": make, "model": model, "years": [], "error": "Database temporarily unavailable"}

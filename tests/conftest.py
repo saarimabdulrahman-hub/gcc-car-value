@@ -1,6 +1,10 @@
 import os
 # Set JWT_SECRET before any src imports — Settings() validates it on construction
 os.environ.setdefault("JWT_SECRET", "test-jwt-secret-" + "x" * 40)
+# Pin the environment so the app lifespan skips production startup validation
+# (the fixture JWT secret above intentionally fails production strength rules).
+os.environ.setdefault("ENVIRONMENT", "testing")
+os.environ.setdefault("SECRET_PROVIDER", "environment")
 
 import pytest
 import pytest_asyncio

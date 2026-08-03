@@ -1,5 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, Integer, Text, DateTime, func
+from sqlalchemy import Column, ForeignKey, Integer, Text, DateTime, func
 from sqlalchemy.types import TypeDecorator, JSON, String, CHAR
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB, DATERANGE
 import uuid as _uuid
@@ -53,5 +53,5 @@ class LineageMixin:
     schema_version = Column(Integer, nullable=False)
     parser_version = Column(Text, nullable=False)
     normalizer_version = Column(Text, nullable=False)
-    pipeline_run_id = Column(UniversalUUID, nullable=False)
+    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id"), nullable=False)
     ingested_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

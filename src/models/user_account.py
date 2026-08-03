@@ -19,7 +19,7 @@ class UserAccount(Base):
     @staticmethod
     def hash_password(password: str, salt: str | None = None) -> tuple[str, str]:
         salt = salt or secrets.token_hex(16)
-        h = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100000)
+        h = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 600_000)
         return h.hex(), salt
 
     def verify_password(self, password: str) -> bool:

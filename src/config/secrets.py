@@ -4,8 +4,11 @@ All sensitive configuration (JWT secrets, DB passwords, API keys) flows through
 a SecretProvider. The application never calls os.getenv() directly for secrets.
 
 Providers:
-    EnvironmentProvider  — reads from environment variables (local dev, Docker)
-    AwsSecretsManager    — reads from AWS Secrets Manager (production)
+    EnvironmentProvider  — reads from environment variables (local dev, Docker, Render)
+    AwsSecretsManager    — reads from AWS Secrets Manager (deployments with AWS creds)
+
+The active provider is chosen by the explicit SECRET_PROVIDER setting
+(environment | aws), never derived from ENVIRONMENT.
 
 Usage:
     from src.config.secrets import get_secret_provider
@@ -259,7 +262,10 @@ _provider: SecretProvider | None = None
 def get_secret_provider() -> SecretProvider:
     """Get or create the singleton SecretProvider.
 
-    Uses AWS Secrets Manager in production, environment variables otherwise.
+    Provider is chosen by the explicit SECRET_PROVIDER setting, NOT derived
+    from ENVIRONMENT. This lets production on Render read secrets from env
+    vars (SECRET_PROVIDER=environment) while other deployments opt into AWS
+    Secrets Manager (SECRET_PROVIDER=aws) when they have AWS credentials.
     """
     global _provider
     if _provider is not None:
@@ -267,11 +273,10 @@ def get_secret_provider() -> SecretProvider:
 
     from src.config import get_settings
     settings = get_settings()
-    env = settings.environment
 
-    if env == "production":
+    if settings.secret_provider == "aws":
         _provider = AwsSecretsManagerProvider(
-            environment=env,
+            environment=settings.environment,
             region=settings.s3_region,
         )
     else:
@@ -279,7 +284,8 @@ def get_secret_provider() -> SecretProvider:
 
     logger.info("secret_provider_initialized",
                 provider=_provider.source_name,
-                environment=env)
+                secret_provider=settings.secret_provider,
+                environment=settings.environment)
     return _provider
 
 
