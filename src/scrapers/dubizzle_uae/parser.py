@@ -1,6 +1,7 @@
 """Dubizzle UAE listing parser."""
 from bs4 import BeautifulSoup
 import re
+from src.scrapers.title_parser import extract_make_model
 
 
 def parse_listing(html: str, url: str) -> dict:
@@ -10,7 +11,7 @@ def parse_listing(html: str, url: str) -> dict:
     title_elem = soup.select_one("h1, [data-testid='listing-title'], .listing-title")
     title = title_elem.get_text(strip=True) if title_elem else ""
 
-    result["make"], result["model"] = _extract_make_model(title)
+    result["make"], result["model"] = extract_make_model(title)
     result["year"] = _extract_year(title)
     result["spec"] = _extract_spec(title)
     result["mileage_km"] = _extract_mileage(title)
@@ -47,13 +48,6 @@ def parse_listing(html: str, url: str) -> dict:
     result["country"] = "AE"
 
     return result
-
-
-def _extract_make_model(title: str) -> tuple[str, str]:
-    tokens = title.split()
-    if len(tokens) >= 2:
-        return tokens[0], " ".join(tokens[1:3])
-    return "", ""
 
 
 def _extract_year(title: str) -> int | None:

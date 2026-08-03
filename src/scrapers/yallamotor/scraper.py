@@ -2,6 +2,7 @@
 import re
 from bs4 import BeautifulSoup
 from src.scrapers.base import BaseScraper
+from src.scrapers.title_parser import extract_make_model
 
 # Country config: url key → (country code, default city, currency)
 COUNTRIES = {
@@ -52,7 +53,7 @@ class YallaMotorScraper(BaseScraper):
         title = soup.select_one("h1, .car-title, [class*='title']")
         title_text = title.get_text(strip=True) if title else ""
 
-        result["make"], result["model"] = self._extract_make_model(title_text)
+        result["make"], result["model"] = extract_make_model(title_text)
         result["year"] = self._extract_number(title_text)
         result["spec"] = self._extract_spec(title_text)
         result["mileage_km"] = self._extract_mileage(title_text)
@@ -88,10 +89,6 @@ class YallaMotorScraper(BaseScraper):
         result["schema_version"] = 1
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
-
-    def _extract_make_model(self, title: str) -> tuple[str, str]:
-        tokens = title.split()
-        return (tokens[0], tokens[1]) if len(tokens) >= 2 else ("", "")
 
     def _extract_number(self, text: str) -> int | float | None:
         text = re.sub(r'[^\d.]', '', text.replace(",", ""))

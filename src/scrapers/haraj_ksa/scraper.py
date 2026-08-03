@@ -2,6 +2,7 @@
 import re
 from bs4 import BeautifulSoup
 from src.scrapers.base import BaseScraper
+from src.scrapers.title_parser import extract_make_model
 
 class HarajKSAScraper(BaseScraper):
     source = "haraj_ksa"
@@ -39,7 +40,7 @@ class HarajKSAScraper(BaseScraper):
         title = soup.select_one("h1, .title, [class*='title']")
         title_text = title.get_text(strip=True) if title else ""
 
-        result["make"], result["model"] = self._extract_make_model(title_text)
+        result["make"], result["model"] = extract_make_model(title_text)
         result["year"] = self._extract_year(title_text)
         result["spec"] = self._extract_spec(title_text + " " + html)
         result["mileage_km"] = self._extract_mileage(title_text + " " + html)
@@ -82,11 +83,6 @@ class HarajKSAScraper(BaseScraper):
         result["schema_version"] = 1
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
-
-    def _extract_make_model(self, title: str) -> tuple[str, str]:
-        # Handle both Arabic and English titles
-        tokens = title.split()
-        return (tokens[0], tokens[1]) if len(tokens) >= 2 else ("", "")
 
     def _extract_year(self, text: str) -> int | None:
         match = re.search(r'\b(19\d{2}|20[0-2]\d)\b', text)
