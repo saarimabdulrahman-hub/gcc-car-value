@@ -9,6 +9,7 @@ from src.api.schemas.valuation import (
 from src.engine.statistical import valuate, ValuationResult
 from src.ml.model_loader import ModelLoader
 from src.ml.prediction_service import PredictionService
+from src.engine.llm_explainer import explain_valuation, ValuationContext
 import structlog
 
 router = APIRouter()
@@ -122,6 +123,23 @@ async def valuate_vehicle(
             fallback_used = True
             prediction_source = "statistical"
 
+    # Generate human-readable explanation (best-effort, never block)
+    explanation = None
+    try:
+        ctx = ValuationContext(
+            make=valuation_req.make, model=valuation_req.model,
+            year=valuation_req.year, mileage_km=valuation_req.mileage_km,
+            spec=valuation_req.spec, city=valuation_req.city,
+            estimate=valuation.estimate, price_low=valuation.price_low,
+            price_high=valuation.price_high, confidence=valuation.confidence,
+            comp_count=valuation.comp_count,
+            adjustments=[{"reason": a.reason, "amount": a.amount, "detail": a.detail}
+                        for a in valuation.adjustments],
+        )
+        explanation = explain_valuation(ctx)
+    except Exception:
+        pass
+
     deal_indicator, deal_description = _compute_deal_indicator(
         valuation_req.asking_price, valuation
     )
@@ -175,7 +193,7 @@ async def valuate_vehicle(
         comps=[CompSummary(**c) for c in valuation.comps],
         adjustments=[Adjustment(**a.__dict__) for a in valuation.adjustments],
         confidence_interval_80=valuation.confidence_interval_80,
-        knowledge=Knowledge(),
+        knowledge=Knowledge(generation=explanation or None),
         deal_indicator=deal_indicator,
         deal_description=deal_description,
         prediction_source=prediction_source,

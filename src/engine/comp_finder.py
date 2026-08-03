@@ -73,6 +73,7 @@ async def find_comps(
     ]
 
     all_comps: list[CompListing] = []
+    seen_ids: set = set()
 
     for tier in tiers:
         year_min = year - tier["year_range"]
@@ -107,6 +108,9 @@ async def find_comps(
         rows = result.scalars().all()
 
         for row in rows:
+            if row.id in seen_ids:
+                continue
+            seen_ids.add(row.id)
             comp = CompListing(
                 source=row.source,
                 make=row.make,
