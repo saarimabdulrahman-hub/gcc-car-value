@@ -46,7 +46,80 @@ jobs:
           DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/gcc_car_value_test
         run: pytest tests/ -v --cov=src --cov-report=xml --cov-report=term-missing
 
+      - name: Test migrations
+        env:
+          DATABASE_URL_SYNC: postgresql://postgres:postgres@localhost:5432/gcc_car_value_test
+        run: |
+          alembic -c src/db/migrations/alembic.ini upgrade head
+          alembic -c src/db/migrations/alembic.ini downgrade -1
+          alembic -c src/db/migrations/alembic.ini upgrade head
+
+      - name: Dependency audit
+        run: pip install pip-audit && pip-audit || true  # warn but don't block
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -f docker/Dockerfile.api .
+
+  frontend-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install serve
+        run: npm install -g serve
+
+      - name: Install Playwright browsers
+        run: pip install playwright && playwright install chromium
+
+      - name: Start static server
+        run: |
+          serve -l 3000 ui &
+          sleep 2
+
+      - name: Validate all routes return 200
+        run: python scripts/validate_routes.py http://localhost:3000
+
+      - name: Check HTML for broken internal links
+        run: |
+          FAIL=0
+          for f in ui/*.html; do
+            grep -oP 'href="(?!http|#|mailto)[^"]*\.html' "$f" | sed 's/href="//' | sort -u | while read -r link; do
+              if [ ! -f "ui/$link" ]; then
+                echo "BROKEN: $f → $link"
+                FAIL=1
+              fi
+            done
+          done
+          exit $FAIL
+
+      - name: Check no console errors in HTML
+        run: |
+          FAIL=0
+          for f in ui/*.html; do
+            if grep -qP '<script[^>]*src="[^"]*"' "$f"; then
+              grep -oP 'src="[^"]*"' "$f" | sed 's/src="//;s/"//' | while read -r src; do
+                if [[ "$src" != http* ]] && [ ! -f "ui/$src" ]; then
+                  echo "MISSING JS: $f references $src"
+                  FAIL=1
+                fi
+              done
+            fi
+          done
+          exit $FAIL

@@ -1,0 +1,27 @@
+flowchart LR
+    G["GitHub main branch"]
+    FV["Vercel publish<br/>ui/ directory"]
+    FB["Browser routes<br/>clean URLs"]
+    RB["Render Docker build<br/>Python 3.12"]
+    MG["Alembic upgrade head<br/>fail fast"]
+    SV["Startup validation<br/>secrets + configuration"]
+    UV["Uvicorn / FastAPI<br/>port 8000"]
+    HC["/v1/health/live<br/>Render health probe"]
+    DB[("Managed PostgreSQL")]
+
+    G --> FV --> FB
+    G --> RB --> MG
+    MG <--> DB
+    MG --> SV --> UV --> HC
+    UV <--> DB
+
+    classDef source fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef frontend fill:#102a43,stroke:#4f86c6,color:#fff,stroke-width:2px;
+    classDef backend fill:#173f35,stroke:#58a88c,color:#fff,stroke-width:2px;
+    classDef gate fill:#f7f1fb,stroke:#8f6bb3,color:#2f1c40,stroke-width:2px;
+    classDef store fill:#f0f5f9,stroke:#66788a,color:#14202b,stroke-width:2px;
+    class G source;
+    class FV,FB frontend;
+    class RB,UV,HC backend;
+    class MG,SV gate;
+    class DB store;

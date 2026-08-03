@@ -1,0 +1,29 @@
+flowchart LR
+    M["Marketplace pages"]
+    F["Fetch index + listing<br/>httpx session"]
+    R["Rate limiter<br/>retry + circuit breaker"]
+    S[("Raw HTML<br/>S3-compatible bucket")]
+    X["Site parser<br/>source fields"]
+    V["Pandera validation"]
+    N["Canonical normalization<br/>currency → AED"]
+    Q["Quality scoring"]
+    D{"Score ≥<br/>threshold?"}
+    L[("Listings<br/>insert or update")]
+    E[("Dead-letter<br/>rejected records")]
+    P[("Pipeline run<br/>audit record")]
+
+    M --> F --> R --> S
+    R --> X
+    X -. "integration gap" .-> V
+    V --> N --> Q --> D
+    D -->|"yes"| L
+    D -->|"no"| E
+    X --> P
+
+    classDef live fill:#173f35,stroke:#58a88c,color:#fff,stroke-width:2px;
+    classDef module fill:#fff7e6,stroke:#c9922e,color:#33240d,stroke-width:2px;
+    classDef store fill:#f0f5f9,stroke:#66788a,color:#14202b,stroke-width:2px;
+    classDef gap fill:#fff0f0,stroke:#cf5c5c,color:#5b1515,stroke-width:2px,stroke-dasharray:5 4;
+    class M,F,R,X live;
+    class V,N,Q,D module;
+    class S,L,E,P store;
