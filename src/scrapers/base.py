@@ -1,4 +1,5 @@
 import uuid
+import asyncio
 import structlog
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -76,6 +77,9 @@ class BaseScraper(ABC):
                 _seen_urls.update(fresh)
                 for url in fresh:
                     try:
+                        if not await self._robots_allows(url):
+                            result.records_rejected += 1
+                            continue
                         await self.rate_limiter.acquire()
                         html = await self.fetch_listing(url)
                         s3_key = f"raw/{self.source}/{result.run_id}/{uuid.uuid4()}.html"
@@ -122,6 +126,28 @@ class BaseScraper(ABC):
     async def close(self):
         if self._session:
             await self._session.aclose()
+
+    async def _robots_allows(self, url: str) -> bool:
+        """Check robots.txt once per host. Fails open on fetch error."""
+        from urllib.robotparser import RobotFileParser
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        host = f"{parsed.scheme}://{parsed.netloc}"
+        if not hasattr(self, "_robots_cache"):
+            self._robots_cache = {}
+        if host not in self._robots_cache:
+            rp = RobotFileParser()
+            rp.set_url(f"{host}/robots.txt")
+            try:
+                await asyncio.to_thread(rp.read)
+                self._robots_cache[host] = rp
+            except Exception:
+                self._robots_cache[host] = None
+                structlog.get_logger().warning("robots_fetch_failed", host=host)
+        rp = self._robots_cache[host]
+        if rp is None:
+            return True
+        return rp.can_fetch(settings.scraper_user_agent, url)
 
     async def _persist(self, parsed: dict) -> str:
         """Run parsed data through validate -> normalize -> score -> promote.
