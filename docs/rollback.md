@@ -25,7 +25,7 @@ vercel rollback --prod --scope gcc-car-value
 **Manual rollback via commit revert:**
 ```bash
 git revert HEAD --no-edit
-git push origin main  # Render auto-deploys from main
+git push origin master  # Render auto-deploys from master
 ```
 
 ## Database (Neon)

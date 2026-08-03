@@ -32,10 +32,10 @@ The `keep-alive.yml` workflow pings `/v1/health/live` every 10 minutes to preven
 ## Deploying
 
 ```bash
-# Render auto-deploys on push to main
-git push origin main
+# Render auto-deploys on push to master
+git push origin master
 
-# Vercel auto-deploys on push to main (serves ui/ directory)
+# Vercel auto-deploys on push to master (serves ui/ directory)
 # Manual deploy:
 vercel --prod
 ```
