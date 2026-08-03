@@ -1,6 +1,16 @@
 import asyncio
 import time
 
+_HOST_LIMITERS: dict[str, "RateLimiter"] = {}
+
+
+def get_limiter(host: str, rps: float) -> "RateLimiter":
+    """One shared limiter per hostname, so concurrent scrapers of the same
+    site do not multiply the request rate."""
+    if host not in _HOST_LIMITERS:
+        _HOST_LIMITERS[host] = RateLimiter(rps)
+    return _HOST_LIMITERS[host]
+
 
 class RateLimiter:
     """Token bucket rate limiter for polite scraping."""

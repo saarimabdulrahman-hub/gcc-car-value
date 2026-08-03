@@ -30,7 +30,10 @@ class BaseScraper(ABC):
     base_url: str
 
     def __init__(self, session_factory=None):
-        self.rate_limiter = RateLimiter(settings.scraper_rate_limit_rps)
+        from urllib.parse import urlparse
+        from src.scrapers.rate_limiter import get_limiter
+        host = urlparse(self.base_url).hostname or self.source
+        self.rate_limiter = get_limiter(host, settings.scraper_rate_limit_rps)
         self.raw_storage = RawStorage()
         self._session = None
         self._session_factory = session_factory
