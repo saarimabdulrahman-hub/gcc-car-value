@@ -113,7 +113,7 @@ _SECURITY_HEADERS = {
         "img-src 'self' data: https:; "
         "style-src 'self' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
-        "script-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
         "connect-src 'self' https:; "
         "frame-ancestors 'none'; "
         "base-uri 'self'; "

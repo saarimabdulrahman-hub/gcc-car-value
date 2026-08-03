@@ -1,5 +1,6 @@
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 var API=(function(){var h=window.location.hostname;if(h==='localhost'||h==='127.0.0.1')return'http://localhost:8000/v1';return'https://gcc-car-value.onrender.com/v1';})();
+function apiFetch(url,opts){opts=opts||{};opts.headers=opts.headers||{};var token=localStorage.getItem('token');if(token&&!opts.headers['Authorization']){opts.headers['Authorization']='Bearer '+token;}return fetch(url,opts);}
 var curPage='home';
 var ALL_MAKES=[];
 var MODEL_CACHE={};
@@ -79,11 +80,13 @@ function loadHomeKPIs(){
     if(skel)skel.classList.add('hidden');
     if(data)data.classList.remove('hidden');
   }).catch(function(){
-    /* On error, still show data section (with -- values) and hide skeleton */
     var skel=document.getElementById('home-skeleton-content');
     var data=document.getElementById('home-data-content');
     if(skel)skel.classList.add('hidden');
-    if(data)data.classList.remove('hidden');
+    if(data){
+      data.innerHTML='<div class="error-state" style="text-align:center;padding:2rem;color:var(--gold)">Unable to load dashboard. <button onclick="location.reload()" style="margin-left:8px;padding:4px 12px">Retry</button></div>';
+      data.classList.remove('hidden');
+    }
   });
 }
 
@@ -110,7 +113,7 @@ function smartDefaults(formEl){
       fetch(API+'/models/'+encodeURIComponent(mk)+'/'+encodeURIComponent(md))
         .then(function(r){return r.json();})
         .then(function(d){YEAR_CACHE[ck]=d;showYearSuggestions(formEl,d);})
-        .catch(function(){});
+        .catch(function(){sug.innerHTML='<div class="autocomplete-item muted">Failed to load suggestions</div>';})
     }
   }
 
@@ -1125,15 +1128,20 @@ function loadMarketPage(){
 
   /* Fetch all 4 data sources in parallel */
   Promise.all([
-    fetch(API+'/admin/stats').then(function(r){return r.json();}).catch(function(){return null;}),
+    apiFetch(API+'/admin/stats').then(function(r){return r.json();}).catch(function(){return null;}),
     fetch(API+'/models').then(function(r){return r.json();}).catch(function(){return null;}),
-    fetch(API+'/admin/quality').then(function(r){return r.json();}).catch(function(){return null;}),
-    fetch(API+'/admin/scrapers').then(function(r){return r.json();}).catch(function(){return null;})
+    apiFetch(API+'/admin/quality').then(function(r){return r.json();}).catch(function(){return null;}),
+    apiFetch(API+'/admin/scrapers').then(function(r){return r.json();}).catch(function(){return null;}),
   ]).then(function(results){
-    MARKET_DATA.stats = results[0];
-    MARKET_DATA.models = results[1];
-    MARKET_DATA.quality = results[2];
-    MARKET_DATA.scrapers = results[3];
+    if(results.every(function(r){return r===null;})){
+      var grid=document.getElementById('market-kpi-grid');
+      if(grid)grid.innerHTML='<div class="error-state" style="grid-column:1/-1;text-align:center;padding:2rem">Market data unavailable. <button onclick="loadMarketPage()">Retry</button></div>';
+      return;
+    }
+    MARKET_DATA.stats = results[0] || {};
+    MARKET_DATA.models = results[1] || {};
+    MARKET_DATA.quality = results[2] || {};
+    MARKET_DATA.scrapers = results[3] || {};
 
     renderMarketKPIs();
     renderBrandRankings();
