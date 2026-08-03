@@ -23,8 +23,13 @@ def parse_listing(html: str, url: str) -> dict:
         result["asking_price"] = 0
     result["original_currency"] = "AED"
 
-    match = re.search(r'/cars/(\d+)|id[-_](\d+)', url)
-    result["external_id"] = match.group(1) or match.group(2) if match else ""
+    import hashlib
+    match = re.search(r'/(\d{5,})(?:/|$|\?)|id[-_](\d+)', url)
+    if match:
+        result["external_id"] = match.group(1) or match.group(2)
+    else:
+        result["external_id"] = "url_" + hashlib.sha256(
+            url.split("?")[0].encode()).hexdigest()[:16]
 
     details = {}
     for row in soup.select("tr, .detail-item, [class*='spec']"):

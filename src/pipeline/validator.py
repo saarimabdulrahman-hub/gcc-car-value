@@ -47,7 +47,8 @@ def validate_listing(data: dict) -> ValidationResult:
 
     required = ["make", "model", "year", "asking_price", "city", "country", "source", "external_id"]
     for field in required:
-        if field not in data or data[field] is None:
+        value = data.get(field)
+        if value is None or (isinstance(value, str) and not value.strip()):
             errors.append(f"missing_required_field: {field}")
 
     if errors:
