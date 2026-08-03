@@ -59,11 +59,19 @@ class BaseScraper(ABC):
         _MAX_CONSECUTIVE_FAILURES = 10
         try:
             page = 1
-            while True:
+            _MAX_PAGES = 50
+            _seen_urls: set[str] = set()
+            while page <= _MAX_PAGES:
                 urls = await self.fetch_index(page)
                 if not urls:
                     break
-                for url in urls:
+                fresh = [u for u in urls if u not in _seen_urls]
+                if not fresh:
+                    structlog.get_logger().info(
+                        "pagination_exhausted", source=self.source, page=page)
+                    break
+                _seen_urls.update(fresh)
+                for url in fresh:
                     try:
                         await self.rate_limiter.acquire()
                         html = await self.fetch_listing(url)
