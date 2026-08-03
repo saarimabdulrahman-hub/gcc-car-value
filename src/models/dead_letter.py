@@ -1,10 +1,13 @@
 import uuid
-from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey, func, Index
 from src.db.base import UniversalUUID, UniversalJSONB
 from src.db.base import Base
 
 class DeadLetter(Base):
     __tablename__ = "dead_letter"
+    __table_args__ = (
+        Index("ix_dead_letter_source_external_id", "source", "external_id"),
+    )
 
     id = Column(UniversalUUID, primary_key=True, default=uuid.uuid4)
     source = Column(Text, nullable=False)
