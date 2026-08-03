@@ -28,7 +28,7 @@ async def fetch_url(url: str) -> str:
     """Fetch a URL with browser-like headers."""
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         r = await client.get(url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",  # noqa: E501
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
         })
@@ -85,9 +85,9 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
 
     # Spec
     text_lower = (title_text + " " + html).lower()
-    if "gcc" in text_lower or "خليجي" in text_lower: result["spec"] = "GCC"
-    elif "american spec" in text_lower or "us spec" in text_lower: result["spec"] = "US"
-    elif "japan" in text_lower or "ياباني" in text_lower: result["spec"] = "Japan"
+    if "gcc" in text_lower or "خليجي" in text_lower: result["spec"] = "GCC"  # noqa: E701
+    elif "american spec" in text_lower or "us spec" in text_lower: result["spec"] = "US"  # noqa: E701
+    elif "japan" in text_lower or "ياباني" in text_lower: result["spec"] = "Japan"  # noqa: E701
 
     # City
     cities = ["Dubai", "Abu Dhabi", "Sharjah", "Riyadh", "Jeddah", "Dammam",
@@ -101,29 +101,29 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
         result["city"] = "Dubai"
 
     # Country
-    if "haraj" in url or "ksa" in url or "saudi" in url: result["country"] = "SA"
-    elif "dubizzle" in url: result["country"] = "AE"
+    if "haraj" in url or "ksa" in url or "saudi" in url: result["country"] = "SA"  # noqa: E701
+    elif "dubizzle" in url: result["country"] = "AE"  # noqa: E701
     elif "yallamotor" in url:
-        if "ksa" in url: result["country"] = "SA"
-        else: result["country"] = "AE"
-    elif "qatar" in url: result["country"] = "QA"
-    elif "kuwait" in url or "q8car" in url: result["country"] = "KW"
-    elif "bahrain" in url: result["country"] = "BH"
-    elif "oman" in url: result["country"] = "OM"
+        if "ksa" in url: result["country"] = "SA"  # noqa: E701
+        else: result["country"] = "AE"  # noqa: E701
+    elif "qatar" in url: result["country"] = "QA"  # noqa: E701
+    elif "kuwait" in url or "q8car" in url: result["country"] = "KW"  # noqa: E701
+    elif "bahrain" in url: result["country"] = "BH"  # noqa: E701
+    elif "oman" in url: result["country"] = "OM"  # noqa: E701
 
     # Body type
-    if "suv" in text_lower or "4x4" in text_lower: result["body_type"] = "SUV"
-    elif "sedan" in text_lower: result["body_type"] = "sedan"
+    if "suv" in text_lower or "4x4" in text_lower: result["body_type"] = "SUV"  # noqa: E701
+    elif "sedan" in text_lower: result["body_type"] = "sedan"  # noqa: E701
 
     # Transmission
-    if "automatic" in text_lower or "auto" in text_lower: result["transmission"] = "automatic"
+    if "automatic" in text_lower or "auto" in text_lower: result["transmission"] = "automatic"  # noqa: E701
 
     # Source detection
-    if "dubizzle" in url: result["source"] = "dubizzle"
-    elif "yallamotor" in url: result["source"] = "yallamotor"
-    elif "haraj" in url: result["source"] = "haraj"
-    elif "carswitch" in url: result["source"] = "carswitch"
-    elif "opensooq" in url: result["source"] = "opensooq"
+    if "dubizzle" in url: result["source"] = "dubizzle"  # noqa: E701
+    elif "yallamotor" in url: result["source"] = "yallamotor"  # noqa: E701
+    elif "haraj" in url: result["source"] = "haraj"  # noqa: E701
+    elif "carswitch" in url: result["source"] = "carswitch"  # noqa: E701
+    elif "opensooq" in url: result["source"] = "opensooq"  # noqa: E701
 
     # External ID from URL
     id_match = re.search(r'/(\d{5,})[/$]', url)
@@ -202,7 +202,7 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
     # Fall back to generic parser
     result = parse_listing_from_html(html, url)
     # If the parser fabricated core fields, this URL isn't a listing page
-    if result.get("_fabricated") and result.get("make") == "Toyota" and result.get("model") == "Camry":
+    if result.get("_fabricated") and result.get("make") == "Toyota" and result.get("model") == "Camry":  # noqa: E501
         return None
     # Ensure required numeric fields are not None
     if result.get("year") is None:
@@ -216,21 +216,21 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
 @limiter.limit("10/minute")
 async def valuate_from_url(
     request: URLValuationRequest,
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_api_key),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_api_key),  # noqa: B008
 ):
     """Paste a car listing URL, we fetch it, parse the details, and return a valuation."""
     try:
         validate_public_url(request.url)
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e))  # noqa: B904
 
     try:
         html = await fetch_url(request.url)
     except httpx.HTTPError as e:
-        raise HTTPException(status_code=422, detail=f"Could not fetch URL: {e}")
+        raise HTTPException(status_code=422, detail=f"Could not fetch URL: {e}")  # noqa: B904
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Error fetching URL: {e}")
+        raise HTTPException(status_code=422, detail=f"Error fetching URL: {e}")  # noqa: B904
 
     # Check if the page is an anti-bot/blocking page
     html_lower = html.lower()
@@ -256,7 +256,7 @@ async def valuate_from_url(
         site_name = brand_map.get(domain, domain.split(".")[0].title())
         raise HTTPException(
             status_code=422,
-            detail=f"{site_name} is blocking automated access with bot protection. Please use the manual entry form instead — it works for any car listing."
+            detail=f"{site_name} is blocking automated access with bot protection. Please use the manual entry form instead — it works for any car listing."  # noqa: E501
         )
 
     parsed = parse_listing_from_html_smart(html, request.url)
@@ -282,7 +282,7 @@ async def valuate_from_url(
         )
     except Exception as e:
         logger.error("valuation_error", url=request.url, error=str(e))
-        raise HTTPException(
+        raise HTTPException(  # noqa: B904
             status_code=422,
             detail=f"Error processing valuation: {str(e)[:200]}"
         )

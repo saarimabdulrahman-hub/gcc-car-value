@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("/models")
 async def list_makes(
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None, description="Filter by country: AE, SA, etc."),
 ):
     """List all available makes with model counts."""
@@ -23,7 +23,7 @@ async def list_makes(
         """
         if country:
             query += " AND country = :country"
-            result = await db.execute(text(query + " GROUP BY make ORDER BY make"), {"country": country})
+            result = await db.execute(text(query + " GROUP BY make ORDER BY make"), {"country": country})  # noqa: E501
         else:
             result = await db.execute(text(query + " GROUP BY make ORDER BY make"))
 
@@ -42,7 +42,7 @@ async def list_makes(
 @router.get("/models/{make}")
 async def list_models(
     make: str,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None),
 ):
     """List models for a make."""
@@ -66,7 +66,7 @@ async def list_models(
         return {
             "make": make,
             "models": [
-                {"model": r.model, "year_range": f"{r.year_min}–{r.year_max}", "listing_count": r.listing_count}
+                {"model": r.model, "year_range": f"{r.year_min}–{r.year_max}", "listing_count": r.listing_count}  # noqa: E501
                 for r in rows
             ]
         }
@@ -78,7 +78,7 @@ async def list_models(
 @router.get("/models/{make}/{model}")
 async def list_model_years(
     make: str, model: str,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
     country: str | None = Query(None),
 ):
     """List years for a make/model."""
@@ -91,7 +91,7 @@ async def list_model_years(
             query += " AND country = :country"
             result = await db.execute(
                 text(query + " GROUP BY year ORDER BY year DESC"),
-                {"make": make, "model": model, "country": country} if country else {"make": make, "model": model}
+                {"make": make, "model": model, "country": country} if country else {"make": make, "model": model}  # noqa: E501
             )
         else:
             result = await db.execute(
@@ -106,4 +106,4 @@ async def list_model_years(
         }
     except Exception:
         logger.exception("models_list_years_failed", make=make, model=model)
-        return {"make": make, "model": model, "years": [], "error": "Database temporarily unavailable"}
+        return {"make": make, "model": model, "years": [], "error": "Database temporarily unavailable"}  # noqa: E501

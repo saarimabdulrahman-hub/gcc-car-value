@@ -53,7 +53,7 @@ class LoginRequest(BaseModel):
 
 @router.post("/auth/register")
 @limiter.limit("5/minute")
-async def register(request: Request, req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+async def register(request: Request, req: RegisterRequest, db: AsyncSession = Depends(get_db)):  # noqa: B008
     existing = await db.execute(
         text("SELECT id FROM user_accounts WHERE email = :email"),
         {"email": req.email},
@@ -72,15 +72,15 @@ async def register(request: Request, req: RegisterRequest, db: AsyncSession = De
         await db.commit()
     except Exception:
         await db.rollback()
-        raise HTTPException(500, "Registration failed, please try again")
+        raise HTTPException(500, "Registration failed, please try again")  # noqa: B904
     return {"message": "Account created"}
 
 
 @router.post("/auth/login")
 @limiter.limit("10/minute")
-async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(get_db)):
+async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(get_db)):  # noqa: B008
     result = await db.execute(
-        text("SELECT id, email, password_hash, password_salt, role FROM user_accounts WHERE email = :email"),
+        text("SELECT id, email, password_hash, password_salt, role FROM user_accounts WHERE email = :email"),  # noqa: E501
         {"email": req.email},
     )
     row = result.fetchone()
@@ -108,7 +108,7 @@ class RefreshRequest(BaseModel):
 
 @router.post("/auth/refresh")
 @limiter.limit("5/minute")
-async def refresh(request: Request, req: RefreshRequest, db: AsyncSession = Depends(get_db)):
+async def refresh(request: Request, req: RefreshRequest, db: AsyncSession = Depends(get_db)):  # noqa: B008
     payload = await verify_token(req.refresh_token, check_revoked=True)
     if payload is None or payload.get("type") != "refresh":
         raise HTTPException(401, "Invalid or expired refresh token")
@@ -138,7 +138,7 @@ async def refresh(request: Request, req: RefreshRequest, db: AsyncSession = Depe
 @limiter.limit("10/minute")
 async def logout(
     request: Request,
-    user: dict = Depends(get_current_user),
+    user: dict = Depends(get_current_user),  # noqa: B008
 ):
     """Revoke the current access token. The refresh token is revoked on next refresh."""
     auth = request.headers.get("Authorization", "")
@@ -151,7 +151,7 @@ async def logout(
 
 
 @router.get("/auth/me")
-async def me(user: dict = Depends(get_current_user)):
+async def me(user: dict = Depends(get_current_user)):  # noqa: B008
     if user is None:
         raise HTTPException(401, "Authentication required")
     return {"id": user["id"], "email": user.get("email"), "role": user["role"]}

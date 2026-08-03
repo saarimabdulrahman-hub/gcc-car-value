@@ -24,8 +24,8 @@ logger = structlog.get_logger()
 
 @router.get("/admin/stats")
 async def platform_stats(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_METRICS)),  # noqa: B008
 ):
     """Overall platform statistics."""
     now = datetime.now(UTC)
@@ -59,8 +59,8 @@ async def platform_stats(
         "valuations": {"total": total_valuations, "last_7_days": recent_valuations},
         "last_pipeline_run": {
             "source": last_run.source if last_run else None,
-            "started_at": last_run.started_at.isoformat() if last_run and last_run.started_at else None,
-            "completed_at": last_run.completed_at.isoformat() if last_run and last_run.completed_at else None,
+            "started_at": last_run.started_at.isoformat() if last_run and last_run.started_at else None,  # noqa: E501
+            "completed_at": last_run.completed_at.isoformat() if last_run and last_run.completed_at else None,  # noqa: E501
             "success": last_run.success if last_run else None,
             "records_ingested": last_run.records_ingested if last_run else 0,
         } if last_run else None,
@@ -71,8 +71,8 @@ async def platform_stats(
 
 @router.get("/admin/scrapers")
 async def scraper_status(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_SCRAPERS)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_SCRAPERS)),  # noqa: B008
 ):
     """Health status of all scrapers."""
     subquery = (select(
@@ -101,8 +101,8 @@ async def scraper_status(
 
 @router.get("/admin/quality")
 async def quality_metrics(
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(require_permission(Permission.ADMIN_QUALITY)),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(require_permission(Permission.ADMIN_QUALITY)),  # noqa: B008
 ):
     """Data quality metrics — quality score distribution, rejection rates."""
     total = (await db.execute(select(func.count()).select_from(Listing))).scalar()

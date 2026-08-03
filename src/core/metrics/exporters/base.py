@@ -35,6 +35,6 @@ class MetricExporter(ABC):
         """Human-readable exporter name for logging."""
         ...
 
-    async def shutdown(self) -> None:
+    async def shutdown(self) -> None:  # noqa: B027
         """Cleanup resources before application shutdown."""
         pass

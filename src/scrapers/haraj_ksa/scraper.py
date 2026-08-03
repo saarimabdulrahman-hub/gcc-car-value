@@ -110,7 +110,7 @@ class HarajKSAScraper(BaseScraper):
 
     def _extract_spec(self, text: str) -> str | None:
         t = text.lower()
-        if "gcc" in t or "خليجي" in t: return "GCC"
-        if "american" in t or "us spec" in t or "امريكي" in t: return "US"
-        if "japan" in t or "ياباني" in t: return "Japan"
+        if "gcc" in t or "خليجي" in t: return "GCC"  # noqa: E701
+        if "american" in t or "us spec" in t or "امريكي" in t: return "US"  # noqa: E701
+        if "japan" in t or "ياباني" in t: return "Japan"  # noqa: E701
         return None

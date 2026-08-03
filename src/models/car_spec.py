@@ -20,7 +20,7 @@ class CarSpec(Base):
     fuel_economy_combined = Column(Float, nullable=True)
     fuel_tank_capacity = Column(Float, nullable=True)
     seating_capacity = Column(Integer, nullable=True)
-    cargo_volume_L = Column(Float, nullable=True)
+    cargo_volume_L = Column(Float, nullable=True)  # noqa: N815
     safety_rating = Column(Text, nullable=True)
     warranty_years = Column(Integer, nullable=True)
     warranty_km = Column(Integer, nullable=True)

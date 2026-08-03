@@ -113,7 +113,7 @@ class PredictionService:
         }
 
         # Build ordered feature array
-        X = np.array([
+        X = np.array([  # noqa: N806
             feature_values.get(name, 0.0)
             for name in self._feature_names
         ]).reshape(1, -1)

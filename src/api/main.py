@@ -31,7 +31,7 @@ setup_logging()
 # ------------------------------------------------------------------
 # Auto-register application lifecycle metrics
 # ------------------------------------------------------------------
-from src.core.metrics import Metrics
+from src.core.metrics import Metrics  # noqa: E402
 
 _start_time = time.time()
 
@@ -49,7 +49,7 @@ except Exception:
 
 def _update_uptime() -> None:
     """Update the uptime gauge before each /metrics scrape."""
-    try:
+    try:  # noqa: SIM105
         Metrics.set_gauge("app.uptime_seconds", time.time() - _start_time)
     except Exception:
         pass  # Never let metrics collection break the app
@@ -157,7 +157,7 @@ app.include_router(notifications.router, prefix="/v1", tags=["notifications"])
 app.include_router(watchlist.router, prefix="/v1", tags=["watchlist"])
 
 # Serve UI directly from route — zero caching
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse  # noqa: E402
 
 
 @app.get("/", response_class=HTMLResponse)

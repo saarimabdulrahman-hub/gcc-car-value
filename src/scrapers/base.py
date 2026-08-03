@@ -62,10 +62,10 @@ class BaseScraper(ABC):
         result = ScraperResult(source=self.source)
         result.started_at = datetime.now(UTC)
         _consecutive_failures = 0
-        _MAX_CONSECUTIVE_FAILURES = 10
+        _MAX_CONSECUTIVE_FAILURES = 10  # noqa: N806
         try:
             page = 1
-            _MAX_PAGES = 50
+            _MAX_PAGES = 50  # noqa: N806
             _seen_urls: set[str] = set()
             while page <= _MAX_PAGES:
                 urls = await self.fetch_index(page)

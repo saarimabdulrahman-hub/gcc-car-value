@@ -34,8 +34,8 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 async def get_current_user(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
-    db: AsyncSession = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),  # noqa: B008
+    db: AsyncSession = Depends(get_db),  # noqa: B008
 ) -> dict | None:
     """Extract and validate the current user from JWT Bearer token.
 
@@ -110,7 +110,7 @@ def require_permission(
 
     async def _check(
         request: Request,
-        user: dict | None = Depends(get_current_user),
+        user: dict | None = Depends(get_current_user),  # noqa: B008
     ) -> dict:
         if user is None:
             _log_denied(request, None, permission, "unauthenticated")
@@ -120,7 +120,7 @@ def require_permission(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER
+        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 
         if not rbac.has_permission(user_role, permission):
             _log_denied(request, user, permission, "insufficient_permission")
@@ -150,7 +150,7 @@ def require_role(
 
     async def _check(
         request: Request,
-        user: dict | None = Depends(get_current_user),
+        user: dict | None = Depends(get_current_user),  # noqa: B008
     ) -> dict:
         if user is None:
             _log_denied(request, None, f"role:{role.value}", "unauthenticated")
@@ -160,7 +160,7 @@ def require_role(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER
+        user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 
         if not rbac.has_role(user_role, role):
             _log_denied(request, user, f"role:{role.value}",

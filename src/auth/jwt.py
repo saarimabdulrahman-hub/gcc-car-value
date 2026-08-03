@@ -23,9 +23,9 @@ _revoked_jtis: set[str] = set()
 # Lazy-loaded JWT secret — resolved on first use via SecretProvider
 _jwt_secret: str | None = None
 
-from sqlalchemy import text
+from sqlalchemy import text  # noqa: E402
 
-from src.db.session import async_session_factory
+from src.db.session import async_session_factory  # noqa: E402
 
 
 async def _get_jwt_secret() -> str:
@@ -113,7 +113,7 @@ async def revoke_token_jti(jti: str) -> None:
     try:
         async with async_session_factory() as db:
             await db.execute(
-                text("INSERT INTO dead_letter (id, source, external_id, rejection_reason, raw_data) "
+                text("INSERT INTO dead_letter (id, source, external_id, rejection_reason, raw_data) "  # noqa: E501
                      "VALUES (:id, 'auth', :jti, 'revoked_token', '{}')"),
                 {"id": str(uuid.uuid4()), "jti": jti},
             )

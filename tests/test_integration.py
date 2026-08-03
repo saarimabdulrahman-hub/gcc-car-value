@@ -39,7 +39,7 @@ async def populated_db():
         {"source": "yallamotor", "ext_id": "ylm001", "city": "Dubai", "country": "AE",
          "price": 130000, "mileage": 68000, "spec": "GCC", "seller": "dealer", "status": "active"},
         {"source": "dubizzle_uae", "ext_id": "dxb004", "city": "Dubai", "country": "AE",
-         "price": 140000, "mileage": 40000, "spec": "GCC", "seller": "dealer", "status": "sold_confirmed"},
+         "price": 140000, "mileage": 40000, "spec": "GCC", "seller": "dealer", "status": "sold_confirmed"},  # noqa: E501
         {"source": "dubizzle_uae", "ext_id": "dxb005", "city": "Sharjah", "country": "AE",
          "price": 118000, "mileage": 90000, "spec": "GCC", "seller": "private", "status": "active"},
         # Dubai — US spec (cheaper)
@@ -55,7 +55,7 @@ async def populated_db():
         {"source": "dubizzle_uae", "ext_id": "auh002", "city": "Abu Dhabi", "country": "AE",
          "price": 127000, "mileage": 65000, "spec": "GCC", "seller": "dealer", "status": "active"},
         {"source": "dubizzle_uae", "ext_id": "auh003", "city": "Abu Dhabi", "country": "AE",
-         "price": 122000, "mileage": 72000, "spec": "GCC", "seller": "private", "status": "probably_sold"},
+         "price": 122000, "mileage": 72000, "spec": "GCC", "seller": "private", "status": "probably_sold"},  # noqa: E501
         # Saudi — Riyadh
         {"source": "haraj", "ext_id": "ruh001", "city": "Riyadh", "country": "SA",
          "price": 47000, "mileage": 85000, "spec": "GCC", "seller": "private", "status": "active"},
@@ -106,7 +106,7 @@ async def populated_db():
                 make="Toyota", model="Land Cruiser", year=2018,
                 mileage_km=ld["mileage"], spec=ld["spec"],
                 city=ld["city"], country=ld["country"],
-                original_price=ld["price"], original_currency="SAR" if ld["country"] == "SA" else "AED",
+                original_price=ld["price"], original_currency="SAR" if ld["country"] == "SA" else "AED",  # noqa: E501
                 exchange_rate=0.978 if ld["country"] == "SA" else 1.0,
                 exchange_timestamp=now,
                 normalized_price_aed=ld["price"] * (0.978 if ld["country"] == "SA" else 1.0),
@@ -151,9 +151,9 @@ async def test_valuate_returns_estimate(populated_db):
             mileage_km=80000, spec="GCC", country="AE", city="Dubai",
         )
 
-    assert result.confidence in ("high", "medium"), f"Expected high or medium confidence, got {result.confidence}"
+    assert result.confidence in ("high", "medium"), f"Expected high or medium confidence, got {result.confidence}"  # noqa: E501
     assert result.comp_count >= 10, f"Expected >= 10 comps, got {result.comp_count}"
-    assert 110000 <= result.estimate <= 150000, f"Estimate {result.estimate} outside expected range 110K-150K"
+    assert 110000 <= result.estimate <= 150000, f"Estimate {result.estimate} outside expected range 110K-150K"  # noqa: E501
     assert result.price_low < result.estimate < result.price_high
 
     # Check adjustments

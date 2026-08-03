@@ -143,6 +143,6 @@ def generate_secure_jwt_secret() -> str:
 
     Usage:
         python -c "from src.config.startup import generate_secure_jwt_secret; print(generate_secure_jwt_secret())"
-    """
+    """  # noqa: E501
     import secrets
     return secrets.token_hex(32)

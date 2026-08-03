@@ -57,9 +57,9 @@ def test_listing_has_lineage_columns():
 
 
 def test_listing_has_dual_currency():
-    """Spec Section 3.4: original_price + original_currency + exchange_rate + normalized_price_aed."""
+    """Spec Section 3.4: original_price + original_currency + exchange_rate + normalized_price_aed."""  # noqa: E501
     from src.models import Listing
     currency_fields = {"original_price", "original_currency", "exchange_rate",
                        "exchange_timestamp", "normalized_price_aed"}
     columns = {c.name for c in Listing.__table__.columns}
-    assert currency_fields.issubset(columns), f"Missing currency fields: {currency_fields - columns}"
+    assert currency_fields.issubset(columns), f"Missing currency fields: {currency_fields - columns}"  # noqa: E501

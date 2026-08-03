@@ -227,7 +227,7 @@ def downgrade() -> None:
         op.drop_constraint(f"ck_model_ratings_{col}_range", "model_ratings", type_="check")
 
     # --- UNIQUEs ---
-    op.execute("ALTER TABLE canonical_vehicles DROP CONSTRAINT IF EXISTS uq_canonical_vehicles_make_model_year_gen")
+    op.execute("ALTER TABLE canonical_vehicles DROP CONSTRAINT IF EXISTS uq_canonical_vehicles_make_model_year_gen")  # noqa: E501
     op.drop_constraint("uq_listings_source_external_id", "listings", type_="unique")
 
 

@@ -18,7 +18,7 @@ _exporter = PrometheusExporter(Metrics)
 
 
 @router.get("/metrics")
-async def metrics(_: dict = Depends(require_api_key)):
+async def metrics(_: dict = Depends(require_api_key)):  # noqa: B008
     """Prometheus metrics endpoint.
 
     Returns all registered metrics in Prometheus exposition format.

@@ -13,8 +13,8 @@ router = APIRouter()
 @limiter.limit("30/minute")
 async def list_notifications(
     request: Request,
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(get_current_user),  # noqa: B008
 ):
     if user is None:
         raise HTTPException(401, "Authentication required")
@@ -33,7 +33,7 @@ async def list_notifications(
                 "id": str(r.id),
                 "type": "price_alert",
                 "title": f"Price alert: {r.make} {r.model}",
-                "body": f"Target price AED {r.target_price:,.0f} reached" if r.last_triggered_at and r.target_price is not None else f"Watching {r.make} {r.model}",
+                "body": f"Target price AED {r.target_price:,.0f} reached" if r.last_triggered_at and r.target_price is not None else f"Watching {r.make} {r.model}",  # noqa: E501
                 "read": r.last_triggered_at is not None,
                 "created_at": r.created_at.isoformat() if r.created_at else None,
             }

@@ -5,24 +5,24 @@ from src.db.session import get_session as get_db
 
 limiter = Limiter(key_func=get_remote_address)
 
-import hashlib
+import hashlib  # noqa: E402
 
-from fastapi import Depends, HTTPException, Security
-from fastapi.security import APIKeyHeader
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Depends, HTTPException, Security  # noqa: E402
+from fastapi.security import APIKeyHeader  # noqa: E402
+from sqlalchemy.ext.asyncio import AsyncSession  # noqa: E402
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def require_api_key(
     api_key: str | None = Security(api_key_header),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db)  # noqa: B008
 ) -> dict:
     if not api_key:
         raise HTTPException(status_code=401, detail="API key required")
     from sqlalchemy import text
     hashed = hashlib.sha256(api_key.encode()).hexdigest()
     result = await db.execute(
-        text("SELECT id, email, role FROM user_accounts WHERE api_key_hash = :hash AND is_active = true"),
+        text("SELECT id, email, role FROM user_accounts WHERE api_key_hash = :hash AND is_active = true"),  # noqa: E501
         {"hash": hashed}
     )
     user = result.fetchone()

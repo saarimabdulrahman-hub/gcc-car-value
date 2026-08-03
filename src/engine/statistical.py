@@ -77,7 +77,7 @@ async def valuate(
             adjustments.append(Adjustment(
                 reason="mileage",
                 amount=mileage_adj,
-                detail=f"{'More' if mileage_delta > 0 else 'Fewer'} km than segment avg. Adjustment: {mileage_adj:+.0f} AED"
+                detail=f"{'More' if mileage_delta > 0 else 'Fewer'} km than segment avg. Adjustment: {mileage_adj:+.0f} AED"  # noqa: E501
             ))
 
     # Step 4: Spec adjustment

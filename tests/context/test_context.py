@@ -11,7 +11,7 @@ from src.core.context.context import (
 )
 from src.core.context.models import RequestContext
 from src.core.context.storage import (
-    clear_context,
+    clear_context,  # noqa: F811
     clone_context,
     get_context,
     set_context,
@@ -27,7 +27,7 @@ class TestRequestContextModel:
 
     def test_context_is_frozen(self):
         ctx = RequestContext(correlation_id="abc")
-        with pytest.raises(Exception):  # FrozenInstanceError or similar
+        with pytest.raises(Exception):  # FrozenInstanceError or similar  # noqa: B017
             ctx.correlation_id = "def"  # type: ignore
 
     def test_to_log_fields_includes_non_empty_only(self):

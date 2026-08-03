@@ -101,7 +101,7 @@ def _format_value(value: float) -> str:
 # Type-specific formatters
 # ------------------------------------------------------------------
 
-def _format_counter(metric: "Counter") -> list[str]:
+def _format_counter(metric: "Counter") -> list[str]:  # noqa: F821
     """Counter → metric_total line(s) + optional HELP/TYPE."""
     name = _prometheus_name(metric, "_total")
     lines = [
@@ -113,7 +113,7 @@ def _format_counter(metric: "Counter") -> list[str]:
     return lines
 
 
-def _format_gauge(metric: "Gauge") -> list[str]:
+def _format_gauge(metric: "Gauge") -> list[str]:  # noqa: F821
     """Gauge → metric line(s)."""
     name = _prometheus_name(metric)
     lines = [
@@ -125,7 +125,7 @@ def _format_gauge(metric: "Gauge") -> list[str]:
     return lines
 
 
-def _format_histogram(metric: "Histogram") -> list[str]:
+def _format_histogram(metric: "Histogram") -> list[str]:  # noqa: F821
     """Histogram → _bucket, _sum, _count metric families.
 
     Prometheus histogram format requires:
@@ -170,7 +170,7 @@ def _format_histogram(metric: "Histogram") -> list[str]:
     return lines
 
 
-def _format_info(metric: "Info") -> list[str]:
+def _format_info(metric: "Info") -> list[str]:  # noqa: F821
     """Info → metric_info gauge with info labels."""
     name = _prometheus_name(metric, "_info")
     lines = [

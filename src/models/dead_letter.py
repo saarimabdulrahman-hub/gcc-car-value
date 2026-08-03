@@ -17,5 +17,5 @@ class DeadLetter(Base):
     rejection_reason = Column(Text, nullable=False)
     raw_data = Column(UniversalJSONB, nullable=False)
     quality_score = Column(Integer, nullable=True)
-    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id", ondelete="SET NULL"), nullable=True)
+    pipeline_run_id = Column(UniversalUUID, ForeignKey("pipeline_runs.run_id", ondelete="SET NULL"), nullable=True)  # noqa: E501
     created_at = Column(DateTime(timezone=True), server_default=func.now())

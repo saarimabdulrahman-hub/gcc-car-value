@@ -86,7 +86,7 @@ async def find_comps(
             Listing.model == model,
             Listing.year.between(year_min, year_max),
             Listing.status.in_(["active", "probably_sold", "sold_confirmed"]),
-            Listing.quality_score >= 45,  # ponytail: 45 matches quality_promotion_threshold; raise both once scrapers extract optional fields
+            Listing.quality_score >= 45,  # ponytail: 45 matches quality_promotion_threshold; raise both once scrapers extract optional fields  # noqa: E501
         ]
 
         if tier["same_country"] and country:

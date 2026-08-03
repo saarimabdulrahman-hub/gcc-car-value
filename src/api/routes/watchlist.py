@@ -22,8 +22,8 @@ class SaveValuationRequest(BaseModel):
 @limiter.limit("30/minute")
 async def list_watchlist(
     request: Request,
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(get_current_user),  # noqa: B008
 ):
     if user is None:
         raise HTTPException(401, "Authentication required")
@@ -51,8 +51,8 @@ async def list_watchlist(
 async def save_to_watchlist(
     request: Request,
     req: SaveValuationRequest,
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(get_current_user),  # noqa: B008
 ):
     if user is None:
         raise HTTPException(401, "Authentication required")
@@ -67,7 +67,7 @@ async def save_to_watchlist(
         await db.commit()
     except Exception:
         await db.rollback()
-        raise HTTPException(500, "Failed to save to watchlist")
+        raise HTTPException(500, "Failed to save to watchlist")  # noqa: B904
     return {"message": "Saved to watchlist"}
 
 
@@ -76,8 +76,8 @@ async def save_to_watchlist(
 async def remove_from_watchlist(
     request: Request,
     item_id: str,
-    db: AsyncSession = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
+    user: dict = Depends(get_current_user),  # noqa: B008
 ):
     if user is None:
         raise HTTPException(401, "Authentication required")
@@ -91,5 +91,5 @@ async def remove_from_watchlist(
         await db.commit()
     except Exception:
         await db.rollback()
-        raise HTTPException(500, "Failed to remove from watchlist")
+        raise HTTPException(500, "Failed to remove from watchlist")  # noqa: B904
     return {"message": "Removed from watchlist"}

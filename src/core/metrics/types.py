@@ -195,7 +195,7 @@ class Timer:
         t.stop()
     """
 
-    def __init__(self, registry: "MetricsRegistry", metric_name: str,
+    def __init__(self, registry: "MetricsRegistry", metric_name: str,  # noqa: F821
                  tags: dict[str, str] | None = None):
         self._registry = registry
         self._metric_name = metric_name

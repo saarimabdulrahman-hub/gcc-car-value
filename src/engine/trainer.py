@@ -16,7 +16,7 @@ from src.models.model_registry import ModelRegistry
 logger = structlog.get_logger()
 
 
-async def build_training_dataset(session: AsyncSession, min_listings: int = 1000) -> pd.DataFrame | None:
+async def build_training_dataset(session: AsyncSession, min_listings: int = 1000) -> pd.DataFrame | None:  # noqa: E501
     """Build training dataset from production listings with constructed targets."""
     stmt = (select(Listing)
             .where(Listing.quality_score >= 60,
@@ -53,7 +53,7 @@ async def build_training_dataset(session: AsyncSession, min_listings: int = 1000
             country=country,
             segment_median_price=segment["asking_price_aed"].median(),
             segment_listing_count=len(segment),
-            segment_price_volatility=float(segment["asking_price_aed"].std() / segment["asking_price_aed"].mean())
+            segment_price_volatility=float(segment["asking_price_aed"].std() / segment["asking_price_aed"].mean())  # noqa: E501
             if segment["asking_price_aed"].mean() > 0 else 0.05,
         )
 
@@ -83,13 +83,13 @@ def train_model(df: pd.DataFrame, feature_names: list[str]) -> tuple[object, dic
     import lightgbm as lgb
     from sklearn.model_selection import train_test_split
 
-    X = df[feature_names].fillna(0)
+    X = df[feature_names].fillna(0)  # noqa: N806
     y = df["target"]
 
     if len(X) < 100:
         raise ValueError(f"Insufficient training data: {len(X)} rows")
 
-    X_train, X_holdout, y_train, y_holdout = train_test_split(
+    X_train, X_holdout, y_train, y_holdout = train_test_split(  # noqa: N806
         X, y, test_size=0.15, random_state=42
     )
 
@@ -116,7 +116,7 @@ def train_model(df: pd.DataFrame, feature_names: list[str]) -> tuple[object, dic
         "r2": float(np.corrcoef(y_pred, y_holdout)[0, 1] ** 2),
         "training_rows": len(X_train),
         "holdout_rows": len(X_holdout),
-        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist(), strict=False)),
+        "feature_importance": dict(zip(feature_names, model.feature_importances_.tolist(), strict=False)),  # noqa: E501
     }
 
     return model, metrics, mae

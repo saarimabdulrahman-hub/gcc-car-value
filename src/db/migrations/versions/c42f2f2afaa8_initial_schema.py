@@ -51,7 +51,7 @@ def upgrade() -> None:
         sa.Column("parser_version", sa.Text, nullable=False),
         sa.Column("normalizer_version", sa.Text, nullable=False),
         sa.Column("pipeline_run_id", postgresql.UUID, nullable=False),
-        sa.Column("ingested_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column("ingested_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),  # noqa: E501
         sa.PrimaryKeyConstraint("id", "captured_at"),
         postgresql_partition_by="RANGE (captured_at)",
     )
@@ -76,7 +76,7 @@ def upgrade() -> None:
     op.create_index("idx_listings_quality", "listings", ["quality_score"])
     op.create_index("idx_listings_canonical", "listings", ["canonical_vehicle_id"])
     op.create_index("idx_listings_pipeline_run", "listings", ["pipeline_run_id"])
-    op.create_index("idx_snapshots_listing_date", "listing_snapshots", ["listing_id", "captured_at"])
+    op.create_index("idx_snapshots_listing_date", "listing_snapshots", ["listing_id", "captured_at"])  # noqa: E501
     op.create_index("idx_snapshots_run", "listing_snapshots", ["pipeline_run_id"])
     op.create_index("idx_valuation_cache", "valuation_queries", ["cache_key"])
     op.create_index("idx_valuation_queried_at", "valuation_queries", ["queried_at"])

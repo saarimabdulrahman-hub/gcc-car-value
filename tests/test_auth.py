@@ -7,11 +7,16 @@ import src.auth.jwt as jwt_mod
 os.environ["JWT_SECRET"] = "test-jwt-secret-" + "x" * 40
 jwt_mod._jwt_secret = None
 
-from unittest.mock import patch
+from unittest.mock import patch  # noqa: E402
 
-import pytest
+import pytest  # noqa: E402
 
-from src.auth.jwt import create_access_token, create_api_key, verify_api_key, verify_token
+from src.auth.jwt import (  # noqa: E402
+    create_access_token,
+    create_api_key,
+    verify_api_key,
+    verify_token,
+)
 
 
 @pytest.fixture(autouse=True)

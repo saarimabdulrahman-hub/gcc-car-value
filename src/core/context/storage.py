@@ -18,7 +18,7 @@ from src.core.context.models import RequestContext
 # (e.g., startup, background workers before context is set).
 _request_context: ContextVar[RequestContext] = ContextVar(
     "request_context",
-    default=RequestContext.empty(),
+    default=RequestContext.empty(),  # noqa: B039
 )
 
 

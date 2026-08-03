@@ -16,7 +16,7 @@ class UserAccount(Base):
     password_hash = Column(Text, nullable=False)
     password_salt = Column(Text, nullable=False)
     tier = Column(Text, nullable=False, default="registered")  # registered, enterprise
-    role = Column(Text, nullable=False, default="consumer")    # consumer, dealer, moderator, admin, super_admin, system
+    role = Column(Text, nullable=False, default="consumer")    # consumer, dealer, moderator, admin, super_admin, system  # noqa: E501
     api_key_hash = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

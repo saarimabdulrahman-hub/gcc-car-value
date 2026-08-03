@@ -33,13 +33,13 @@ def _compute_cache_key(req: ValuationRequest) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def _compute_deal_indicator(asking_price: float | None, result: ValuationResult) -> tuple[str | None, str | None]:
+def _compute_deal_indicator(asking_price: float | None, result: ValuationResult) -> tuple[str | None, str | None]:  # noqa: E501
     """Compute Good Deal / Fair Deal / Above Market indicator from spec Section 6.3."""
     if asking_price is None or result.confidence == "insufficient" or result.confidence == "low":
         return None, None
 
     if asking_price < result.price_low:
-        return "great_deal", f"This car is priced below the market range ({asking_price:,.0f} vs {result.price_low:,.0f}–{result.price_high:,.0f} AED)."
+        return "great_deal", f"This car is priced below the market range ({asking_price:,.0f} vs {result.price_low:,.0f}–{result.price_high:,.0f} AED)."  # noqa: E501
     elif asking_price <= result.price_high:
         return "fair_deal", "This car is priced within the normal market range."
     else:
@@ -51,7 +51,7 @@ def _compute_deal_indicator(asking_price: float | None, result: ValuationResult)
 async def valuate_vehicle(
     request: Request,
     valuation_req: ValuationRequest,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),  # noqa: B008
 ):
     cache_key = _compute_cache_key(valuation_req)
 
@@ -105,7 +105,7 @@ async def valuate_vehicle(
                 # Cross-reference: if ML and statistical disagree by >15%,
                 # default to statistical and flag the discrepancy
                 if valuation.estimate > 0:
-                    pct_diff = abs(ml_result.predicted_value - valuation.estimate) / valuation.estimate
+                    pct_diff = abs(ml_result.predicted_value - valuation.estimate) / valuation.estimate  # noqa: E501
                     if pct_diff > 0.15:
                         logger.warning("ml_statistical_disagreement",
                             make=valuation_req.make, model=valuation_req.model,
@@ -154,7 +154,7 @@ async def valuate_vehicle(
     if valuation.confidence == "insufficient":
         raise HTTPException(
             status_code=422,
-            detail="Not enough comparable listings for this vehicle. Try a more common make/model or broader criteria."
+            detail="Not enough comparable listings for this vehicle. Try a more common make/model or broader criteria."  # noqa: E501
         )
 
     # Store in cache
