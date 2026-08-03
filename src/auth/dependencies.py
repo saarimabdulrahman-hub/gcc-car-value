@@ -43,7 +43,7 @@ async def get_current_user(
     if credentials is None:
         return None
 
-    payload = verify_token(credentials.credentials)
+    payload = await verify_token(credentials.credentials)
     if payload is None:
         return None
 
@@ -62,8 +62,23 @@ async def get_current_user(
 
     resolved_role = db_role.value if db_role else (role_str or "consumer")
 
+    # Look up email for endpoints that need it (auth/me)
+    email = None
+    try:
+        from sqlalchemy import text
+        result = await db.execute(
+            text("SELECT email FROM user_accounts WHERE id = :uid"),
+            {"uid": user_id},
+        )
+        row = result.fetchone()
+        email = row.email if row else None
+    except Exception:
+        pass  # Non-critical; /auth/me returns email=None if DB unreachable
+
     return {
-        "user_id": user_id,
+        "id": user_id,
+        "user_id": user_id,  # kept for backward compat with _log_denied
+        "email": email,
         "role": resolved_role,
         "tier": tier_str,
         "is_authenticated": True,

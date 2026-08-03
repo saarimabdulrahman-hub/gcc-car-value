@@ -108,14 +108,14 @@ class RefreshRequest(BaseModel):
 @router.post("/auth/refresh")
 @limiter.limit("5/minute")
 async def refresh(request: Request, req: RefreshRequest, db: AsyncSession = Depends(get_db)):
-    payload = verify_token(req.refresh_token, check_revoked=True)
+    payload = await verify_token(req.refresh_token, check_revoked=True)
     if payload is None or payload.get("type") != "refresh":
         raise HTTPException(401, "Invalid or expired refresh token")
 
     # Revoke the used refresh token (rotation)
     jti = payload.get("jti")
     if jti:
-        revoke_token_jti(jti)
+        await revoke_token_jti(jti)
 
     # Issue new tokens — look up current role from DB for freshness
     from sqlalchemy import text as sql_text
@@ -143,9 +143,9 @@ async def logout(
     auth = request.headers.get("Authorization", "")
     token = auth.removeprefix("Bearer ").strip()
     if token:
-        payload = verify_token(token, check_revoked=False)
+        payload = await verify_token(token, check_revoked=False)
         if payload and payload.get("jti"):
-            revoke_token_jti(payload["jti"])
+            await revoke_token_jti(payload["jti"])
     return {"message": "Logged out"}
 
 
