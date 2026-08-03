@@ -7,7 +7,8 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from bs4 import BeautifulSoup
 import httpx
-from src.api.dependencies import get_db, require_api_key
+from src.api.dependencies import get_db, require_api_key, limiter
+from src.api.security import validate_public_url
 from src.engine.statistical import valuate
 from src.pipeline.normalizer import normalize_listing
 import structlog
@@ -128,6 +129,8 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
     result["external_id"] = id_match.group(1) if id_match else url[-20:]
 
     # Ultra-lenient: always return something. Default missing fields.
+    # Flag fabricated results so the caller can reject non-listing URLs.
+    result["_fabricated"] = True
     if not result.get("make") or not result["make"].strip():
         # Try to extract make from URL itself
         url_lower = url.lower()
@@ -197,6 +200,9 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
 
     # Fall back to generic parser
     result = parse_listing_from_html(html, url)
+    # If the parser fabricated core fields, this URL isn't a listing page
+    if result.get("_fabricated") and result.get("make") == "Toyota" and result.get("model") == "Camry":
+        return None
     # Ensure required numeric fields are not None
     if result.get("year") is None:
         result["year"] = 2020
@@ -206,12 +212,18 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict:
 
 
 @router.post("/valuate-url")
+@limiter.limit("10/minute")
 async def valuate_from_url(
     request: URLValuationRequest,
     db: AsyncSession = Depends(get_db),
     user: dict = Depends(require_api_key),
 ):
     """Paste a car listing URL, we fetch it, parse the details, and return a valuation."""
+    try:
+        validate_public_url(request.url)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
     try:
         html = await fetch_url(request.url)
     except httpx.HTTPError as e:

@@ -24,36 +24,11 @@ VALID_MAKES = {
 def slug(s):
     return re.sub(r'[^a-z0-9]', '_', (s or '').lower().strip())
 
+from src.scrapers.title_parser import extract_make_model
+
 def make_model_from_title(title):
-    """Extract make and model from a listing title."""
-    title = title.strip()
-    # Try known multi-word makes first
-    multi = ['Land Rover','Mercedes Benz','Mercedes-Benz','Alfa Romeo','Aston Martin',
-             'Rolls Royce','Rolls-Royce','Great Wall']
-    found_make = None
-    for m in sorted(multi, key=len, reverse=True):
-        if title.lower().startswith(m.lower()):
-            found_make = m
-            break
-    if not found_make:
-        found_make = title.split()[0] if title.split() else ''
-
-    remainder = title[len(found_make):].strip()
-    # Normalize make name
-    make_map = {'Mercedes Benz':'Mercedes-Benz','Mercedes':'Mercedes-Benz',
-                'Rolls Royce':'Rolls-Royce','Landrover':'Land Rover'}
-    make = make_map.get(found_make, found_make)
-
-    # Extract model (first 1-3 words that aren't year/price/spec)
-    model_words = []
-    for w in remainder.split():
-        if re.match(r'^(20\d{2}|AED|SAR|\d{1,3}(,\d{3})*)$', w):
-            break
-        if w.lower() in ('gcc','us','japan','european','automatic','manual','petrol','diesel'):
-            break
-        model_words.append(w)
-    model = ' '.join(model_words[:3]) if model_words else ''
-    return make, model
+    """Extract make and model from a listing title — delegates to shared parser."""
+    return extract_make_model(title)
 
 def extract_number(text):
     text = re.sub(r'[^\d.]', '', str(text).replace(',', ''))
