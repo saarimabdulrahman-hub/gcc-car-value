@@ -369,7 +369,7 @@ function updateDealScore(askingVal){
   else if(price<300000){score=55;color='var(--amber)';label='Premium segment — verify comps';}
   else{score=40;color='var(--amber)';label='Luxury — needs thorough analysis';}
   valueEl.textContent=score+'/100';valueEl.style.color=color;
-  labelEl.textContent=label;barEl.style.width=score+'%';barEl.style.background=color;
+  labelEl.textContent=label;barEl.style.transform='scaleX('+(score/100)+')';barEl.style.background=color;
 }
 function readForm(el){
 var g=function(c){var e=el.querySelector(c);return e?e.value:null;};
