@@ -56,7 +56,7 @@ class TestIndexPage:
         errors = []
         page.on("pageerror", lambda err: errors.append(err))
         page.goto(f"file:///{UI_DIR / 'index.html'}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
         # Allow cross-origin errors for file:// but fail on real JS errors
         real_errors = [e for e in errors if "cross-origin" not in str(e).lower()
                       and "file://" not in str(e).lower()]

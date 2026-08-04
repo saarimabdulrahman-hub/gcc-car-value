@@ -8,6 +8,10 @@ import threading
 import time
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.core.metrics.registry import MetricsRegistry
 
 
 class MetricType(StrEnum):
@@ -25,10 +29,6 @@ class MetricValue:
     tags: dict[str, str] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
 
-
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from src.core.metrics.registry import MetricsRegistry
 
 class Metric:
     """Base class for all metric types.
