@@ -13,11 +13,11 @@ Usage:
         span.set_attribute("estimate", result.estimate)
 """
 
-from src.core.tracing.provider import init_tracing, is_tracing_enabled
+from src.core.tracing.provider import init_tracing, is_tracing_enabled, shutdown_tracing
 from src.core.tracing.span import NoOpSpan, Span
 from src.core.tracing.tracer import Tracer, get_tracer
 
 __all__ = [
     "get_tracer", "Tracer", "Span", "NoOpSpan",
-    "init_tracing", "is_tracing_enabled",
+    "init_tracing", "is_tracing_enabled", "shutdown_tracing",
 ]

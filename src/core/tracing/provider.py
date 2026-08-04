@@ -59,6 +59,17 @@ def init_tracing() -> None:
         _provider_initialized = True  # Don't retry
 
 
+def shutdown_tracing() -> None:
+    """Flush and shut down the OTel tracer provider. No-op if tracing disabled."""
+    try:
+        from opentelemetry import trace
+        provider = trace.get_tracer_provider()
+        if hasattr(provider, "shutdown"):
+            provider.shutdown()
+    except Exception as e:  # noqa: BLE001 - shutdown must never raise
+        logger.warning("tracing_shutdown_failed", error=str(e)[:200])
+
+
 def _do_init() -> None:
     """Internal OpenTelemetry SDK initialization."""
     from opentelemetry import trace
