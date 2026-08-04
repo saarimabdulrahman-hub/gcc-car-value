@@ -1,4 +1,3 @@
-from typing import Any
 import sys
 import time
 from contextlib import asynccontextmanager

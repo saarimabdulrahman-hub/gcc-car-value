@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Any, Annotated
+from typing import Annotated, Any
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, NoDecode

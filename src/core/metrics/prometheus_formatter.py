@@ -18,7 +18,6 @@ CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
 if TYPE_CHECKING:
     from src.core.metrics.types import Counter, Gauge, Histogram, Info, Metric
-    from src.core.metrics.registry import MetricsRegistry
 
 
 def format_metrics(metrics: list["Metric"]) -> str:
