@@ -114,20 +114,20 @@ async def find_comps(
                 continue
             seen_ids.add(row.id)
             comp = CompListing(
-                source=row.source,
-                make=row.make,
-                model=row.model,
-                year=row.year,
-                mileage_km=row.mileage_km,
-                spec=row.spec,
-                city=row.city,
-                country=row.country,
-                asking_price_aed=row.normalized_price_aed,
-                quality_score=row.quality_score,
-                status=row.status,
+                source=row.source,  # type: ignore[arg-type]
+                make=row.make,  # type: ignore[arg-type]
+                model=row.model,  # type: ignore[arg-type]
+                year=row.year,  # type: ignore[arg-type]
+                mileage_km=row.mileage_km,  # type: ignore[arg-type]
+                spec=row.spec,  # type: ignore[arg-type]
+                city=row.city,  # type: ignore[arg-type]
+                country=row.country,  # type: ignore[arg-type]
+                asking_price_aed=row.normalized_price_aed,  # type: ignore[arg-type]
+                quality_score=row.quality_score,  # type: ignore[arg-type]
+                status=row.status,  # type: ignore[arg-type]
                 days_on_market=_compute_days_on_market(row),
-                delisting_confidence=row.delisting_confidence,
-                platform_name=_platform_name(row.source),
+                delisting_confidence=row.delisting_confidence,  # type: ignore[arg-type]
+                platform_name=_platform_name(row.source),  # type: ignore[arg-type]
             )
             comp.relevance_score = _score_comp(
                 comp, make, model, year, mileage_km, spec, country

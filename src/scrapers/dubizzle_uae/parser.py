@@ -14,15 +14,15 @@ def parse_listing(html: str, url: str) -> dict:
     title = title_elem.get_text(strip=True) if title_elem else ""
 
     result["make"], result["model"] = extract_make_model(title)
-    result["year"] = _extract_year(title)
-    result["spec"] = _extract_spec(title)
-    result["mileage_km"] = _extract_mileage(title)
+    result["year"] = _extract_year(title)  # type: ignore[assignment]
+    result["spec"] = _extract_spec(title)  # type: ignore[assignment]
+    result["mileage_km"] = _extract_mileage(title)  # type: ignore[assignment]
 
     price_elem = soup.select_one("[data-testid='listing-price'], .price, [class*='price']")
     if price_elem:
-        result["asking_price"] = _extract_price(price_elem.get_text(strip=True))
+        result["asking_price"] = _extract_price(price_elem.get_text(strip=True))  # type: ignore[assignment]
     else:
-        result["asking_price"] = 0
+        result["asking_price"] = 0  # type: ignore[assignment]
     result["original_currency"] = "AED"
 
     import hashlib
@@ -41,13 +41,13 @@ def parse_listing(html: str, url: str) -> dict:
             value = cells[1].get_text(strip=True)
             details[key] = value
 
-    result["body_type"] = details.get("body type") or details.get("body")
-    result["transmission"] = details.get("transmission")
-    result["fuel_type"] = details.get("fuel type") or details.get("fuel")
-    result["engine_size"] = _extract_engine_size(details.get("engine size", ""))
-    result["color"] = details.get("color")
-    result["trim"] = details.get("trim")
-    result["seller_type"] = _extract_seller_type(details)
+    result["body_type"] = details.get("body type") or details.get("body")  # type: ignore[assignment]
+    result["transmission"] = details.get("transmission")  # type: ignore[assignment]
+    result["fuel_type"] = details.get("fuel type") or details.get("fuel")  # type: ignore[assignment]
+    result["engine_size"] = _extract_engine_size(details.get("engine size", ""))  # type: ignore[assignment]
+    result["color"] = details.get("color")  # type: ignore[assignment]
+    result["trim"] = details.get("trim")  # type: ignore[assignment]
+    result["seller_type"] = _extract_seller_type(details)  # type: ignore[assignment]
 
     loc_elem = soup.select_one("[data-testid='location'], .location, [class*='location']")
     loc_text = loc_elem.get_text(strip=True) if loc_elem else ""

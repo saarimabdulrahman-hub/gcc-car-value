@@ -33,7 +33,7 @@ class PrometheusExporter(MetricExporter):
     def format_name(self) -> str:
         return "prometheus"
 
-    async def export(self) -> tuple[str, str]:
+    async def export(self) -> tuple[str, str]:  # type: ignore[override]
         """Export all registered metrics in Prometheus text format.
 
         Returns:

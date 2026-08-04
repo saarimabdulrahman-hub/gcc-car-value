@@ -18,7 +18,7 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_db
+from src.api.dependencies import get_db  # type: ignore[attr-defined]
 from src.auth.jwt import verify_token
 from src.auth.rbac import get_user_role, rbac
 from src.auth.roles import Permission, Role

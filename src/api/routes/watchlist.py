@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_db, limiter
+from src.api.dependencies import get_db, limiter  # type: ignore[attr-defined]
 from src.auth.dependencies import get_current_user
 
 router = APIRouter()
@@ -85,7 +85,7 @@ async def remove_from_watchlist(
         text("DELETE FROM saved_valuations WHERE id = :id AND user_id = :uid"),
         {"id": item_id, "uid": user["id"]},
     )
-    if result.rowcount == 0:
+    if result.rowcount == 0:  # type: ignore[attr-defined]
         raise HTTPException(404, "Item not found in watchlist")
     try:
         await db.commit()

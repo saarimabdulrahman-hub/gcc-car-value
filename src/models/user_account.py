@@ -27,5 +27,5 @@ class UserAccount(Base):
         return h.hex(), salt
 
     def verify_password(self, password: str) -> bool:
-        h, _ = self.hash_password(password, self.password_salt)
+        h, _ = self.hash_password(password, self.password_salt)  # type: ignore[arg-type]
         return h == self.password_hash

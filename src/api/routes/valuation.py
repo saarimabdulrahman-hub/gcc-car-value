@@ -5,7 +5,7 @@ import structlog
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_db, limiter
+from src.api.dependencies import get_db, limiter  # type: ignore[attr-defined]
 from src.api.schemas.valuation import (
     Adjustment,
     CompSummary,
@@ -86,7 +86,7 @@ async def valuate_vehicle(
             ml_model, ml_metadata = await loader.get_model()
 
             if ml_model is not None:
-                svc = PredictionService(ml_model, ml_metadata)
+                svc = PredictionService(ml_model, ml_metadata)  # type: ignore[arg-type]
                 ml_result = svc.predict(
                     make=valuation_req.make,
                     model=valuation_req.model,

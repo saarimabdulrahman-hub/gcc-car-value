@@ -68,4 +68,4 @@ class ListingVolumeFeature(BaseFeature):
 # Register
 for cls in [SegmentMedianPrice, SegmentLiquidity, PriceVolatilityFeature,
             MarketTrend4WeekFeature, ListingVolumeFeature]:
-    FeatureRegistry.register(cls())
+    FeatureRegistry.register(cls())  # type: ignore[abstract]

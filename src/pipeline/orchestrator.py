@@ -57,7 +57,7 @@ class PipelineOrchestrator:
                 normalizer_version="1.0.0",
             )
             if run.completed_at and run.started_at:
-                run.duration_seconds = int((run.completed_at - run.started_at).total_seconds())
+                run.duration_seconds = int((run.completed_at - run.started_at).total_seconds())  # type: ignore[assignment]
             session.add(run)
             await session.commit()
             return run

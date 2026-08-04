@@ -37,13 +37,13 @@ async def validate_startup() -> None:
 
     # Validate each secret with a defined policy
     for secret_name, policy in SECRET_POLICIES.items():
-        value = await provider.get(secret_name.value)
+        value = await provider.get(secret_name.value)  # type: ignore[attr-defined]
 
         # Check required secrets
         if value is None:
             if policy.get("require_no_default"):
                 errors.append(
-                    f"{secret_name.value}: REQUIRED but not found. "
+                    f"{secret_name.value}: REQUIRED but not found. "  # type: ignore[attr-defined]
                     f"Set via {provider.source_name}. "
                     f"Description: {policy['description']}"
                 )
@@ -53,7 +53,7 @@ async def validate_startup() -> None:
         min_length = policy.get("min_length", 0)
         if len(value) < min_length:
             errors.append(
-                f"{secret_name.value}: too short "
+                f"{secret_name.value}: too short "  # type: ignore[attr-defined]
                 f"({len(value)} chars, minimum {min_length}). "
                 f"Description: {policy['description']}"
             )
@@ -64,7 +64,7 @@ async def validate_startup() -> None:
         for indicator in default_indicators:
             if indicator in value_lower:
                 errors.append(
-                    f"{secret_name.value}: appears to be a default/example value "
+                    f"{secret_name.value}: appears to be a default/example value "  # type: ignore[attr-defined]
                     f"(contains '{indicator}'). "
                     f"Replace with a strong generated secret."
                 )

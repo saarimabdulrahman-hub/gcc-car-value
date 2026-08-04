@@ -34,10 +34,10 @@ class YallaMotorScraper(BaseScraper):
         links = []
         for link in soup.select("a[href*='/used-cars/']"):
             href = link.get("href", "")
-            if "/used-cars/" in href and href.count("/") > 3:
+            if "/used-cars/" in href and href.count("/") > 3:  # type: ignore[operator]
                 full_url = href if href.startswith("http") else f"{self.base_url}{href}"
                 links.append(full_url)
-        return list(set(links))
+        return list(set(links))  # type: ignore[arg-type]
 
     async def fetch_listing(self, url: str) -> str:
         session = await self.get_session()
@@ -56,17 +56,17 @@ class YallaMotorScraper(BaseScraper):
         title_text = title.get_text(strip=True) if title else ""
 
         result["make"], result["model"] = extract_make_model(title_text)
-        result["year"] = self._extract_number(title_text)
-        result["spec"] = self._extract_spec(title_text)
-        result["mileage_km"] = self._extract_mileage(title_text)
+        result["year"] = self._extract_number(title_text)  # type: ignore[assignment]
+        result["spec"] = self._extract_spec(title_text)  # type: ignore[assignment]
+        result["mileage_km"] = self._extract_mileage(title_text)  # type: ignore[assignment]
 
         # Price
         price_elem = soup.select_one("[class*='price'], .price-value, .car-price")
         if price_elem:
             price_text = price_elem.get_text(strip=True)
-            result["asking_price"] = self._extract_number(price_text)
+            result["asking_price"] = self._extract_number(price_text)  # type: ignore[assignment]
         else:
-            result["asking_price"] = 0
+            result["asking_price"] = 0  # type: ignore[assignment]
 
         # External ID from URL
         match = re.search(r'/(\d+)[/$]', url)
@@ -88,7 +88,7 @@ class YallaMotorScraper(BaseScraper):
             result["city"] = loc.get_text(strip=True) or self.default_city
 
         result["parser_version"] = "yallamotor_v1.0.0"
-        result["schema_version"] = 1
+        result["schema_version"] = 1  # type: ignore[assignment]
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
 

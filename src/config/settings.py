@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Annotated
+from typing import Any, Annotated
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, NoDecode
@@ -96,7 +96,7 @@ class Settings(BaseSettings):
 
     @field_validator("api_cors_origins", mode="before")
     @classmethod
-    def parse_cors_origins(cls, v: object) -> list[str]:
+    def parse_cors_origins(cls, v: object) -> Any:
         """Accept a JSON array, a comma-separated string, or a list.
 
         Env vars are strings; humans set API_CORS_ORIGINS on Render as a plain

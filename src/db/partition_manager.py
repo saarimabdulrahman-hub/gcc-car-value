@@ -77,7 +77,7 @@ class PartitionManager:
         months = months_ahead or config["future_months"]
         created = []
 
-        for i in range(months + 1):  # +1 includes current month
+        for i in range(months + 1):  # type: ignore[operator]
             partition_date = _add_months(datetime.utcnow().replace(day=1), i)
             partition_name = await self._create_partition_if_not_exists(
                 table_name, partition_date
@@ -103,7 +103,7 @@ class PartitionManager:
         """
         config = PARTITION_CONFIG[table_name]
         retention = retention_months or config["retention_months"]
-        cutoff = _add_months(datetime.utcnow().replace(day=1), -retention)
+        cutoff = _add_months(datetime.utcnow().replace(day=1), -retention)  # type: ignore[operator]
 
         expired = await self._get_expired_partitions(table_name, cutoff)
         if not expired:

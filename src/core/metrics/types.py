@@ -26,6 +26,10 @@ class MetricValue:
     timestamp: float = field(default_factory=time.time)
 
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.core.metrics.registry import MetricsRegistry
+
 class Metric:
     """Base class for all metric types.
 

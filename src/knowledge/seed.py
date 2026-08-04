@@ -894,7 +894,7 @@ async def seed_knowledge_base(session: AsyncSession) -> dict:
     counts = {"specs": 0, "issues": 0, "maintenance": 0, "depreciation": 0, "ratings": 0}
 
     for make, models in MODELS.items():
-        for model_name, generations in models.items():
+        for model_name, generations in models.items():  # type: ignore[attr-defined]
             for gen_name, gen_data in generations.items():
                 # CarSpecs
                 spec = CarSpec(

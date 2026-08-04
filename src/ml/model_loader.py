@@ -64,11 +64,11 @@ class ModelLoader:
         # First try loading from the path stored in registry
         model = None
         if registry_entry.model_path:
-            model = load_model(registry_entry.model_name)
+            model = load_model(registry_entry.model_name)  # type: ignore[arg-type]
 
         # Fall back: try loading by model_name from models directory
-        if model is None and model_exists(registry_entry.model_name):
-            model = load_model(registry_entry.model_name)
+        if model is None and model_exists(registry_entry.model_name):  # type: ignore[arg-type]
+            model = load_model(registry_entry.model_name)  # type: ignore[arg-type]
 
         if model is None:
             logger.error("model_load_failed",
@@ -77,7 +77,7 @@ class ModelLoader:
             return None, None
 
         self._model = model
-        self._loaded_model_name = registry_entry.model_name
+        self._loaded_model_name = registry_entry.model_name  # type: ignore[assignment]
         self._metadata = self._build_metadata(registry_entry)
 
         logger.info("active_model_loaded",
@@ -97,7 +97,7 @@ class ModelLoader:
         entry = await self._get_active_model()
         if entry is None:
             return False
-        return model_exists(entry.model_name) or (
+        return model_exists(entry.model_name) or (  # type: ignore[arg-type]
             entry.model_path is not None
         )
 

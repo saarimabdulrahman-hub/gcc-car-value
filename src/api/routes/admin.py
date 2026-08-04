@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_db
+from src.api.dependencies import get_db  # type: ignore[attr-defined]
 from src.auth.dependencies import require_permission
 from src.auth.roles import Permission
 from src.models.drift_event import DriftEvent
@@ -125,5 +125,5 @@ async def quality_metrics(
         "quality_distribution": {
             "high_quality": high, "medium_quality": medium, "low_quality": low,
         },
-        "high_quality_pct": round(high / total * 100, 1) if total else 0,
+        "high_quality_pct": round(high / total * 100, 1) if total else 0,  # type: ignore[operator]
     }

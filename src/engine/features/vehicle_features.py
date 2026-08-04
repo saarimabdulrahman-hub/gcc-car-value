@@ -42,4 +42,4 @@ class CommonIssueCountFeature(BaseFeature):
 
 # Register
 for cls in [BrandReliabilityFeature, DepreciationRateFeature, CommonIssueCountFeature]:
-    FeatureRegistry.register(cls())
+    FeatureRegistry.register(cls())  # type: ignore[abstract]

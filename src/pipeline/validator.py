@@ -23,11 +23,11 @@ class ListingSchema(pa.DataFrameModel):
         coerce = True
 
     @pa.dataframe_check
-    def year_not_future(self, df):
+    def year_not_future(self, df):  # type: ignore[misc]
         return df["year"] <= datetime.now().year + 1
 
     @pa.dataframe_check
-    def reasonable_price(self, df):
+    def reasonable_price(self, df):  # type: ignore[misc]
         suspicious = df["asking_price"].isin([1, 123, 1234, 12345, 123456])
         return ~suspicious.any()
 

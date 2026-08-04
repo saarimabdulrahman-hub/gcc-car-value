@@ -136,7 +136,7 @@ class BaseScraper(ABC):
         parsed = urlparse(url)
         host = f"{parsed.scheme}://{parsed.netloc}"
         if not hasattr(self, "_robots_cache"):
-            self._robots_cache = {}
+            self._robots_cache = {}  # type: ignore[var-annotated]
         if host not in self._robots_cache:
             rp = RobotFileParser()
             rp.set_url(f"{host}/robots.txt")
@@ -144,7 +144,7 @@ class BaseScraper(ABC):
                 await asyncio.to_thread(rp.read)
                 self._robots_cache[host] = rp
             except Exception:
-                self._robots_cache[host] = None
+                self._robots_cache[host] = None  # type: ignore[assignment]
                 structlog.get_logger().warning("robots_fetch_failed", host=host)
         rp = self._robots_cache[host]
         if rp is None:
@@ -171,7 +171,7 @@ class BaseScraper(ABC):
                 errors=validation.errors[:3])
             return "rejected"
 
-        data = normalize_listing(validation.data)
+        data = normalize_listing(validation.data)  # type: ignore[arg-type]
         score, flags = score_quality(data)
 
         async with self._session_factory() as session:

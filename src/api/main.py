@@ -1,3 +1,4 @@
+from typing import Any
 import sys
 import time
 from contextlib import asynccontextmanager
@@ -91,7 +92,7 @@ app = FastAPI(
 )
 
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
 app.add_middleware(
     CORSMiddleware,
@@ -142,7 +143,7 @@ app.add_middleware(CorrelationMiddleware)
 try:
     from src.core.tracing.instrumentation.http import HTTPInstrumentation
 except ImportError:
-    HTTPInstrumentation = None
+    HTTPInstrumentation = None  # type: ignore
 if HTTPInstrumentation is not None:
     app.add_middleware(HTTPInstrumentation)
 

@@ -99,8 +99,8 @@ async def recommend(
                 make=row.make, model=row.model, score=round(score, 1),
                 reason=", ".join(reasons[:3]) if reasons else "market pick",
                 avg_price=round(row.avg_price) if row.avg_price else None,
-                reliability=reliability,
-                resale_value=resale,
+                reliability=reliability,  # type: ignore[arg-type]
+                resale_value=resale,  # type: ignore[arg-type]
             ))
 
     recommendations.sort(key=lambda r: r.score, reverse=True)

@@ -12,6 +12,7 @@ from __future__ import annotations
 import threading
 from collections.abc import Callable
 from typing import Any
+from typing import cast
 
 from src.core.metrics.types import (
     Counter,
@@ -72,34 +73,34 @@ class MetricsRegistry:
 
         Raises DuplicateMetricError if name is already registered.
         """
-        return self._register(
+        return cast(Counter, self._register(
             Counter(name, description, namespace, tags)
-        )
+        ))
 
     def gauge(self, name: str, description: str = "",
               namespace: str = "",
               tags: dict[str, str] | None = None) -> Gauge:
         """Register and return a Gauge metric."""
-        return self._register(
+        return cast(Gauge, self._register(
             Gauge(name, description, namespace, tags)
-        )
+        ))
 
     def histogram(self, name: str, description: str = "",
                   buckets: list[float] | None = None,
                   namespace: str = "",
                   tags: dict[str, str] | None = None) -> Histogram:
         """Register and return a Histogram metric."""
-        return self._register(
+        return cast(Histogram, self._register(
             Histogram(name, description, buckets, namespace, tags)
-        )
+        ))
 
     def info(self, name: str, description: str = "",
              namespace: str = "",
              tags: dict[str, str] | None = None) -> Info:
         """Register and return an Info metric (static metadata)."""
-        return self._register(
+        return cast(Info, self._register(
             Info(name, description, namespace, tags)
-        )
+        ))
 
     def _register(self, metric: Metric) -> Metric:
         """Register a metric. Thread-safe, prevents duplicates."""

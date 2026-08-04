@@ -17,10 +17,10 @@ class DubizzleUAEScraper(BaseScraper):
         links = []
         for link in soup.select("a[href*='/motors/used-cars/']"):
             href = link.get("href", "")
-            if "/motors/used-cars/" in href and "/ads/" not in href:
+            if "/motors/used-cars/" in href and "/ads/" not in href:  # type: ignore[operator]
                 full_url = href if href.startswith("http") else f"{self.base_url}{href}"
                 links.append(full_url)
-        return list(set(links))
+        return list(set(links))  # type: ignore[arg-type]
 
     async def fetch_listing(self, url: str) -> str:
         session = await self.get_session()

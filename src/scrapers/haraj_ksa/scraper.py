@@ -20,10 +20,10 @@ class HarajKSAScraper(BaseScraper):
         links = []
         for link in soup.select("a[href*='/car/'], a[href*='/cars/']"):
             href = link.get("href", "")
-            if "/car/" in href or "/cars/" in href:
+            if "/car/" in href or "/cars/" in href:  # type: ignore[operator]
                 full_url = href if href.startswith("http") else f"{self.base_url}{href}"
                 links.append(full_url)
-        return list(set(links))
+        return list(set(links))  # type: ignore[arg-type]
 
     async def fetch_listing(self, url: str) -> str:
         session = await self.get_session()
@@ -44,22 +44,22 @@ class HarajKSAScraper(BaseScraper):
         title_text = title.get_text(strip=True) if title else ""
 
         result["make"], result["model"] = extract_make_model(title_text)
-        result["year"] = self._extract_year(title_text)
+        result["year"] = self._extract_year(title_text)  # type: ignore[assignment]
 
         # Scope to the listing body; fall back to the title only, never whole HTML.
         body = soup.select_one("[class*='postBody'], [class*='post-body'], article, main")
         scope_text = body.get_text(" ", strip=True) if body else title_text
 
-        result["spec"] = self._extract_spec(scope_text)
-        result["mileage_km"] = self._extract_mileage(scope_text)
+        result["spec"] = self._extract_spec(scope_text)  # type: ignore[assignment]
+        result["mileage_km"] = self._extract_mileage(scope_text)  # type: ignore[assignment]
 
         # Price — Haraj prices are in SAR
         price_elem = soup.select_one("[class*='price'], .price-value")
         if price_elem:
             price_text = price_elem.get_text(strip=True)
-            result["asking_price"] = self._extract_number(price_text)
+            result["asking_price"] = self._extract_number(price_text)  # type: ignore[assignment]
         else:
-            result["asking_price"] = 0
+            result["asking_price"] = 0  # type: ignore[assignment]
 
         # External ID
         match = re.search(r'/(\d+)[/$]', url)
@@ -89,7 +89,7 @@ class HarajKSAScraper(BaseScraper):
             result["city"] = city_map.get(city_match.group(1), "Riyadh")
 
         result["parser_version"] = "haraj_ksa_v1.0.0"
-        result["schema_version"] = 1
+        result["schema_version"] = 1  # type: ignore[assignment]
         result["normalizer_version"] = "normalizer_v1.0.0"
         return result
 

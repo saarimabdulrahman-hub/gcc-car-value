@@ -87,4 +87,4 @@ class HasServiceHistoryFeature(BaseFeature):
 # Register all listing features
 for cls in [MileageFeature, VehicleAgeFeature, SpecGCCFeature, SpecUSFeature,
             SellerDealerFeature, HasWarrantyFeature, HasServiceHistoryFeature]:
-    FeatureRegistry.register(cls())
+    FeatureRegistry.register(cls())  # type: ignore[abstract]

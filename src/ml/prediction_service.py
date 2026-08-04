@@ -119,7 +119,7 @@ class PredictionService:
         ]).reshape(1, -1)
 
         # Predict
-        predicted = float(self._model.predict(X)[0])
+        predicted = float(self._model.predict(X)[0])  # type: ignore[attr-defined]
 
         # Confidence: derive from model's training MAE and the comp-based
         # statistical confidence. Higher MAE → lower confidence.

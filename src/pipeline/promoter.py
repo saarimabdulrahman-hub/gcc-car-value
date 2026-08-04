@@ -37,16 +37,16 @@ async def promote_listing(
     now = datetime.now(UTC)
 
     if existing:
-        existing.last_seen_at = now
+        existing.last_seen_at = now  # type: ignore[assignment]
         existing.status = data.get("status", "active")
         existing.original_price = data["original_price"]
         existing.original_currency = data["original_currency"]
         existing.exchange_rate = data["exchange_rate"]
-        existing.exchange_timestamp = now
+        existing.exchange_timestamp = now  # type: ignore[assignment]
         existing.normalized_price_aed = data["normalized_price_aed"]
-        existing.mileage_km = data.get("mileage_km")
-        existing.quality_score = score
-        existing.quality_flags = flags
+        existing.mileage_km = data.get("mileage_km")  # type: ignore[assignment]
+        existing.quality_score = score  # type: ignore[assignment]
+        existing.quality_flags = flags  # type: ignore[assignment]
         existing.schema_version = data.get("schema_version", 1)
         existing.parser_version = data.get("parser_version", "1.0.0")
         existing.normalizer_version = data.get("normalizer_version", "1.0.0")
