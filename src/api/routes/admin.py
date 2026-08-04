@@ -51,7 +51,7 @@ async def platform_stats(
     # Active drift events
     drift_count = (await db.execute(
         select(func.count()).select_from(DriftEvent)
-        .where(not DriftEvent.acknowledged, DriftEvent.threshold_exceeded)
+        .where(DriftEvent.acknowledged.is_(False), DriftEvent.threshold_exceeded)
     )).scalar()
 
     return {
