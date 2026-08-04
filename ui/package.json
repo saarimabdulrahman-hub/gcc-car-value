@@ -13,13 +13,14 @@
     "dev": "vite",
     "build": "tsc && vite build && node -e \"var f=require('fs');f.cpSync('dist/react-browse/react-browse.html','react-browse.html');f.cpSync('dist/react-browse/assets','assets',{recursive:true})\"",
     "preview": "vite preview",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint .",
     "format": "prettier --write ."
   },
   "overrides": {
     "brace-expansion": "^2.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^3.0.0",
     "autoprefixer": "^10.4.0",
     "eslint": "^8.0.0",
