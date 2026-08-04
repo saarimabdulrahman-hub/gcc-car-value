@@ -144,3 +144,27 @@ async def test_valuate_insufficient_comps(monkeypatch):
     assert result.confidence == "insufficient"
     assert result.estimate == 0
     assert result.comp_count == 3
+
+
+@pytest.mark.asyncio
+async def test_mileage_adjustment_direction_is_downward(monkeypatch):
+    """Target has more km than the segment → mileage adjustment must be negative."""
+    from src.engine import statistical
+
+    comps = [make_comp(price=80000, days=5) for _ in range(20)]
+    for c in comps:
+        c.mileage_km = 30000  # segment is low-mileage
+
+    async def mock_find_comps(*args, **kwargs):
+        return comps
+
+    monkeypatch.setattr(statistical, "find_comps", mock_find_comps)
+
+    result = await statistical.valuate(
+        session=None, make="Toyota", model="Camry", year=2020,
+        mileage_km=100000, spec="GCC", country="AE", city="Dubai",
+    )
+
+    mileage_adj = [a for a in result.adjustments if a.reason == "mileage"]
+    assert mileage_adj, "expected a mileage adjustment"
+    assert mileage_adj[0].amount < 0  # more km than segment → price down
