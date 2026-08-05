@@ -40,9 +40,15 @@ document.querySelector('.mobile-menu-btn')?.setAttribute('aria-expanded','false'
 document.querySelectorAll('.sidebar-nav a').forEach(function(a){a.classList.remove('active');a.removeAttribute('aria-current');});
 el.classList.add('active');
 el.setAttribute('aria-current', 'page');
-document.querySelectorAll('[id^="page-"]').forEach(function(pg){pg.classList.add('hidden');});
-var pg=document.getElementById('page-'+p);if(pg)pg.classList.remove('hidden');
-document.body.classList.toggle('has-sidebar',p!=='home');
+/* SPA page swap — wrapped in View Transitions when supported (animate) */
+var doSwap=function(){
+  document.querySelectorAll('[id^="page-"]').forEach(function(pg){pg.classList.add('hidden');});
+  var pg2=document.getElementById('page-'+p);if(pg2)pg2.classList.remove('hidden');
+  document.body.classList.toggle('has-sidebar',p!=='home');
+};
+var vtSupported=(typeof document.startViewTransition==='function');
+var vtReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(vtSupported&&!vtReduced)document.startViewTransition(doSwap);else doSwap();
 if(p==='sell')buildForm('sell-form',false);
 if(p==='buy'){buildForm('buy-form',true);var sr=document.querySelector('.sell-rail');var br=document.querySelector('.buy-rail');if(sr&&br)br.innerHTML=sr.innerHTML;}
 if(p==='browse')loadBrowseMakes();
@@ -495,7 +501,7 @@ var estPos=rangeSpan>0?((d.estimate-d.price_low)/rangeSpan*100):50;
 var h='';
 
 /* ═══ VALUATION HERO ═══ */
-h+='<div class="card result-hero">';
+h+='<div class="card result-hero reveal-ready">';
 h+='<div class="card-header" style="display:flex;align-items:center;gap:var(--space-2);justify-content:center">';
 h+='<svg class="conf-ring" viewBox="0 0 64 64" role="img" aria-label="Confidence: '+d.confidence+', '+confPct+' percent"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--border-default)" stroke-width="4"/><circle cx="32" cy="32" r="28" fill="none" stroke="'+confColor+'" stroke-width="4" stroke-dasharray="'+Math.round(confPct/100*175.93)+' 175.93" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 32 32)" style="transition:stroke-dasharray 1s ease"/></svg>';
 h+='<div class="conf-text"><span class="conf-label" style="color:'+confColor+'">'+d.confidence.toUpperCase()+' CONFIDENCE</span><span class="conf-sub">based on '+d.comp_count+' comparable listings</span></div>';
@@ -619,23 +625,63 @@ h+='<p style="font-size:var(--text-xs);color:var(--text-muted);text-align:center
 
 c.innerHTML=h;
 
-/* Count-up animation for result amount */
+/* ── Cinematic valuation reveal (overdrive A + animate + delight) ── */
+var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* 1. Hero rises in */
+var heroEl = c.querySelector('.result-hero');
+if (heroEl) {
+  if (reduced) { heroEl.classList.add('reveal-in'); }
+  else { requestAnimationFrame(function(){ heroEl.classList.add('reveal-in'); }); }
+}
+
+/* 2. Amount counts up, gold ticker pulse on arrival */
 var amountEl = document.getElementById('result-amount-value');
 if (amountEl) {
   var target = d.estimate;
-  var duration = 600;
+  var duration = reduced ? 0 : 900;
   var startTime = performance.now();
+  var tickerDone = false;
   function animate(now) {
-    var elapsed = now - startTime;
-    var progress = Math.min(elapsed / duration, 1);
+    var progress = duration ? Math.min((now - startTime) / duration, 1) : 1;
     var eased = 1 - Math.pow(1 - progress, 3);
-    var current = Math.round(eased * target);
-    amountEl.textContent = 'AED ' + current.toLocaleString();
+    amountEl.textContent = 'AED ' + Math.round(eased * target).toLocaleString();
     if (progress < 1) {
       requestAnimationFrame(animate);
+    } else if (!tickerDone) {
+      tickerDone = true;
+      amountEl.classList.add('ticker-pulse');
+      setTimeout(function(){ amountEl.classList.remove('ticker-pulse'); }, 700);
     }
   }
   requestAnimationFrame(animate);
+}
+
+/* 3. Confidence ring fills */
+var ring = c.querySelector('.conf-ring circle:last-child');
+if (ring) {
+  var full = 175.93;
+  var ringTarget = Math.round(confPct / 100 * full);
+  if (reduced) {
+    ring.style.strokeDasharray = ringTarget + ' ' + full;
+  } else {
+    ring.style.strokeDasharray = '0 ' + full;
+    setTimeout(function(){
+      ring.style.transition = 'stroke-dasharray 900ms cubic-bezier(0.16,1,0.3,1) 250ms';
+      ring.style.strokeDasharray = ringTarget + ' ' + full;
+    }, 50);
+  }
+}
+
+/* 4. Price range marker sweeps across */
+var marker = c.querySelector('.range-bar-marker');
+if (marker && !reduced) marker.classList.add('sweep-in');
+
+/* 5. Comparable / better-deal cards cascade with stagger */
+var stagger = c.querySelectorAll('.comp-item, .alt-card');
+for (var s = 0; s < stagger.length; s++) {
+  if (reduced) { stagger[s].style.animation = 'none'; stagger[s].style.opacity = '1'; }
+  else { stagger[s].style.animationDelay = (450 + s * 80) + 'ms'; }
 }
 }
 
