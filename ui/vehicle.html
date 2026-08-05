@@ -7,10 +7,9 @@
   var make = params.get('make');
   var model = params.get('model');
   if (!make || !model) return;
-  var BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
   document.querySelector('.page-title').textContent = make + ' ' + model;
   document.querySelector('.page-sub').textContent = 'Loading specifications…';
-  fetch(BASE + '/v1/models/' + encodeURIComponent(make) + '/' + encodeURIComponent(model), { signal: AbortSignal.timeout(3000) })
+  fetch(API + '/models/' + encodeURIComponent(make) + '/' + encodeURIComponent(model), { signal: AbortSignal.timeout(3000) })
     .then(function (r) { return r.json(); })
     .then(function (data) {
       if (!data.years || !data.years.length) return;

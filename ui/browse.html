@@ -929,7 +929,7 @@
     function initials(name) { return name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase(); }
     function logoSlug(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }
     function esc(value) { return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
-    function sparkline(index) { const lines = ['M1 15 C12 15 15 13 22 12 S30 4 38 7 45 14 54 13 63 15','M1 15 C12 15 18 13 25 10 S34 5 41 10 50 13 63 14','M1 16 C10 16 18 14 24 12 S32 4 39 8 47 14 63 13']; return lines[index % lines.length]; }
+    function sparkline(index) { const lines = ['M1 15 C12 15 15 13 22 12 S30 4 38 7 S45 14 63 15','M1 15 C12 15 18 13 25 10 S34 5 41 10 S50 13 63 14','M1 16 C10 16 18 14 24 12 S32 4 39 8 S47 14 63 13']; return lines[index % lines.length]; }
     function carThumb() { return '<div class="vehicle-thumb"><svg viewBox="0 0 64 30"><use href="#i-car"/></svg></div>'; }
 
     function normalizeApiMake(item, index) {

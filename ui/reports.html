@@ -73,7 +73,6 @@
   <script src="detail-pages.js"></script>
   <script>
   (function () {
-    var BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
     var TIMEOUT = 3000;
 
     /* Show loading shimmer on KPI values while fetching */
@@ -94,7 +93,7 @@
       });
     }
 
-    fetch(BASE + '/v1/models', { signal: AbortSignal.timeout(TIMEOUT) })
+    fetch(API + '/models', { signal: AbortSignal.timeout(TIMEOUT) })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         var makes = Array.isArray(data.makes) ? data.makes : [];

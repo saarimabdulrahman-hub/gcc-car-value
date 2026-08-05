@@ -5,10 +5,9 @@
   var make = params.get('make');
   var model = params.get('model');
   if (!make) return;
-  var BASE = location.port === '3000' ? 'http://127.0.0.1:8000' : '';
   document.querySelector('.page-title').textContent = (model ? make + ' ' + model : make) + ' — Comparables';
   document.querySelector('.page-sub').textContent = 'Loading comparable data…';
-  fetch(BASE + '/v1/models/' + encodeURIComponent(make) + (model ? '/' + encodeURIComponent(model) : ''), { signal: AbortSignal.timeout(3000) })
+  fetch(API + '/models/' + encodeURIComponent(make) + (model ? '/' + encodeURIComponent(model) : ''), { signal: AbortSignal.timeout(3000) })
     .then(function (r) { return r.json(); })
     .then(function (data) {
       var items = data.models || data.years || [];
