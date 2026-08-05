@@ -168,3 +168,99 @@ async def test_mileage_adjustment_direction_is_downward(monkeypatch):
     mileage_adj = [a for a in result.adjustments if a.reason == "mileage"]
     assert mileage_adj, "expected a mileage adjustment"
     assert mileage_adj[0].amount < 0  # more km than segment → price down
+
+
+# ── valuate() integration tests — mock find_comps, exercise adjustments ──
+
+def make_full_comp(price, mileage, spec="GCC", city="Dubai", days=10):
+    return CompListing(
+        source="test", make="Toyota", model="Camry", year=2020,
+        mileage_km=mileage, spec=spec, city=city, country="AE",
+        asking_price_aed=price, quality_score=90, status="active",
+        days_on_market=days, delisting_confidence=None,
+        platform_name="Test Platform",
+    )
+
+
+@pytest.fixture
+def mock_find_comps(monkeypatch):
+    """Replace find_comps with a configurable fake returning fixture comps."""
+    holder = {}
+
+    async def fake_find_comps(session, make, model, year, mileage_km,
+                              spec, country, city, min_comps=15, max_comps=50):
+        return holder["comps"]
+
+    monkeypatch.setattr("src.engine.statistical.find_comps", fake_find_comps)
+    return holder
+
+
+class FakeSession:
+    pass
+
+
+@pytest.mark.asyncio
+async def test_valuate_insufficient_with_few_comps(mock_find_comps):
+    from src.engine.statistical import valuate
+    mock_find_comps["comps"] = [make_full_comp(70000, 50000) for _ in range(3)]
+    result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 50000)
+    assert result.confidence == "insufficient"
+    assert result.estimate == 0
+    assert result.comp_count == 3
+
+
+@pytest.mark.asyncio
+async def test_valuate_mileage_adjustment(mock_find_comps):
+    from src.engine.statistical import valuate
+    # Comps average HIGHER mileage (60k) than target (40k) → target has fewer
+    # km than segment avg → estimate adjusts UP by delta*0.25
+    comps = [make_full_comp(price=100000 + i * 100, mileage=60000) for i in range(10)]
+    mock_find_comps["comps"] = comps
+    result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 40000)
+    assert result.confidence != "insufficient"
+    assert len(result.adjustments) >= 1
+    mileage_adj = next(a for a in result.adjustments if a.reason == "mileage")
+    assert mileage_adj.amount > 0  # fewer km than avg → positive adjustment
+    assert result.estimate > 100000
+
+
+@pytest.mark.asyncio
+async def test_valuate_spec_premium(mock_find_comps):
+    from src.engine.statistical import valuate
+    # GCC comps priced higher than non-GCC → target GCC gets a premium
+    gcc = [make_full_comp(price=110000 + i * 100, mileage=50000, spec="GCC") for i in range(5)]
+    non_gcc = [make_full_comp(price=90000 + i * 100, mileage=50000, spec="US") for i in range(5)]
+    mock_find_comps["comps"] = gcc + non_gcc
+    result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 50000, spec="GCC")
+    spec_adj = next((a for a in result.adjustments if a.reason == "spec"), None)
+    assert spec_adj is not None
+    assert spec_adj.amount > 0  # GCC premium adds value
+
+
+@pytest.mark.asyncio
+async def test_valuate_city_adjustment(mock_find_comps):
+    from src.engine.statistical import valuate
+    # Dubai comps pricier than Sharjah comps → target in Dubai gets a premium
+    dubai = [make_full_comp(price=105000 + i * 100, mileage=50000, city="Dubai") for i in range(6)]
+    sharjah = [make_full_comp(price=95000 + i * 100, mileage=50000, city="Sharjah") for i in range(6)]
+    mock_find_comps["comps"] = dubai + sharjah
+    result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 50000, city="Dubai")
+    city_adj = next((a for a in result.adjustments if a.reason == "city"), None)
+    assert city_adj is not None
+    assert city_adj.amount > 0
+
+
+@pytest.mark.asyncio
+async def test_valuate_no_adjustments_when_uniform(mock_find_comps):
+    from src.engine.statistical import valuate
+    # All comps identical spec/city/mileage → no mileage/spec/city adjustments
+    comps = [make_full_comp(price=100000 + i * 50, mileage=50000) for i in range(12)]
+    mock_find_comps["comps"] = comps
+    result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 50000)
+    reasons = [a.reason for a in result.adjustments]
+    # Mileage adjustment is appended even at zero delta; spec/city are skipped
+    # when their inputs are None. Any zero-delta adjustment must not move price.
+    assert "spec" not in reasons
+    assert "city" not in reasons
+    for a in result.adjustments:
+        assert abs(a.amount) < 1

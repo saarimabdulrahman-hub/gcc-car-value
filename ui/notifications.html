@@ -73,7 +73,8 @@ body { margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 <div class="lang-btn"><span class="lang-option active" data-lang-btn="en">EN</span><span class="lang-divider">|</span><span class="lang-option" data-lang-btn="ar">AR</span></div>
 </header>
 
-<div class="content">
+
+<div class="preview-state" role="note"><strong>Preview data</strong><span>Sample data shown until the live API connects</span></div><div class="content">
 <div class="page-header">
 <div><h1 class="page-title">Notifications</h1><p class="page-sub">Price movements, report updates, and platform activity in one place.</p></div>
 <button class="btn ghost" onclick="document.querySelectorAll('.list-row').forEach(function(r){r.style.opacity='0.4'});showToast&&showToast('All marked as read','success',3000)">Mark all as read</button>

@@ -25,6 +25,9 @@ class DriftResult:
 
 def compute_psi(expected: np.ndarray, actual: np.ndarray, bins: int = 10) -> float:
     """Population Stability Index between two distributions."""
+    # Guard against empty input — no distribution to compare means no drift
+    if expected.size == 0 or actual.size == 0:
+        return 0.0
     # Combine to compute bin edges
     combined = np.concatenate([expected, actual])
     bin_edges = np.percentile(combined, np.linspace(0, 100, bins + 1))
