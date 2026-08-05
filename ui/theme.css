@@ -73,6 +73,13 @@
   --gradient-btn-primary: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
 }
 
+/* Keyboard focus — consistent gold ring across every page (theme.css is
+   loaded by all pages, so this is the single source for focus visibility). */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 /* Honest preview and unavailable-control states shared by production pages. */
 button:disabled,
 input:disabled,
