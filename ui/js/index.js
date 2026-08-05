@@ -81,12 +81,12 @@ function loadHomeKPIs(){
     /* Hide skeleton, show real data */
     var skel=document.getElementById('home-skeleton-content');
     var data=document.getElementById('home-data-content');
-    if(skel)skel.classList.add('hidden');
+    if(skel){skel.classList.add('hidden');skel.removeAttribute('aria-busy');}
     if(data)data.classList.remove('hidden');
   }).catch(function(){
     var skel=document.getElementById('home-skeleton-content');
     var data=document.getElementById('home-data-content');
-    if(skel)skel.classList.add('hidden');
+    if(skel){skel.classList.add('hidden');skel.removeAttribute('aria-busy');}
     if(data){
       data.innerHTML='<div class="error-state" style="text-align:center;padding:2rem;color:var(--gold)">Unable to load dashboard. <button onclick="location.reload()" style="margin-left:8px;padding:4px 12px">Retry</button></div>';
       data.classList.remove('hidden');
@@ -168,9 +168,9 @@ h+='<hr class="form-divider">';
 
 h+='<div class="form-section"><div class="form-section-title"><span class="sec-letter">B.</span> Vehicle Details</div>';
 h+='<div class="form-row">';
-h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-make-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" id="'+prefix+'-make-error">Please select a make</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-model-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" id="'+prefix+'-model-error">Please select a model</span></div>';
-h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" aria-describedby="'+prefix+'-year-error" aria-required="true" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error" id="'+prefix+'-year-error">Please enter a valid year (1990–2027)</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-make">Make</label><div class="autocomplete-wrap"><input type="text" class="fm-make" id="'+prefix+'-make" placeholder="e.g. Toyota" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-make-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" role="alert" id="'+prefix+'-make-error">Please select a make</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-model">Model</label><div class="autocomplete-wrap"><input type="text" class="fm-model" id="'+prefix+'-model" placeholder="e.g. Land Cruiser" autocomplete="off" disabled role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-describedby="'+prefix+'-model-error" aria-required="true" oninput="autocompleteSmart(this)" onfocus="autocompleteSmart(this)"><div class="autocomplete-suggestions"></div></div><span class="field-error" role="alert" id="'+prefix+'-model-error">Please select a model</span></div>';
+h+='<div class="form-group"><label for="'+prefix+'-year">Year</label><input type="number" class="fm-year" id="'+prefix+'-year" placeholder="e.g. 2020" min="1990" max="2027" aria-describedby="'+prefix+'-year-error" aria-required="true" onchange="smartDefaults(this.closest(\'[id$=-form]\'))"><span class="field-error" role="alert" id="'+prefix+'-year-error">Please enter a valid year (1990–2027)</span></div>';
 h+='<div class="form-group"><label for="'+prefix+'-mileage">Mileage (km)</label><div class="input-icon-wrap"><svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><input type="number" class="fm-mileage" id="'+prefix+'-mileage" placeholder="e.g. 80000"></div></div>';
 h+='</div></div>';
 

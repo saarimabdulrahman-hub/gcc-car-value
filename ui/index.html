@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Car Valuator — GCC Market Intelligence</title>
+<meta name="theme-color" content="#050a0f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -96,9 +97,9 @@
 
 <div class="breadcrumbs hidden" id="breadcrumbs"></div>
 
-<div id="page-home" style="background-image:url('hero-bg.webp');background-size:cover;background-position:center;background-attachment:fixed">
+<div id="page-home" style="background-image:url('hero-bg.webp');background-size:cover;background-position:center">
 
-<div id="home-skeleton-content">
+<div id="home-skeleton-content" aria-busy="true" aria-label="Loading dashboard...">
   <div class="home-hero" style="min-height:680px;display:flex;align-items:center;padding:40px 56px">
     <div style="display:flex;flex-direction:column;gap:var(--space-3);max-width:480px">
       <div class="skeleton home-skeleton-badge"></div>
@@ -211,22 +212,16 @@
     <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><div class="kpi-value" id="home-kpi-countries">6</div></div>
     <div class="kpi-label">Countries Covered</div>
   </div>
-  <div class="kpi-divider"></div>
+  <div class="kpi-divider" aria-hidden="true"></div>
   <div class="kpi-card">
     <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><div class="kpi-value" id="home-kpi-listings" aria-atomic="true">18M+</div></div>
     <div class="kpi-label">Live Listings Tracked</div>
   </div>
-  <div class="kpi-divider"></div>
-  <div class="kpi-card">
-    <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><div class="kpi-value" id="home-kpi-marketplaces">Industry-leading</div></div>
-    <div class="kpi-label">Model Accuracy</div>
-  </div>
-  <div class="kpi-divider"></div>
   <div class="kpi-card">
     <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><div class="kpi-value" id="home-kpi-valuations" aria-atomic="true">24/7</div></div>
     <div class="kpi-label">Market Monitoring</div>
   </div>
-  <div class="kpi-divider"></div>
+  <div class="kpi-divider" aria-hidden="true"></div>
   <div class="kpi-card">
     <div class="kpi-row"><svg class="kpi-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="kpi-value">~4 min</div></div>
     <div class="kpi-label">Avg Refresh Time</div>
@@ -268,6 +263,7 @@
       <div class="card-body"><div id="sell-form"></div></div>
       <div class="card-footer">
         <button class="btn" id="sell-btn" onclick="doValuation('sell')">Get Market Valuation<span class="btn-sub">AI-powered pricing + listing recommendations</span></button>
+        <p style="font-size:var(--text-xs);color:var(--text-muted);text-align:center;margin-top:var(--space-1)">Your vehicle details are never shared.</p>
       </div>
     </div>
 
@@ -377,6 +373,7 @@
       <div class="card-body"><div id="buy-form"></div></div>
       <div class="card-footer">
         <button class="btn" id="buy-btn" onclick="doValuation('buy')">Analyze This Deal<span class="btn-sub">Get AI-powered market valuation</span></button>
+        <p style="font-size:var(--text-xs);color:var(--text-muted);text-align:center;margin-top:var(--space-1)">Your vehicle details are never shared.</p>
       </div>
     </div>
 
