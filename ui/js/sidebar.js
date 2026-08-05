@@ -1,44 +1,60 @@
-/* Shared sidebar loader — include on every standalone page.
-   Injects the standard GCC Car Valuator sidebar with SVG sprite icons.
-   Usage: <script src="js/sidebar.js"></script>
-   The sidebar needs: <aside id="sidebar"></aside> and an SVG sprite sheet. */
+/* Shared sidebar loader — generates the canonical GCC Car Valuator sidebar.
+   Include on every standalone page: <script src="js/sidebar.js"></script>
+   Injects into <aside id="sidebar"></aside>. Matches the original
+   browse/market/settings/watchlist sidebar exactly (brand, nav-group,
+   nav-heading, nav-item, account-card, health-card). */
 (function(){
-  var html='<div class="sidebar-brand"><div class="sidebar-logo">CV</div><div class="sidebar-titles"><span class="sidebar-name">CAR VALUATOR</span><span class="sidebar-subtitle">GCC MARKET INTELLIGENCE</span></div></div>';
-  html+='<nav class="sidebar-nav" aria-label="Primary navigation">';
-  html+='<div class="sidebar-section-label">Main</div>';
-  html+='<a href="index.html"><svg class="nav-icon" width="18" height="18"><use href="#i-home"/></svg> Home</a>';
-  html+='<a href="index.html#sell"><svg class="nav-icon" width="18" height="18"><use href="#i-sell"/></svg> Sell</a>';
-  html+='<a href="index.html#buy"><svg class="nav-icon" width="18" height="18"><use href="#i-buy"/></svg> Buy</a>';
-  html+='<div class="sidebar-section-label">Analysis</div>';
-  html+='<a href="browse.html"><svg class="nav-icon" width="18" height="18"><use href="#i-grid"/></svg> Browse</a>';
-  html+='<a href="market.html"><svg class="nav-icon" width="18" height="18"><use href="#i-chart"/></svg> Market</a>';
-  html+='<a href="reports.html"><svg class="nav-icon" width="18" height="18"><use href="#i-file"/></svg> Reports</a>';
-  html+='<a href="watchlist.html"><svg class="nav-icon" width="18" height="18"><use href="#i-star"/></svg> Watchlist</a>';
-  html+='<div class="sidebar-section-label">Admin</div>';
-  html+='<a href="settings.html"><svg class="nav-icon" width="18" height="18"><use href="#i-gear"/></svg> Settings</a>';
-  html+='</nav>';
-  html+='<div class="sidebar-footer"><div class="sidebar-profile"><div class="profile-avatar">GCC</div><div class="profile-info"><div class="profile-name">GCC Car Valuator</div><div class="profile-plan">Enterprise</div></div></div><div class="sidebar-system-health"><div class="health-dot"></div><span class="health-label">All systems operational</span></div></div>';
+  function item(href, id, label) {
+    return '<a class="nav-item" href="' + href + '"' + (id ? ' id="' + id + '"' : '') + '>' +
+      '<svg class="icon"><use href="#i-' + id + '"/></svg><span data-i18n="' + id + '">' + label + '</span></a>';
+  }
+  var html =
+    '<a class="brand" href="index.html">' +
+      '<span class="brand-mark">CV</span>' +
+      '<span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span>' +
+    '</a>' +
+    '<div class="sidebar-scroll"><nav>' +
+      '<div class="nav-group"><div class="nav-heading">Main</div>' +
+        item('index.html', 'home', 'Home') +
+        item('index.html#sell', 'sell', 'Sell') +
+        item('index.html#buy', 'buy', 'Buy') +
+      '</div>' +
+      '<div class="nav-group"><div class="nav-heading">Analysis</div>' +
+        item('browse.html', 'grid', 'Browse') +
+        item('market.html', 'chart', 'Market') +
+        item('reports.html', 'file', 'Reports') +
+        item('watchlist.html', 'star', 'Watchlist') +
+      '</div>' +
+      '<div class="nav-group"><div class="nav-heading">Admin</div>' +
+        item('settings.html', 'gear', 'Settings') +
+      '</div>' +
+    '</nav></div>' +
+    '<div class="sidebar-footer">' +
+      '<div class="account-card"><div class="account-logo">GCC</div><div><div class="account-name">GCC Car Valuator</div><div class="account-plan">Enterprise</div></div></div>' +
+      '<div class="health-card"><div class="health-title"><span class="health-dot"></span>All systems operational</div><div class="health-copy"><span class="health-pulse"></span>All services are running normally</div></div>' +
+    '</div>';
 
-  function setActive(){
-    var path=window.location.pathname.replace(/\/$/,'').split('/').pop()||'index.html';
-    var links=document.querySelectorAll('.sidebar-nav a');
-    for(var i=0;i<links.length;i++){
-      var href=links[i].getAttribute('href');
-      if(href===path||(path===''&&href==='index.html')){
+  function setActive() {
+    var path = window.location.pathname.replace(/\/$/, '').split('/').pop() || 'index.html';
+    var links = document.querySelectorAll('.sidebar-scroll .nav-item');
+    for (var i = 0; i < links.length; i++) {
+      var href = links[i].getAttribute('href');
+      var target = href.split('#')[0] || 'index.html';
+      if (target === path) {
         links[i].classList.add('active');
-        links[i].setAttribute('aria-current','page');
+        links[i].setAttribute('aria-current', 'page');
       }
     }
   }
 
-  function init(){
-    var sidebar=document.getElementById('sidebar');
-    if(!sidebar) return;
-    sidebar.setAttribute('aria-label','Main navigation');
-    sidebar.innerHTML=html;
+  function init() {
+    var sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    sidebar.setAttribute('aria-label', 'Primary navigation');
+    sidebar.innerHTML = html;
     setActive();
   }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
