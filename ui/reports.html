@@ -67,7 +67,8 @@ body { margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .filter-select:focus { outline:none;border-color:#e9a50a }
 .analytics-grid { display:grid;grid-template-columns:1fr 340px 1fr;gap:24px;margin-bottom:24px }
 .bottom-grid { display:grid;grid-template-columns:1fr 1fr;gap:24px }
-.chart-svg { width:100%;height:auto;display:block }
+.chart { position:relative;height:205px;padding:16px 8px 0;background:repeating-linear-gradient(to bottom,transparent 0 39px,rgba(255,255,255,0.05) 40px) }
+.chart-svg { width:100%;height:100%;display:block }
 .donut-wrap { display:grid;grid-template-columns:155px 1fr;align-items:center;gap:12px;padding:14px 16px 16px }
 .donut { position:relative;width:150px;height:150px;flex-shrink:0 }
 .donut-center { position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center }
@@ -169,12 +170,12 @@ td a:hover { color:#f7f8fa }
 </div>
 
 <div class="analytics-grid">
-<div class="card"><div class="card-head"><h2>Market trend (vehicles sold)</h2><div style="display:flex;gap:16px;font-size:12px"><span><span style="display:inline-block;width:12px;height:3px;background:#e9a50a;border-radius:2px;vertical-align:middle;margin-right:4px"></span>2024</span><span><span style="display:inline-block;width:12px;height:3px;background:#14b8a6;border-radius:2px;vertical-align:middle;margin-right:4px"></span>2023</span></div></div>
+<div class="card"><div class="card-head"><h2>Market trend (vehicles sold)</h2><div style="display:flex;gap:16px;font-size:11px;color:#929cab"><span><span style="display:inline-block;width:24px;height:2px;background:#e9a50a;border-radius:2px;vertical-align:middle;margin-right:5px"></span>2024</span><span><span style="display:inline-block;width:24px;height:2px;background:#14b8a6;border-radius:2px;vertical-align:middle;margin-right:5px"></span>2023</span></div></div>
 <div class="card-body">
-<svg viewBox="0 0 640 180" preserveAspectRatio="none" class="chart-svg">
-<polyline points="0,170 53,144 106,116 159,98 212,76 265,60 318,50 371,35 424,28 477,22 530,14 583,2 640,-10" fill="none" stroke="#e9a50a" stroke-width="4"/>
-<polyline points="0,185 53,175 106,160 159,140 212,120 265,104 318,94 371,82 424,76 477,64 530,52 583,34 640,12" fill="none" stroke="#14b8a6" stroke-width="3"/>
-</svg>
+<div class="chart"><svg viewBox="0 0 640 180" preserveAspectRatio="none" class="chart-svg">
+<polyline points="0,170 53,144 106,116 159,98 212,76 265,60 318,50 371,35 424,28 477,22 530,14 583,2 640,2" fill="none" stroke="#e9a50a" stroke-width="4"/>
+<polyline points="0,178 53,168 106,153 159,133 212,113 265,97 318,87 371,75 424,69 477,57 530,45 583,27 640,10" fill="none" stroke="#14b8a6" stroke-width="3"/>
+</svg></div>
 <div class="mini-stats"><div class="mini-stat"><label>Highest month</label><strong>AED 12.8B</strong><small>May 2024</small></div><div class="mini-stat"><label>Lowest month</label><strong>AED 8.7B</strong><small>Jan 2024</small></div><div class="mini-stat"><label>Avg monthly growth</label><strong style="color:#14df75">+5.6%</strong><small>2024 vs 2023</small></div></div>
 </div></div>
 
