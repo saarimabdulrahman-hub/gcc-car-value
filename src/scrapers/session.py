@@ -24,5 +24,5 @@ def create_scraper_session() -> httpx.AsyncClient:
             "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
             "Accept-Encoding": "gzip, deflate",
         },
-        follow_redirects=True,
+        follow_redirects=False,
     )

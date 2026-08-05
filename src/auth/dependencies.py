@@ -57,10 +57,14 @@ async def get_current_user(
     role_str = payload.get("role")
     tier_str = payload.get("tier", "registered")
 
+    db_verified = True
     try:
         db_role = await get_user_role(db, user_id)
     except Exception:
         db_role = None
+        db_verified = False
+        logger.warning("auth_db_unavailable", user_id=user_id[:8] + "...",
+                       fallback="jwt_claim", jti=payload.get("jti", "?")[:8] + "...")
 
     resolved_role = db_role.value if db_role else (role_str or "consumer")
 
@@ -84,7 +88,36 @@ async def get_current_user(
         "role": resolved_role,
         "tier": tier_str,
         "is_authenticated": True,
+        "_db_verified": db_verified,
     }
+
+
+def _check_db_verified(user: dict, request: Request) -> None:
+    """Raise 503 if the user's role was not verified against the authoritative DB
+    and the operation requires elevated privileges.
+
+    When the DB is unreachable, consumer-level operations (read-only, public-
+    equivalent) may proceed. Any operation requiring DEALER role or above must
+    be denied until the DB can confirm the user's actual role — the JWT claim
+    alone is not trusted for elevated access.
+    """
+    if user.get("_db_verified"):
+        return
+    user_role_str = user.get("role", "consumer")
+    # CONSUMER may proceed; anything above requires DB verification
+    if user_role_str != Role.CONSUMER.value:
+        logger.warning(
+            "auth_db_degraded_denied",
+            user_id=user.get("user_id"),
+            required_role=user_role_str,
+            method=request.method,
+            path=request.url.path,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Authentication service is temporarily degraded. Please try again.",
+            headers={"Retry-After": "30"},
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -119,6 +152,8 @@ def require_permission(
                 detail="Authentication required.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
+        _check_db_verified(user, request)
 
         user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 
@@ -159,6 +194,8 @@ def require_role(
                 detail="Authentication required.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
+        _check_db_verified(user, request)
 
         user_role = Role(user["role"]) if user["role"] in Role.__members__.values() else Role.CONSUMER  # noqa: E501
 

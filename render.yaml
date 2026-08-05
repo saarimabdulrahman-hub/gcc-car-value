@@ -1,4 +1,5 @@
 services:
+  # ── Production ──
   - type: web
     name: gcc-car-value-api
     runtime: docker
@@ -22,6 +23,36 @@ services:
       - key: ENVIRONMENT
         value: production
       # S3 credentials for scraper raw data storage
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+      - key: S3_REGION
+        value: me-central-1
+
+  # ── Staging — deployed from preview branch, separate DB ──
+  - type: web
+    name: gcc-car-value-api-staging
+    runtime: docker
+    repo: https://github.com/saarimabdulrahman-hub/gcc-car-value.git
+    branch: preview
+    rootDir: .
+    dockerfilePath: docker/Dockerfile.api
+    healthCheckPath: /v1/health/live
+    plan: free
+    envVars:
+      - key: SECRET_PROVIDER
+        value: environment
+      - key: API_CORS_ORIGINS
+        value: https://gcc-car-value-staging.vercel.app
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_URL_SYNC
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENVIRONMENT
+        value: staging
       - key: S3_ACCESS_KEY
         sync: false
       - key: S3_SECRET_KEY

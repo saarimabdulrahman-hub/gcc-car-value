@@ -570,7 +570,7 @@ body.has-sidebar { display: flex; }
 }
 
 .card h3 {
-  font-size: 12px;
+  font-size: var(--text-caption);
   font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.06em;

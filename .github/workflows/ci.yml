@@ -55,7 +55,7 @@ jobs:
           alembic -c src/db/migrations/alembic.ini upgrade head
 
       - name: Dependency audit
-        run: pip install pip-audit && pip-audit || true  # warn but don't block
+        run: pip install pip-audit && pip-audit
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -108,6 +108,10 @@ jobs:
             done
           done
           exit $FAIL
+
+      - name: Lint frontend JS (eslint)
+        run: |
+          cd ui && npx eslint js/ --max-warnings 50 || echo "::warning ::Frontend JS has lint warnings — review and reduce"
 
       - name: Check no console errors in HTML
         run: |

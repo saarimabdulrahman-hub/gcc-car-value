@@ -25,13 +25,26 @@ class URLValuationRequest(BaseModel):
 
 
 async def fetch_url(url: str) -> str:
-    """Fetch a URL with browser-like headers."""
-    async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
-        r = await client.get(url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",  # noqa: E501
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
-        })
+    """Fetch a URL with browser-like headers. Validates every redirect target."""
+    from src.api.security import validate_public_url
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",  # noqa: E501
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
+    }
+    async with httpx.AsyncClient(timeout=20, follow_redirects=False) as client:
+        r = await client.get(url, headers=headers)
+        # Manual redirect loop — validate every hop against SSRF/DNS-rebinding
+        _redirects_followed = 0
+        _max_redirects = 5
+        while r.is_redirect and _redirects_followed < _max_redirects:
+            redirect_url = r.headers.get("location", "")
+            if not redirect_url:
+                break
+            validate_public_url(redirect_url)
+            r = await client.get(redirect_url, headers=headers)
+            _redirects_followed += 1
         r.raise_for_status()
         return r.text
 
@@ -129,31 +142,38 @@ def parse_listing_from_html(html: str, url: str) -> dict | None:
     id_match = re.search(r'/(\d{5,})[/$]', url)
     result["external_id"] = id_match.group(1) if id_match else url[-20:]
 
-    # Ultra-lenient: always return something. Default missing fields.
-    # Flag fabricated results so the caller can reject non-listing URLs.
+    # If the parser couldn't extract core fields, don't fabricate data.
+    # Return None so the caller rejects the URL with a clear error.
     result["_fabricated"] = True  # type: ignore[assignment]
-    if not result.get("make") or not result["make"].strip():
-        # Try to extract make from URL itself
+
+    # Check if core fields were actually extracted from the page content.
+    # If any of make, model, year, or asking_price is missing or clearly bogus,
+    # return None — we cannot produce a reliable valuation.
+    make = result.get("make")
+    model = result.get("model")
+    year = result.get("year")
+    asking_price = result.get("asking_price")
+
+    # Try to extract make from URL as a last heuristic before giving up
+    if not make or not make.strip():
         url_lower = url.lower()
         for brand in ["toyota", "nissan", "honda", "hyundai", "kia", "ford", "chevrolet",
                        "bmw", "mercedes", "audi", "lexus", "mazda", "mitsubishi",
                        "land-rover", "porsche", "volkswagen", "gmc", "jeep", "dodge"]:
             if brand in url_lower:
-                result["make"] = brand.title()
+                make = brand.title()
+                result["make"] = make
                 break
-        if not result.get("make") or not result["make"].strip():
-            result["make"] = "Toyota"  # last resort default
-    if not result.get("year") or result["year"] is None:
-        result["year"] = 2020  # type: ignore[assignment]
-    if not result.get("asking_price") or result["asking_price"] == 0:  # type: ignore[comparison-overlap]
-        # Try harder: look for any number that looks like a price
-        price_match = re.search(r'(?:AED|SAR)\s*(\d[\d,]*)', html, re.IGNORECASE)
-        if price_match:
-            result["asking_price"] = float(price_match.group(1).replace(",", ""))  # type: ignore[assignment]
-        else:
-            result["asking_price"] = 100000  # type: ignore[assignment]
-    if not result.get("model") or not result["model"].strip():
-        result["model"] = "Camry"  # common default
+
+    # Reject: any core field missing or unfindable
+    if not make or not make.strip():
+        return None
+    if not model or not model.strip():
+        return None
+    if not year or year is None:
+        return None
+    if asking_price is None or asking_price == 0:  # type: ignore[comparison-overlap]
+        return None
 
     return result
 
@@ -201,14 +221,9 @@ def parse_listing_from_html_smart(html: str, url: str) -> dict | None:
 
     # Fall back to generic parser
     result = parse_listing_from_html(html, url)
-    # If the parser fabricated core fields, this URL isn't a listing page
-    if result.get("_fabricated") and result.get("make") == "Toyota" and result.get("model") == "Camry":  # noqa: E501
+    # If the parser couldn't extract real data, reject — never fabricate valuations
+    if result is None or result.get("_fabricated"):
         return None
-    # Ensure required numeric fields are not None
-    if result.get("year") is None:
-        result["year"] = 2020  # type: ignore[index]
-    if result.get("asking_price") is None or result["asking_price"] == 0:  # type: ignore[index]
-        result["asking_price"] = 100000  # type: ignore[index]
     return result
 
 

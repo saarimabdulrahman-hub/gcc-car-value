@@ -36,11 +36,34 @@ class DatabaseCheck(HealthCheck):
                 result = await session.execute(text("SELECT 1"))
                 result.scalar()
 
-                # Migration state check
-                await session.execute(text(
-                    "SELECT 1 FROM pg_tables "
-                    "WHERE tablename = 'alembic_version'"
+                # Migration state check — verify revision is current
+                result = await session.execute(text(
+                    "SELECT version_num FROM alembic_version"
                 ))
+                row = result.fetchone()
+                if row is None:
+                    raise RuntimeError("alembic_version table is empty — no migrations applied")
+
+            # Compare installed revision against Alembic head
+            from alembic.config import Config as AlembicConfig
+            from alembic.script import ScriptDirectory
+            from pathlib import Path
+
+            alembic_cfg = AlembicConfig("src/db/migrations/alembic.ini")
+            script = ScriptDirectory.from_config(alembic_cfg)
+            heads = script.get_heads()
+            installed = row.version_num
+
+            if installed not in heads:
+                duration_ms = (time.perf_counter() - start) * 1000
+                return CheckResult.degraded(
+                    name=self.name,
+                    error=f"Database migration is behind head. Installed: {installed[:12]}..., Head: {heads[0][:12]}...",  # noqa: E501
+                    severity=self.severity,
+                    duration_ms=duration_ms,
+                    installed_revision=installed,
+                    head_revision=heads[0],
+                )
 
             duration_ms = (time.perf_counter() - start) * 1000
             return CheckResult.healthy(

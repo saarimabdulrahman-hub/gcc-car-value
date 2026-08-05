@@ -39,7 +39,7 @@
     document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr';
     translate(lang);
     setActive(lang);
-    try { localStorage.setItem('gcc-lang', lang); } catch(e) {}
+    try { localStorage.setItem('gcc-lang', lang); } catch(e) { console.warn('lang: localStorage write failed', e); }
     return lang;
   };
   window.toggleLang = function(){
@@ -48,7 +48,7 @@
   };
   function applySaved(){
     var saved = null;
-    try { saved = localStorage.getItem('gcc-lang'); } catch(e) {}
+    try { saved = localStorage.getItem('gcc-lang'); } catch(e) { console.warn('lang: localStorage read failed', e); }
     if (saved === 'ar' || saved === 'en') window.setLang(saved);
   }
   if (document.readyState === 'loading') {

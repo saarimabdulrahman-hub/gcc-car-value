@@ -80,25 +80,54 @@ async def register(request: Request, req: RegisterRequest, db: AsyncSession = De
 @limiter.limit("10/minute")
 async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(get_db)):  # noqa: B008
     result = await db.execute(
-        text("SELECT id, email, password_hash, password_salt, role FROM user_accounts WHERE email = :email"),  # noqa: E501
+        text("SELECT id, email, password_hash, password_salt, role, failed_login_attempts, locked_until FROM user_accounts WHERE email = :email"),  # noqa: E501
         {"email": req.email},
     )
     row = result.fetchone()
     if not row:
         raise HTTPException(401, "Invalid credentials")
 
+    # Account lockout: 5 failed attempts → 15-minute lock
+    failed = int(row.failed_login_attempts or "0")
+    if row.locked_until and row.locked_until > datetime.now(UTC):
+        raise HTTPException(429, "Account temporarily locked. Try again later.")
+    # Auto-unlock after lockout period expires
+    if row.locked_until and row.locked_until <= datetime.now(UTC) and failed >= 5:
+        failed = 0
+        await db.execute(
+            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),
+            {"id": str(row.id)},
+        )
+
     # verify_password is an instance method — reconstruct for check
     h, _ = UserAccount.hash_password(req.password, row.password_salt)
     if h != row.password_hash:
+        new_failed = failed + 1
+        locked = datetime.now(UTC) + timedelta(minutes=15) if new_failed >= 5 else None
+        await db.execute(
+            text("UPDATE user_accounts SET failed_login_attempts = :n, locked_until = :lu WHERE id = :id"),
+            {"n": str(new_failed), "lu": locked, "id": str(row.id)},
+        )
+        await db.commit()
+        if new_failed >= 5:
+            raise HTTPException(429, "Account temporarily locked. Try again in 15 minutes.")
         raise HTTPException(401, "Invalid credentials")
 
-    access_token = create_access_token(str(row.id), role=row.role)
+    # Successful login — reset counter
+    if failed > 0:
+        await db.execute(
+            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),
+            {"id": str(row.id)},
+        )
+        await db.commit()
+
+    access_token = create_access_token(str(row.id), role=row.role or "consumer")
     refresh_token = create_refresh_token(str(row.id))
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
         "email": row.email,
-        "role": row.role,
+        "role": row.role or "consumer",
     }
 
 
