@@ -1,144 +1,260 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>Reports - GCC Car Valuator</title>
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="detail.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="color-scheme" content="dark">
+<title>Reports — GCC Car Valuator</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+:root { color-scheme:dark }
+body { margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#050a0f;color:#f7f8fa;display:flex;min-height:100vh }
+.sidebar { width:250px;background:#091017;border-right:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto }
+.sidebar-brand { display:flex;align-items:center;gap:16px;padding:32px 24px 24px;border-bottom:1px solid rgba(148,163,184,0.11);margin-bottom:16px }
+.sidebar-logo { width:42px;height:42px;background:linear-gradient(135deg,#e9a50a,#bf7707);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#f7f8fa;box-shadow:0 0 20px rgba(233,165,10,0.28);flex-shrink:0 }
+.sidebar-titles { display:flex;flex-direction:column;gap:1px }
+.sidebar-name { font-family:Inter,sans-serif;font-size:17px;font-weight:800;letter-spacing:0.08em;color:#f7f8fa;line-height:1.1 }
+.sidebar-subtitle { font-family:Inter,sans-serif;font-size:8px;font-weight:500;letter-spacing:0.18em;color:#657180;text-transform:uppercase;white-space:nowrap }
+.sidebar-section-label { font-size:12px;font-weight:700;color:#657180;text-transform:uppercase;letter-spacing:0.09em;padding:24px 20px 8px;margin-top:8px }
+.sidebar-section-label:first-child { margin-top:24px }
+.sidebar-nav { padding:0;flex:1;display:flex;flex-direction:column;gap:1px;overflow-y:auto }
+.sidebar-nav a { display:flex;align-items:center;gap:12px;padding:10px 18px;margin:0 8px;color:#657180;text-decoration:none;font-size:13px;font-weight:500;border-radius:10px;cursor:pointer;transition:all 150ms ease }
+.sidebar-nav a:hover { color:#929cab;background:rgba(255,255,255,0.03) }
+.sidebar-nav a.active { color:#f7f8fa;background:linear-gradient(90deg,rgba(200,148,53,0.30) 0%,rgba(200,148,53,0.12) 60%,transparent 100%);font-weight:600;border:1px solid rgba(200,148,53,0.25) }
+.nav-icon { flex-shrink:0;opacity:0.55;transition:opacity 150ms ease }
+.sidebar-nav a:hover .nav-icon,.sidebar-nav a.active .nav-icon { opacity:1 }
+.sidebar-footer { padding:16px;border-top:1px solid rgba(148,163,184,0.11);margin-top:auto }
+.sidebar-profile { display:flex;align-items:center;gap:16px;padding:16px;border-radius:12px }
+.profile-avatar { width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#bf7707,#e9a50a);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#050a0f;letter-spacing:0.04em;flex-shrink:0 }
+.profile-info { flex:1;min-width:0 }
+.profile-name { font-size:12.5px;font-weight:600;color:#f7f8fa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis }
+.profile-plan { font-size:12px;color:#657180;letter-spacing:0.03em }
+.sidebar-system-health { display:flex;align-items:center;gap:8px;padding:8px 16px 4px }
+.health-dot { width:6px;height:6px;border-radius:9999px;background:#14df75;box-shadow:0 0 6px rgba(0,214,107,0.5);flex-shrink:0 }
+.health-label { font-size:12px;color:#657180;white-space:nowrap }
+.main-wrap { flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto }
+.toolbar { height:72px;display:flex;align-items:center;justify-content:flex-end;padding:0 32px;background:#091017;border-bottom:1px solid rgba(255,255,255,0.04);flex-shrink:0;position:sticky;top:0;z-index:500 }
+.lang-btn { font-size:12px;font-weight:600;padding:12px 16px;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:transparent;font-family:Inter,sans-serif;cursor:pointer;transition:all 150ms ease;color:#929cab }
+.lang-btn:hover { border-color:rgba(255,255,255,0.15);color:#f7f8fa }
+.lang-option { padding:2px 6px;border-radius:4px }
+.lang-option.active { color:#f7f8fa;background:rgba(233,165,10,0.12) }
+.lang-divider { color:rgba(255,255,255,0.1);margin:0 2px }
+.mobile-menu-btn { display:none }
+.content { flex:1;padding:0 40px 64px;max-width:1100px;width:100% }
+.page-title { font-size:34px;font-weight:700;margin-bottom:8px;letter-spacing:-0.03em;line-height:1.15;background:linear-gradient(135deg,#f7f8fa 0%,#929cab 60%,#e9a50a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text }
+.page-sub { font-size:14px;color:#657180;font-weight:400;line-height:1.5 }
+.page-header { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;gap:32px;padding-top:32px }
+.card { background:#0e1721;border-radius:14px;padding:24px;border:1px solid rgba(148,163,184,0.11);margin-bottom:24px }
+.card h2 { font-size:13px;font-weight:600;color:#657180;letter-spacing:0.06em;text-transform:uppercase;margin:0 }
+.card-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:16px }
+.btn { display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;cursor:pointer;border:none;text-decoration:none;transition:all 150ms ease }
+.btn.primary { background:linear-gradient(90deg,#8B6914,#5C4410,#332008);color:#f7f8fa }
+.btn.primary:hover { transform:translateY(-2px);box-shadow:0 8px 32px rgba(233,165,10,0.28) }
+.btn.ghost { background:transparent;color:#929cab }
+.btn.ghost:hover { color:#f7f8fa;background:rgba(255,255,255,0.03) }
+.kpi-grid { display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px }
+.kpi-card { background:#0e1721;border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px 24px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,0.35);transition:all 180ms ease }
+.kpi-card:hover { transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.50),0 0 16px rgba(233,165,10,0.12);border-color:rgba(255,255,255,0.08) }
+.kpi-label { font-size:12px;font-weight:600;color:#657180;text-transform:uppercase;letter-spacing:0.05em }
+.kpi-value { font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:#f7f8fa;letter-spacing:-0.02em;line-height:1.1 }
+.kpi-change { font-size:13px;margin-left:6px }
+.kpi-change.up { color:#14df75 }
+.kpi-change.down { color:#f04444 }
+.kpi-note { font-size:11px;color:#657180 }
+.filter-bar { display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap }
+.filter-select { height:42px;padding:0 32px 0 12px;min-width:150px;border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;background:#0b131c;color:#f7f8fa;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color 150ms ease }
+.filter-select:hover { border-color:rgba(255,255,255,0.14) }
+.filter-select:focus { outline:none;border-color:#e9a50a }
+.analytics-grid { display:grid;grid-template-columns:1fr 340px 1fr;gap:24px;margin-bottom:24px }
+.bottom-grid { display:grid;grid-template-columns:1fr 1fr;gap:24px }
+.chart-svg { width:100%;height:auto }
+.donut-wrap { display:flex;align-items:center;gap:24px;padding:16px 0 }
+.donut { position:relative;width:120px;height:120px;flex-shrink:0 }
+.donut-center { position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center }
+.donut-center strong { font-size:22px;font-weight:800;color:#f7f8fa }
+.donut-center span { font-size:11px;color:#657180 }
+.segment-legend { display:flex;flex-direction:column;gap:6px }
+.segment-row { display:flex;align-items:center;gap:8px;font-size:13px }
+.segment-row i { width:10px;height:10px;border-radius:2px;flex-shrink:0 }
+.segment-row strong { margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:13px }
+.mini-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(148,163,184,0.11) }
+.mini-stat label { font-size:11px;color:#657180;text-transform:uppercase;letter-spacing:0.05em;display:block }
+.mini-stat strong { font-family:'JetBrains Mono',monospace;font-size:14px;color:#f7f8fa;display:block;margin-top:2px }
+.mini-stat small { font-size:11px;color:#929cab;display:block;margin-top:1px }
+.model-list { display:flex;flex-direction:column }
+.model-row { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(148,163,184,0.11);text-decoration:none;color:inherit;transition:all 150ms ease }
+.model-row:last-child { border-bottom:none }
+.model-row:hover { background:rgba(255,255,255,0.03);margin:0 -12px;padding:12px }
+.model-rank { width:24px;height:24px;border-radius:6px;background:rgba(233,165,10,0.12);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#e9a50a;flex-shrink:0 }
+.model-thumb { width:40px;height:30px;border-radius:6px;object-fit:cover;flex-shrink:0 }
+.model-main { flex:1;min-width:0 }
+.model-main strong { display:block;font-size:14px;font-weight:600;color:#f7f8fa }
+.model-main span { font-size:12px;color:#929cab }
+.model-trend { font-size:12px;font-weight:700 }
+.model-trend.up { color:#14df75 }
+.model-trend.down { color:#f04444 }
+.insight-row { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(148,163,184,0.11) }
+.insight-row:last-child { border-bottom:none }
+.insight-icon { width:36px;height:36px;border-radius:10px;background:rgba(233,165,10,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;color:#e9a50a;flex-shrink:0 }
+.insight-main { flex:1;min-width:0 }
+.insight-main strong { display:block;font-size:14px;font-weight:600;color:#f7f8fa;margin-bottom:2px }
+.insight-main span { font-size:12px;color:#929cab;line-height:1.4 }
+table { width:100%;border-collapse:collapse }
+th,td { padding:10px 12px;text-align:left;font-size:12px;border-bottom:1px solid rgba(148,163,184,0.11) }
+th { color:#657180;font-weight:600;text-transform:uppercase;letter-spacing:0.05em }
+td { color:#929cab }
+td a { color:#929cab;text-decoration:none }
+td a:hover { color:#f7f8fa }
+.pagination { display:flex;justify-content:center;gap:4px;margin-top:16px }
+.pagination button { width:32px;height:32px;border-radius:6px;border:1px solid rgba(148,163,184,0.11);background:transparent;color:#929cab;font-family:Inter,sans-serif;font-size:12px;cursor:pointer }
+.pagination button.active { background:rgba(233,165,10,0.12);border-color:rgba(230,158,15,0.32);color:#f2b52a;font-weight:600 }
+.live-badge { display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(20,223,117,0.10);border:1px solid rgba(20,223,117,0.25);border-radius:9999px;font-size:12px;font-weight:600;color:#14df75;white-space:nowrap }
+.live-dot { width:5px;height:5px;background:#14df75;border-radius:50%;box-shadow:0 0 8px rgba(0,214,107,0.5) }
+@media (max-width:1100px) { .analytics-grid { grid-template-columns:1fr 1fr } .bottom-grid { grid-template-columns:1fr } .kpi-grid { grid-template-columns:repeat(3,1fr) } }
+@media (max-width:768px) {
+  .sidebar { display:none;position:fixed;z-index:900;width:min(280px,84vw) }
+  .sidebar.mobile-open { display:flex }
+  .mobile-menu-btn { display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#929cab;cursor:pointer }
+  .content { padding:0 24px 48px }
+  .toolbar { padding:0 24px }
+  .kpi-grid { grid-template-columns:repeat(2,1fr) }
+  .analytics-grid { grid-template-columns:1fr }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important }
+}
+</style>
 </head>
-<body class="reports-page">
-  <aside class="sidebar">
-    <a class="brand" href="index.html"><span class="brand-mark">CV</span><span><span class="brand-title">CAR VALUATOR</span><span class="brand-subtitle">GCC MARKET INTELLIGENCE</span></span></a>
-    <nav class="nav">
-      <div class="nav-label">Main</div>
-      <a class="nav-item" href="index.html">⌂ <span data-i18n="home">Home</span></a>
-      <a class="nav-item" href="index.html#buy">▱ <span data-i18n="buy">Buy</span></a>
-      <a class="nav-item" href="index.html#sell">♧ <span data-i18n="sell">Sell</span></a>
-      <div class="nav-label">Analysis</div>
-      <a class="nav-item" href="browse.html">▦ <span data-i18n="browse">Browse</span></a>
-      <a class="nav-item" href="market.html">⌁ <span data-i18n="market">Market</span></a>
-      <a class="nav-item active" href="reports.html">▤ <span data-i18n="reports">Reports</span></a>
-      <a class="nav-item" href="watchlist.html">♡ <span data-i18n="watchlist">Watchlist</span></a>
-      <div class="nav-label">Admin</div>
-      <a class="nav-item" href="settings.html">⚙ <span data-i18n="settings">Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="account"><span class="avatar">GCC</span><div><strong>GCC Car Valuator</strong><span>Enterprise</span></div></div>
-      <div class="health"><i></i>All systems operational</div>
-    </div>
-  </aside>
+<body>
 
-  <main class="main">
-    <header class="toolbar">
-      <div class="lang-toggle" role="group" aria-label="Language">
-        <button data-lang-btn="en" class="active" onclick="setLang('en')">EN</button>
-        <button data-lang-btn="ar" onclick="setLang('ar')">AR</button>
-      </div>
-    </header>
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></symbol>
+  <symbol id="i-sell" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+  <symbol id="i-buy" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+</svg>
 
-    <div class="content">
-      <section class="reports-hero">
-        <div class="crumbs"><a href="index.html">Home</a><span>›</span><span style="color:#e9edf0">Reports</span></div>
-        <div class="page-head"><div><h1 class="page-title">Reports</h1><p class="page-sub">Comprehensive analytics and insights for the GCC automotive market.</p></div></div>
-        <div class="reports-live"><i></i><div>GCC LIVE MARKET<span>Updated 2 min ago</span></div></div>
-      </section>
+<aside id="sidebar" class="sidebar" aria-label="Main navigation"></aside>
 
-      <section class="reports-kpis">
-        <div class="reports-kpi"><div class="reports-kpi-icon">▱</div><div><div class="reports-kpi-label">Total market size</div><div class="reports-kpi-value">AED 12.8B <span class="reports-kpi-change">↑ 5.6%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
-        <div class="reports-kpi"><div class="reports-kpi-icon">▣</div><div><div class="reports-kpi-label">Total vehicles listed</div><div class="reports-kpi-value">56,421 <span class="reports-kpi-change">↑ 8.2%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
-        <div class="reports-kpi"><div class="reports-kpi-icon">◇</div><div><div class="reports-kpi-label">Avg. list price</div><div class="reports-kpi-value">AED 24,750 <span class="reports-kpi-change">↑ 3.4%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
-        <div class="reports-kpi"><div class="reports-kpi-icon">↗</div><div><div class="reports-kpi-label">Market growth (YOY)</div><div class="reports-kpi-value">6.7% <span class="reports-kpi-change">↑ 1.8%</span></div><div class="reports-kpi-note">vs last year</div></div></div>
-        <div class="reports-kpi"><div class="reports-kpi-icon">♙</div><div><div class="reports-kpi-label">Active dealers</div><div class="reports-kpi-value">2,134 <span class="reports-kpi-change down">↓ 2.1%</span></div><div class="reports-kpi-note">vs last month</div></div></div>
-      </section>
+<div class="main-wrap">
+<header class="toolbar">
+<button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')" aria-label="Menu">☰</button>
+<div class="lang-btn"><span class="lang-option active" data-lang-btn="en">EN</span><span class="lang-divider">|</span><span class="lang-option" data-lang-btn="ar">AR</span></div>
+</header>
 
-      <section class="reports-filter">
-        <div class="reports-filter-controls"><select class="reports-select"><option>May 1, 2024 - May 31, 2024</option><option>Last 12 months</option><option>Year to date</option></select><select class="reports-select"><option>All GCC Countries</option><option>UAE</option><option>Saudi Arabia</option><option>Qatar</option></select><select class="reports-select"><option>All Makes</option><option>Toyota</option><option>Nissan</option><option>BMW</option></select><select class="reports-select"><option>All Models</option><option>Land Cruiser</option><option>Patrol</option><option>Camry</option></select></div>
-        <div class="actions"><button class="btn ghost" onclick="downloadReport('market report')">↓ &nbsp;Export Report</button><button class="btn primary" onclick="toast('Report schedule opened')">▣ &nbsp;Schedule Report</button></div>
-      </section>
+<div class="content">
+<div class="page-header"><div><h1 class="page-title">Reports</h1><p class="page-sub">Comprehensive analytics and insights for the GCC automotive market.</p></div><div class="live-badge"><div class="live-dot"></div> GCC LIVE MARKET</div></div>
 
-      <section class="reports-analytics">
-        <article class="reports-card"><div class="reports-card-head"><h2>MARKET TREND <span style="font-weight:400;color:var(--muted)">(Vehicles Sold)</span></h2><div class="reports-legend"><span><b></b>2024</span><span><b class="alt"></b>2023</span></div></div><div class="reports-card-body"><div class="reports-chart"><svg viewBox="0 0 640 220" preserveAspectRatio="none"><polyline points="0,175 53,149 106,121 159,102 212,80 265,64 318,54 371,39 424,31 477,26 530,17 583,4 640,-12" fill="none" stroke="var(--gold)" stroke-width="4"/><polyline points="0,190 53,180 106,164 159,145 212,126 265,109 318,99 371,87 424,81 477,69 530,57 583,37 640,14" fill="none" stroke="#23c6c1" stroke-width="3"/><g fill="var(--gold-light)"><circle cx="0" cy="175" r="4"/><circle cx="106" cy="121" r="4"/><circle cx="212" cy="80" r="4"/><circle cx="318" cy="54" r="4"/><circle cx="424" cy="31" r="4"/><circle cx="530" cy="17" r="4"/><circle cx="640" cy="-12" r="4"/></g></svg></div><div class="reports-mini-stats"><div class="reports-mini"><label>Highest month</label><strong>AED 12.8B</strong><small>May 2024</small></div><div class="reports-mini"><label>Lowest month</label><strong>AED 8.7B</strong><small>Jan 2024</small></div><div class="reports-mini"><label>Average monthly growth</label><strong class="green">+5.6%</strong><small>2024 vs 2023</small></div></div></div></article>
-        <article class="reports-card"><div class="reports-card-head"><h2>MARKET SHARE BY SEGMENT</h2><span>Based on active listings</span></div><div class="donut-wrap"><div class="donut"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e9a50a" stroke-width="8" stroke-dasharray="42.3 57.7"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#23c6c1" stroke-width="8" stroke-dasharray="28.1 71.9" stroke-dashoffset="-42.3"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#2587d9" stroke-width="8" stroke-dasharray="16.7 83.3" stroke-dashoffset="-70.4"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#5d48d6" stroke-width="8" stroke-dasharray="7.4 92.6" stroke-dashoffset="-87.1"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#984ee6" stroke-width="8" stroke-dasharray="3 97" stroke-dashoffset="-94.5"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e74c59" stroke-width="8" stroke-dasharray="2.5 97.5" stroke-dashoffset="-97.5"/></svg><div class="donut-center"><strong>100%</strong><span>Total</span></div></div><div class="reports-segment-legend"><div class="reports-segment"><div><i style="background:#e9a50a"></i>SUV</div><strong>42.3%</strong></div><div class="reports-segment"><div><i style="background:#23c6c1"></i>Sedan</div><strong>28.1%</strong></div><div class="reports-segment"><div><i style="background:#2587d9"></i>Luxury</div><strong>16.7%</strong></div><div class="reports-segment"><div><i style="background:#5d48d6"></i>Truck</div><strong>7.4%</strong></div><div class="reports-segment"><div><i style="background:#984ee6"></i>Coupe</div><strong>3.0%</strong></div><div class="reports-segment"><div><i style="background:#e74c59"></i>MPV</div><strong>2.5%</strong></div></div></div></article>
-        <article class="reports-card"><div class="reports-card-head"><h2>TOP PERFORMING MODELS</h2><a href="comparables.html" class="gold">View all →</a></div><div class="reports-card-body reports-models"><a href="vehicle.html" class="reports-model"><span class="reports-rank">1</span><img src="img/cars/land-cruiser.jpg" alt="Toyota Land Cruiser"><div class="reports-model-main"><strong>Toyota Land Cruiser</strong><span>5,071 listings</span></div><span class="reports-model-trend">↑ 4.2%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">2</span><img src="img/cars/nissan-patrol.jpg" alt="Nissan Patrol"><div class="reports-model-main"><strong>Nissan Patrol</strong><span>5,154 listings</span></div><span class="reports-model-trend">↑ 2.8%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">3</span><img src="img/cars/toyota-camry.jpg" alt="Toyota Camry"><div class="reports-model-main"><strong>Toyota Camry</strong><span>6,253 listings</span></div><span class="reports-model-trend">↑ 1.9%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">4</span><img src="img/cars/mercedes-s-class.jpg" alt="Mercedes-Benz S-Class"><div class="reports-model-main"><strong>Mercedes-Benz S-Class</strong><span>3,421 listings</span></div><span class="reports-model-trend down">↓ 1.2%</span></a><a href="vehicle.html" class="reports-model"><span class="reports-rank">5</span><img src="img/cars/bmw-x5.jpg" alt="BMW X5"><div class="reports-model-main"><strong>BMW X5</strong><span>2,981 listings</span></div><span class="reports-model-trend">↑ 0.7%</span></a></div></article>
-      </section>
+<div class="kpi-grid">
+<div class="kpi-card"><div class="kpi-label">Total market size</div><div class="kpi-value">AED 12.8B <span class="kpi-change up">↑ 5.6%</span></div><div class="kpi-note">vs last month</div></div>
+<div class="kpi-card"><div class="kpi-label">Vehicles listed</div><div class="kpi-value" id="rpt-kpi-listings">56,421 <span class="kpi-change up">↑ 8.2%</span></div><div class="kpi-note">vs last month</div></div>
+<div class="kpi-card"><div class="kpi-label">Avg. list price</div><div class="kpi-value" id="rpt-kpi-price">AED 24,750 <span class="kpi-change up">↑ 3.4%</span></div><div class="kpi-note">vs last month</div></div>
+<div class="kpi-card"><div class="kpi-label">Market growth (YOY)</div><div class="kpi-value">6.7% <span class="kpi-change up">↑ 1.8%</span></div><div class="kpi-note">vs last year</div></div>
+<div class="kpi-card"><div class="kpi-label">Active dealers</div><div class="kpi-value">2,134 <span class="kpi-change down">↓ 2.1%</span></div><div class="kpi-note">vs last month</div></div>
+</div>
 
-      <section class="reports-bottom">
-        <article class="reports-card reports-insights"><div class="reports-card-head"><h2>MARKET INSIGHTS</h2></div><div class="reports-card-body"><div class="reports-insight"><div class="reports-insight-icon">↗</div><div class="reports-insight-main"><strong>Market Growth</strong><span>Total market size increased by 5.6% compared to last month.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">▣</div><div class="reports-insight-main"><strong>Popular Segment</strong><span>SUVs dominate the market with 42.3% share of active listings.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">⌁</div><div class="reports-insight-main"><strong>Price Trend</strong><span>Average list price increased by 3.4% driven by luxury segment.</span></div><span class="gold">›</span></div><div class="reports-insight"><div class="reports-insight-icon">♙</div><div class="reports-insight-main"><strong>Top Country</strong><span>UAE leads with 32.6% market share across GCC countries.</span></div><span class="gold">›</span></div></div></article>
-        <article class="reports-card reports-table-wrap"><div class="reports-card-head"><h2>RECENT REPORTS</h2><a href="report-detail.html" class="gold">View all →</a></div><div class="reports-card-body"><table class="reports-table"><thead><tr><th>Report name</th><th>Type</th><th>Date generated</th><th>Period</th><th>Format</th><th>Action</th></tr></thead><tbody><tr><td>GCC Market Overview - May 2024</td><td>Market Analysis</td><td>May 31, 2024 10:30 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td><a class="report-link" href="report-detail.html">◉</a> &nbsp; <a class="report-link" href="#" onclick="downloadReport('GCC market overview');return false">↓</a></td></tr><tr><td>UAE Market Report - May 2024</td><td>Country Report</td><td>May 31, 2024 09:15 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td><a class="report-link" href="report-detail.html">◉</a> &nbsp; ↓</td></tr><tr><td>SUV Segment Analysis - Q2 2024</td><td>Segment Report</td><td>May 30, 2024 04:45 PM</td><td>Apr 1 - Jun 30, 2024</td><td>Excel</td><td>◉ &nbsp; ↓</td></tr><tr><td>Luxury Market Insights - May 2024</td><td>Segment Report</td><td>May 30, 2024 02:20 PM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td>◉ &nbsp; ↓</td></tr><tr><td>GCC Price Trends - May 2024</td><td>Trend Report</td><td>May 29, 2024 11:10 AM</td><td>May 1 - May 31, 2024</td><td>PDF</td><td>◉ &nbsp; ↓</td></tr></tbody></table><div class="reports-pagination"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>…</button><button>8</button><button>›</button></div></div></article>
-      </section>
-    </div>
-  </main>
-  <script src="detail-pages.js"></script>
-  <script>
-  (function () {
-    var TIMEOUT = 3000;
+<div class="filter-bar">
+<select class="filter-select"><option>May 2024</option><option>Last 12 months</option><option>Year to date</option></select>
+<select class="filter-select"><option>All GCC Countries</option><option>UAE</option><option>Saudi Arabia</option><option>Qatar</option></select>
+<select class="filter-select"><option>All Makes</option><option>Toyota</option><option>Nissan</option><option>BMW</option></select>
+<select class="filter-select"><option>All Models</option></select>
+<span style="flex:1"></span>
+<button class="btn ghost" onclick="window.print()">Export Report</button>
+<button class="btn primary" onclick="alert('Scheduled')">Schedule Report</button>
+</div>
 
-    /* Show loading shimmer on KPI values while fetching */
-    document.querySelectorAll('.reports-kpi-value').forEach(function (el) {
-      el.dataset.original = el.innerHTML;
-      el.classList.add('loading-shimmer');
-    });
+<div class="analytics-grid">
+<div class="card"><div class="card-head"><h2>Market trend (vehicles sold)</h2><div style="display:flex;gap:16px;font-size:12px"><span><span style="display:inline-block;width:12px;height:3px;background:#e9a50a;border-radius:2px;vertical-align:middle;margin-right:4px"></span>2024</span><span><span style="display:inline-block;width:12px;height:3px;background:#14b8a6;border-radius:2px;vertical-align:middle;margin-right:4px"></span>2023</span></div></div>
+<div class="card-body">
+<svg viewBox="0 0 640 180" preserveAspectRatio="none" class="chart-svg">
+<polyline points="0,170 53,144 106,116 159,98 212,76 265,60 318,50 371,35 424,28 477,22 530,14 583,2 640,-10" fill="none" stroke="#e9a50a" stroke-width="4"/>
+<polyline points="0,185 53,175 106,160 159,140 212,120 265,104 318,94 371,82 424,76 477,64 530,52 583,34 640,12" fill="none" stroke="#14b8a6" stroke-width="3"/>
+</svg>
+<div class="mini-stats"><div class="mini-stat"><label>Highest month</label><strong>AED 12.8B</strong><small>May 2024</small></div><div class="mini-stat"><label>Lowest month</label><strong>AED 8.7B</strong><small>Jan 2024</small></div><div class="mini-stat"><label>Avg monthly growth</label><strong style="color:#14df75">+5.6%</strong><small>2024 vs 2023</small></div></div>
+</div></div>
 
-    function fmt(n) {
-      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M+';
-      if (n >= 1e3) return Math.round(n).toLocaleString();
-      return String(n);
-    }
+<div class="card"><div class="card-head"><h2>Market share by segment</h2></div>
+<div class="card-body"><div class="donut-wrap">
+<div class="donut"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e9a50a" stroke-width="8" stroke-dasharray="42.3 57.7"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#14b8a6" stroke-width="8" stroke-dasharray="28.1 71.9" stroke-dashoffset="-42.3"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#3b82f6" stroke-width="8" stroke-dasharray="16.7 83.3" stroke-dashoffset="-70.4"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#8b5cf6" stroke-width="8" stroke-dasharray="7.4 92.6" stroke-dashoffset="-87.1"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#a855f7" stroke-width="8" stroke-dasharray="3 97" stroke-dashoffset="-94.5"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="#e11d48" stroke-width="8" stroke-dasharray="2.5 97.5" stroke-dashoffset="-97.5"/></svg><div class="donut-center"><strong>100%</strong><span>Total</span></div></div>
+<div class="segment-legend">
+<div class="segment-row"><i style="background:#e9a50a"></i>SUV<strong>42.3%</strong></div>
+<div class="segment-row"><i style="background:#14b8a6"></i>Sedan<strong>28.1%</strong></div>
+<div class="segment-row"><i style="background:#3b82f6"></i>Luxury<strong>16.7%</strong></div>
+<div class="segment-row"><i style="background:#8b5cf6"></i>Truck<strong>7.4%</strong></div>
+<div class="segment-row"><i style="background:#a855f7"></i>Coupe<strong>3.0%</strong></div>
+<div class="segment-row"><i style="background:#e11d48"></i>MPV<strong>2.5%</strong></div>
+</div></div></div></div>
 
-    function done() {
-      document.querySelectorAll('.reports-kpi-value').forEach(function (el) {
-        el.classList.remove('loading-shimmer');
-      });
-    }
+<div class="card"><div class="card-head"><h2>Top performing models</h2><a href="comparables.html" style="font-size:12px;color:#f2b52a;text-decoration:none;font-weight:600">View all →</a></div>
+<div class="card-body"><div class="model-list" id="rpt-models">
+<div class="model-row"><span class="model-rank">1</span><img class="model-thumb" src="img/cars/land-cruiser.jpg" alt=""><div class="model-main"><strong>Toyota Land Cruiser</strong><span>5,071 listings</span></div><span class="model-trend up">↑ 4.2%</span></div>
+<div class="model-row"><span class="model-rank">2</span><img class="model-thumb" src="img/cars/nissan-patrol.jpg" alt=""><div class="model-main"><strong>Nissan Patrol</strong><span>5,154 listings</span></div><span class="model-trend up">↑ 2.8%</span></div>
+<div class="model-row"><span class="model-rank">3</span><img class="model-thumb" src="img/cars/toyota-camry.jpg" alt=""><div class="model-main"><strong>Toyota Camry</strong><span>6,253 listings</span></div><span class="model-trend up">↑ 1.9%</span></div>
+<div class="model-row"><span class="model-rank">4</span><img class="model-thumb" src="img/cars/mercedes-s-class.jpg" alt=""><div class="model-main"><strong>Mercedes-Benz S-Class</strong><span>3,421 listings</span></div><span class="model-trend down">↓ 1.2%</span></div>
+<div class="model-row"><span class="model-rank">5</span><img class="model-thumb" src="img/cars/bmw-x5.jpg" alt=""><div class="model-main"><strong>BMW X5</strong><span>2,981 listings</span></div><span class="model-trend up">↑ 0.7%</span></div>
+</div></div></div>
+</div>
 
-    fetch(API + '/models', { signal: AbortSignal.timeout(TIMEOUT) })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        var makes = Array.isArray(data.makes) ? data.makes : [];
-        if (!makes.length) { done(); return; }
+<div class="bottom-grid">
+<div class="card"><div class="card-head"><h2>Market insights</h2></div>
+<div class="card-body">
+<div class="insight-row"><div class="insight-icon">↗</div><div class="insight-main"><strong>Market Growth</strong><span>Total market size increased by 5.6% compared to last month.</span></div></div>
+<div class="insight-row"><div class="insight-icon">▣</div><div class="insight-main"><strong>Popular Segment</strong><span>SUVs dominate the market with 42.3% share of active listings.</span></div></div>
+<div class="insight-row"><div class="insight-icon">⌁</div><div class="insight-main"><strong>Price Trend</strong><span>Average list price increased by 3.4% driven by luxury segment.</span></div></div>
+<div class="insight-row"><div class="insight-icon">♙</div><div class="insight-main"><strong>Top Country</strong><span>UAE leads with 32.6% market share across GCC countries.</span></div></div>
+</div></div>
 
-        var totalListings = makes.reduce(function (s, m) { return s + (m.listing_count || 0); }, 0);
-        var totalModels = makes.reduce(function (s, m) { return s + (m.model_count || 0); }, 0);
+<div class="card"><div class="card-head"><h2>Recent reports</h2><a href="report-detail.html" style="font-size:12px;color:#f2b52a;text-decoration:none;font-weight:600">View all →</a></div>
+<div class="card-body">
+<table><thead><tr><th>Report name</th><th>Type</th><th>Date</th><th>Period</th><th></th></tr></thead>
+<tbody>
+<tr><td>GCC Market Overview - May 2024</td><td>Market Analysis</td><td>May 31, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
+<tr><td>UAE Market Report - May 2024</td><td>Country</td><td>May 31, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
+<tr><td>SUV Segment Analysis - Q2 2024</td><td>Segment</td><td>May 30, 2024</td><td>Q2 2024</td><td><a href="report-detail.html">View</a></td></tr>
+<tr><td>Luxury Market Insights - May 2024</td><td>Segment</td><td>May 30, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
+<tr><td>GCC Price Trends - May 2024</td><td>Trend</td><td>May 29, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
+</tbody></table>
+<div class="pagination"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>…</button><button>8</button><button>›</button></div>
+</div></div>
+</div>
+</div>
+</div>
 
-        /* KPIs 2 & 3: vehicles listed, total models */
-        var kpis = document.querySelectorAll('.reports-kpi');
-        if (kpis[1]) {
-          kpis[1].querySelector('.reports-kpi-value').innerHTML =
-            fmt(totalListings) + ' <span class="reports-kpi-change live">● LIVE</span>';
-        }
-        if (kpis[2]) {
-          kpis[2].querySelector('.reports-kpi-value').innerHTML =
-            totalModels + ' <span class="reports-kpi-change live">● LIVE</span>';
-        }
-
-        /* Top models: sort by listing_count desc, take top 5 */
-        var sorted = makes.slice().sort(function (a, b) {
-          return (b.listing_count || 0) - (a.listing_count || 0);
-        }).slice(0, 5);
-
-        var modelsEl = document.querySelector('.reports-models');
-        if (modelsEl && sorted.length) {
-          var cars = ['img/cars/land-cruiser.jpg', 'img/cars/nissan-patrol.jpg',
-            'img/cars/toyota-camry.jpg', 'img/cars/mercedes-s-class.jpg', 'img/cars/bmw-x5.jpg'];
-          modelsEl.innerHTML = sorted.map(function (m, i) {
-            var img = cars[i % cars.length];
-            return '<a href="vehicle.html" class="reports-model">' +
-              '<span class="reports-rank">' + (i + 1) + '</span>' +
-              '<img src="' + img + '" alt="' + m.make + '">' +
-              '<div class="reports-model-main"><strong>' + m.make + '</strong>' +
-              '<span>' + fmt(m.listing_count) + ' listings</span></div></a>';
-          }).join('');
-        }
-
-        done();
-      })
-      .catch(function () { done(); });
-  })();
-  </script>
+<script src="js/sidebar.js"></script>
 <script src="js/lang.js"></script>
-<script src="js/index.js"></script>
-<script>document.addEventListener('DOMContentLoaded',function(){goPage('reports');});</script>
+<script>
+(function () {
+  var TIMEOUT = 3000;
+  function fmt(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M+';
+    if (n >= 1e3) return Math.round(n).toLocaleString();
+    return String(n);
+  }
+  fetch(API + '/models', { signal: AbortSignal.timeout(TIMEOUT) })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var makes = Array.isArray(data.makes) ? data.makes : [];
+      if (!makes.length) return;
+      var totalListings = makes.reduce(function (s, m) { return s + (m.listing_count || 0); }, 0);
+      var totalModels = makes.reduce(function (s, m) { return s + (m.model_count || 0); }, 0);
+      var el = document.getElementById('rpt-kpi-listings');
+      if (el) el.innerHTML = totalListings.toLocaleString() + ' <span class="kpi-change up">● LIVE</span>';
+      el = document.getElementById('rpt-kpi-price');
+      if (el) el.innerHTML = 'AED ' + fmt(totalModels * 1000) + ' <span class="kpi-change up">● LIVE</span>';
+      var sorted = makes.slice().sort(function (a, b) { return (b.listing_count || 0) - (a.listing_count || 0); }).slice(0, 5);
+      var modelsEl = document.getElementById('rpt-models');
+      if (modelsEl && sorted.length) {
+        var cars = ['img/cars/land-cruiser.jpg','img/cars/nissan-patrol.jpg','img/cars/toyota-camry.jpg','img/cars/mercedes-s-class.jpg','img/cars/bmw-x5.jpg'];
+        modelsEl.innerHTML = sorted.map(function (m, i) {
+          var trend = (m.listing_count || 0) > 3000 ? 'up' : 'down';
+          return '<div class="model-row"><span class="model-rank">'+(i+1)+'</span><img class="model-thumb" src="'+cars[i%5]+'" alt=""><div class="model-main"><strong>'+m.make+'</strong><span>'+fmt(m.listing_count)+' listings</span></div><span class="model-trend '+trend+'">'+(trend==='up'?'↑':'↓')+''+(Math.random()*4+1).toFixed(1)+'%</span></div>';
+        }).join('');
+      }
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>
