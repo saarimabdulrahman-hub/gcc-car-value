@@ -837,7 +837,7 @@ body.has-sidebar { display: flex; }
   gap: 2px;
   font-family: 'Inter', sans-serif;
   margin-top: var(--space-4);
-  background: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
+  background: var(--gradient-btn-primary);
   color: var(--text-primary);
   transition: all var(--duration-base);
   letter-spacing: 0.02em;
@@ -1521,7 +1521,7 @@ body.has-sidebar { display: flex; }
   padding: 0 16px;
   border: none;
   border-radius: var(--radius-md);
-  background: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
+  background: var(--gradient-btn-primary);
   color: var(--text-primary);
   cursor: pointer;
   display: flex;
@@ -1672,7 +1672,7 @@ body.has-sidebar { display: flex; }
   margin-bottom: var(--space-4);
 }
 .browse-kpi-card {
-  background: #0e1721;
+  background: var(--bg-card);
   border: 1px solid rgba(255,255,255,0.04);
   border-radius: var(--radius-lg);
   padding: 14px var(--space-3);

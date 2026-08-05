@@ -68,6 +68,9 @@
   --chart-10: #a855f7;
   --chart-11: #e11d48;
   --chart-12: #0891b2;
+
+  /* Primary action gradient — gold brass, used on .btn and CTA buttons */
+  --gradient-btn-primary: linear-gradient(90deg, #8B6914 0%, #5C4410 55%, #332008 100%);
 }
 
 /* Honest preview and unavailable-control states shared by production pages. */

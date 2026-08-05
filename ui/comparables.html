@@ -7,24 +7,24 @@
 <link rel="stylesheet" href="css/sidebar.css">
 <style>
 :root { color-scheme:dark }
-body { margin:0;font-family:Inter,-apple-system,sans-serif;background:#050a0f;color:#f7f8fa;display:flex;min-height:100vh }
+body { margin:0;font-family:Inter,-apple-system,sans-serif;background:var(--color-canvas);color:var(--color-text-primary);display:flex;min-height:100vh }
 .main-wrap { flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto }
-.toolbar { height:72px;display:flex;align-items:center;justify-content:flex-end;padding:0 32px;background:#091017;border-bottom:1px solid rgba(255,255,255,0.04);flex-shrink:0;position:sticky;top:0;z-index:500 }
+.toolbar { height:72px;display:flex;align-items:center;justify-content:flex-end;padding:0 32px;background:var(--color-sidebar);border-bottom:1px solid rgba(255,255,255,0.04);flex-shrink:0;position:sticky;top:0;z-index:500 }
 .content { flex:1;padding:0 40px 64px;max-width:1060px;width:100% }
-.page-title { font-size:34px;font-weight:700;margin-bottom:8px;letter-spacing:-0.03em;line-height:1.15;background:linear-gradient(135deg,#f7f8fa,#929cab 60%,#e9a50a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text }
-.page-sub { font-size:14px;color:#657180;margin-bottom:0;font-weight:400;line-height:1.5 }
+.page-title { font-size:34px;font-weight:700;margin-bottom:8px;letter-spacing:-0.03em;line-height:1.15;background:linear-gradient(135deg,var(--color-text-primary),var(--color-text-secondary) 60%,var(--color-accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text }
+.page-sub { font-size:14px;color:var(--color-text-muted);margin-bottom:0;font-weight:400;line-height:1.5 }
 .page-header { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;gap:32px;padding-top:32px }
-.card { background:#0e1721;border-radius:14px;padding:24px;border:1px solid rgba(148,163,184,0.11);margin-bottom:24px }
-.card h2 { font-size:13px;font-weight:600;color:#657180;letter-spacing:0.06em;text-transform:uppercase;margin:0 }
+.card { background:var(--color-surface-raised);border-radius:14px;padding:24px;border:1px solid rgba(148,163,184,0.11);margin-bottom:24px }
+.card h2 { font-size:13px;font-weight:600;color:var(--color-text-muted);letter-spacing:0.06em;text-transform:uppercase;margin:0 }
 .card-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:16px }
 .list-row { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(148,163,184,0.11) }
 .list-row:last-child { border-bottom:none }
 .thumb { width:64px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0 }
 .row-main { flex:1;min-width:0 }
-.row-main strong { display:block;font-size:14px;font-weight:600;color:#f7f8fa }
-.row-main span { font-size:12px;color:#929cab }
+.row-main strong { display:block;font-size:14px;font-weight:600;color:var(--color-text-primary) }
+.row-main span { font-size:12px;color:var(--color-text-secondary) }
 .row-end { text-align:right }
-.row-end strong { font-family:'JetBrains Mono',monospace;font-size:14px;color:#f7f8fa }
+.row-end strong { font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--color-text-primary) }
 @media (max-width:768px) {
   .toolbar { padding:0 24px }
 }
@@ -52,7 +52,7 @@ body { margin:0;font-family:Inter,-apple-system,sans-serif;background:#050a0f;co
 <div class="list-row"><img class="thumb" src="img/cars/land-cruiser.jpg" alt=""><div class="row-main"><strong>Loading…</strong><span>Fetching market data</span></div><div class="row-end"><strong>—</strong></div></div>
 </div></div>
 
-<p style="font-size:12px;color:#657180;text-align:center;margin-top:16px">Preview data — connect to API for live comparable listings.</p>
+<p style="font-size:12px;color:var(--color-text-muted);text-align:center;margin-top:16px">Preview data — connect to API for live comparable listings.</p>
 </div>
 </div>
 
