@@ -765,6 +765,11 @@ function loadBrowseMakes(){
   var grid = document.getElementById('browse-makes-grid');
   showBrowseSkeletons(grid);
 
+  /* One-shot entrance — removed after the stagger completes so filter
+     re-renders don't re-trigger the rise animation. */
+  grid.classList.add('grid-enter');
+  setTimeout(function(){ if (grid) grid.classList.remove('grid-enter'); }, 600);
+
   var co = document.getElementById('browse-country').value;
   var url = API + '/models';
   if (co) url += '?country=' + co;
@@ -1177,6 +1182,12 @@ var MARKET_DATA = {};
 
 function loadMarketPage(){
   var kpiGrid = document.getElementById('market-kpi-grid');
+  /* One-shot entrance for the brand rankings list */
+  var ranksEl = document.getElementById('mkt-brand-rankings');
+  if (ranksEl) {
+    ranksEl.classList.add('grid-enter');
+    setTimeout(function(){ if (ranksEl) ranksEl.classList.remove('grid-enter'); }, 600);
+  }
 
   /* Fetch all 4 data sources in parallel */
   Promise.all([
