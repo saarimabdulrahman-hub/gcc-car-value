@@ -58,12 +58,12 @@ def test_sold_comp_gets_bonus():
 
 
 def _mk(**over):
-    base = dict(
-        source="test", make="Toyota", model="Camry", year=2020,
-        mileage_km=50000, spec="GCC", city="Dubai", country="AE",
-        asking_price_aed=75000, quality_score=90, status="active",
-        days_on_market=5, delisting_confidence=None, platform_name="Test",
-    )
+    base = {
+        "source": "test", "make": "Toyota", "model": "Camry", "year": 2020,
+        "mileage_km": 50000, "spec": "GCC", "city": "Dubai", "country": "AE",
+        "asking_price_aed": 75000, "quality_score": 90, "status": "active",
+        "days_on_market": 5, "delisting_confidence": None, "platform_name": "Test",
+    }
     base.update(over)
     return CompListing(**base)
 

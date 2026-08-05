@@ -1,4 +1,6 @@
 """Authentication endpoints — register, login, profile."""
+from datetime import UTC, datetime, timedelta
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from sqlalchemy import text
@@ -95,7 +97,7 @@ async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(
     if row.locked_until and row.locked_until <= datetime.now(UTC) and failed >= 5:
         failed = 0
         await db.execute(
-            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),
+            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),  # noqa: E501
             {"id": str(row.id)},
         )
 
@@ -105,7 +107,7 @@ async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(
         new_failed = failed + 1
         locked = datetime.now(UTC) + timedelta(minutes=15) if new_failed >= 5 else None
         await db.execute(
-            text("UPDATE user_accounts SET failed_login_attempts = :n, locked_until = :lu WHERE id = :id"),
+            text("UPDATE user_accounts SET failed_login_attempts = :n, locked_until = :lu WHERE id = :id"),  # noqa: E501
             {"n": str(new_failed), "lu": locked, "id": str(row.id)},
         )
         await db.commit()
@@ -116,7 +118,7 @@ async def login(request: Request, req: LoginRequest, db: AsyncSession = Depends(
     # Successful login — reset counter
     if failed > 0:
         await db.execute(
-            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),
+            text("UPDATE user_accounts SET failed_login_attempts = '0', locked_until = NULL WHERE id = :id"),  # noqa: E501
             {"id": str(row.id)},
         )
         await db.commit()

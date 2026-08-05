@@ -45,9 +45,9 @@ class DatabaseCheck(HealthCheck):
                     raise RuntimeError("alembic_version table is empty — no migrations applied")
 
             # Compare installed revision against Alembic head
+
             from alembic.config import Config as AlembicConfig
             from alembic.script import ScriptDirectory
-            from pathlib import Path
 
             alembic_cfg = AlembicConfig("src/db/migrations/alembic.ini")
             script = ScriptDirectory.from_config(alembic_cfg)

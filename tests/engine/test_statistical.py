@@ -242,7 +242,7 @@ async def test_valuate_city_adjustment(mock_find_comps):
     from src.engine.statistical import valuate
     # Dubai comps pricier than Sharjah comps → target in Dubai gets a premium
     dubai = [make_full_comp(price=105000 + i * 100, mileage=50000, city="Dubai") for i in range(6)]
-    sharjah = [make_full_comp(price=95000 + i * 100, mileage=50000, city="Sharjah") for i in range(6)]
+    sharjah = [make_full_comp(price=95000 + i * 100, mileage=50000, city="Sharjah") for i in range(6)]  # noqa: E501
     mock_find_comps["comps"] = dubai + sharjah
     result = await valuate(FakeSession(), "Toyota", "Camry", 2020, 50000, city="Dubai")
     city_adj = next((a for a in result.adjustments if a.reason == "city"), None)
