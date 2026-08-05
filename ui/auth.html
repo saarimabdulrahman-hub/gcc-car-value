@@ -38,12 +38,13 @@
             <label for="password">Password</label>
             <div style="display:flex;gap:8px">
               <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="8" required>
-              <button class="btn" type="button" id="btnShow" onclick="toggleShow()">Show</button>
+              <button class="btn pw-toggle" type="button" id="btnShow" onclick="toggleShow()">Show</button>
             </div>
+            <a href="#" class="quiet" style="font-size:11px;display:block;margin-top:6px;text-align:right" onclick="authMsg.textContent='Password reset is not yet available. Contact support.';authMsg.setAttribute('role','alert');return false">Forgot password?</a>
           </div>
           <button class="btn primary" type="submit" style="width:100%;margin-top:20px" id="btnSubmit">Sign In</button>
         </form>
-        <div id="authMsg" class="quiet" style="text-align:center;margin-top:12px;min-height:20px"></div>
+        <div id="authMsg" class="quiet" role="alert" style="text-align:center;margin-top:12px;min-height:20px"></div>
         <p class="quiet" style="text-align:center;font-size:11px;margin:25px 0 0">Passwords are hashed with PBKDF2-SHA256 (600k iterations). Accounts are created with consumer access by default.</p>
       </section>
     </div>
@@ -63,7 +64,9 @@
 
     function toggleShow() {
       var pw = document.getElementById('password');
+      var btn = document.querySelector('.pw-toggle');
       pw.type = pw.type === 'password' ? 'text' : 'password';
+      if(btn) btn.textContent = pw.type === 'password' ? 'Show' : 'Hide';
     }
 
     function setMode(register) {
