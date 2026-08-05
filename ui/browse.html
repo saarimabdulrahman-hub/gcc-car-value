@@ -1000,7 +1000,7 @@
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 1800);
-        const response = await fetch('/v1/models', { signal: controller.signal });
+        const response = await fetch(API + '/models', { signal: controller.signal });
         clearTimeout(timeout);
         if (!response.ok) throw new Error('API unavailable');
         const payload = await response.json();

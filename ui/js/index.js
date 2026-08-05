@@ -802,7 +802,7 @@ function renderBrowseMakes(){
         '<span class="make-card-price">AED ' + avgPrice + 'K avg</span>' +
         '<span class="make-card-trend ' + trend.cls + '" style="font-size:0.75rem;font-weight:800">' + trendIcon + ' ' + trend.pct + '%</span>' +
       '</div>' +
-      '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="width:' + barPct + '%"></div></div></div>' +
+      '<div class="make-card-bar-wrap"><div class="make-card-bar"><div class="make-card-bar-fill" style="transform:scaleX(' + (barPct/100).toFixed(3) + ')"></div></div></div>' +
     '</div>';
   }).join('');
 
@@ -1217,7 +1217,7 @@ function renderBrandRankings(){
         '<span class="market-ranked-meta">'+(m.model_count||0)+' models · avg AED '+(Math.floor(Math.random()*300+80)).toLocaleString()+'K</span>'+
       '</div>'+
       '<span class="market-ranked-count">'+m.listing_count.toLocaleString()+'</span>'+
-      '<div class="market-ranked-bar-wrap"><div class="market-ranked-bar"><div class="market-ranked-bar-fill" style="width:'+pct+'%"></div></div></div>'+
+      '<div class="market-ranked-bar-wrap"><div class="market-ranked-bar"><div class="market-ranked-bar-fill" style="transform:scaleX('+(pct/100).toFixed(3)+')"></div></div></div>'+
     '</div>';
   }).join('') : '<div class="empty-state"><p>No brand data available.</p></div>';
 }

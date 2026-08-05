@@ -1,7 +1,9 @@
-/* Shared EN/AR language toggle — flips RTL, persists choice, translates chrome.
+/* Shared EN/AR language toggle + API base detection.
  * Include on every page: <script src="js/lang.js"></script>
  * Mark translatable elements with data-i18n="key" (see I18N dictionary below).
- * The toolbar lang buttons call setLang('en'|'ar'). */
+ * The toolbar lang buttons call setLang('en'|'ar').
+ * API base is auto-detected: localhost ports → local API, otherwise → Render production. */
+var API=(function(){var h=window.location.hostname;if(h==='localhost'||h==='127.0.0.1')return'http://localhost:8000/v1';return'https://gcc-car-value.onrender.com/v1';})();
 (function(){
   var I18N = {
     home:'Home', buy:'Buy', sell:'Sell', browse:'Browse', market:'Market',

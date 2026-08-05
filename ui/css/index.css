@@ -154,7 +154,10 @@ body.has-sidebar { display: flex; }
   left: var(--space-2);
   background: var(--gold);
   color: var(--text-inverse);
-  padding: var(--space-1) var(--space-2);
+  padding: 10px 16px;  /* 44px min touch target */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: var(--text-md);
@@ -233,7 +236,8 @@ body.has-sidebar { display: flex; }
   gap: 2px;
   font-size: var(--text-xs);
   font-weight: 600;
-  padding: 8px 14px;
+  padding: 12px 16px;  /* 44px min touch target */
+  min-height: 44px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255,255,255,0.08);
   background: transparent;
@@ -2245,9 +2249,11 @@ body.has-sidebar { display: flex; }
 }
 .make-card-bar-fill {
   height: 100%;
+  width: 100%;
   background: linear-gradient(90deg, var(--gold), var(--gold-dark));
   border-radius: 2px;
-  transition: width var(--duration-glacial) ease;
+  transform-origin: left;
+  transition: transform var(--duration-glacial) ease;
 }
 
 /* ── Legacy: keep working for non-browse cards ── */
@@ -2550,9 +2556,11 @@ body.has-sidebar { display: flex; }
 }
 .market-ranked-bar-fill {
   height: 100%;
+  width: 100%;
   background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
   border-radius: 3px;
-  transition: width var(--duration-glacial) ease;
+  transform-origin: left;
+  transition: transform var(--duration-glacial) ease;
 }
 
 /* ── Scraper/Country list ── */
@@ -3078,9 +3086,11 @@ body.has-sidebar { display: flex; }
 
 .bar-fill {
   height: 100%;
+  width: 100%;
   background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
   border-radius: 3px;
-  transition: width var(--duration-glacial) ease;
+  transform-origin: left;
+  transition: transform var(--duration-glacial) ease;
 }
 
 .back-btn {
