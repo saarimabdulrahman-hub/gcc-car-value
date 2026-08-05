@@ -2,34 +2,15 @@
   "name": "gcc-car-value-ui",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^4.9.0"
-  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build && node -e \"var f=require('fs');f.cpSync('dist/react-browse/react-browse.html','react-browse.html');f.cpSync('dist/react-browse/assets','assets',{recursive:true})\"",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write ."
-  },
-  "overrides": {
-    "brace-expansion": "^2.0.0"
+    "lint": "eslint js/"
   },
   "devDependencies": {
+    "@eslint/js": "^8.57.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "@vitejs/plugin-react": "^3.0.0",
-    "autoprefixer": "^10.4.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-react": "^7.28.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "postcss": "^8.4.0",
-    "prettier": "^2.8.0",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^4.9.0",
-    "vite": "^4.5.14"
+    "globals": "^15.0.0"
   }
 }

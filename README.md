@@ -8,8 +8,6 @@ A consumer-first car valuation platform for the Gulf (GCC) market. Scrapes class
   production artifact. Vercel publishes that directory according to
   `vercel.json` at <https://gcc-car-value.vercel.app>.
 - **API:** FastAPI runs on Render at <https://gcc-car-value.onrender.com>.
-- **React/Vite:** `ui/src/` and `ui/dist/react-browse/` are an experimental
-  sub-application. They are not part of the production artifact.
 - **Fallback serving:** FastAPI can serve `ui/` during integrated local
   development, but it is not the production frontend host.
 
