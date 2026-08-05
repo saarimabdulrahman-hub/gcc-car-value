@@ -35,11 +35,12 @@
     '</div>';
 
   function setActive() {
-    var path = window.location.pathname.replace(/\/$/, '').split('/').pop() || 'index.html';
+    /* Normalize .html suffix so clean URLs (/reports) match nav hrefs (reports.html) */
+    function norm(p) { return (p || '').replace(/\.html$/, '').replace(/\/$/, ''); }
+    var path = norm(window.location.pathname.split('/').pop());
     var links = document.querySelectorAll('.sidebar-scroll .nav-item');
     for (var i = 0; i < links.length; i++) {
-      var href = links[i].getAttribute('href');
-      var target = href.split('#')[0] || 'index.html';
+      var target = norm(links[i].getAttribute('href').split('#')[0]);
       if (target === path) {
         links[i].classList.add('active');
         links[i].setAttribute('aria-current', 'page');
