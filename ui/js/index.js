@@ -53,7 +53,7 @@ if(p==='settings')renderSettings();
 /* Breadcrumbs */
 var bc=document.getElementById('breadcrumbs');
 var titles={home:'',sell:'Sell Your Car',buy:'Buy a Car',browse:'Browse Models',market:'Market Trends',reports:'Reports',watchlist:'Watchlist',settings:'Settings'};
-if(p==='home'||p==='browse'||!titles[p]){if(bc)bc.classList.add('hidden');}
+if(p==='home'||!titles[p]){if(bc)bc.classList.add('hidden');}
 else{if(bc){bc.classList.remove('hidden');bc.innerHTML='<a href="#" onclick="goPage(\'home\',document.getElementById(\'nav-home\'))">Home</a> <span class="breadcrumb-sep">/</span> <span class="breadcrumb-current">'+titles[p]+'</span>';}}
 
 if(p==='home'){
@@ -614,6 +614,8 @@ if(d.adjustments&&d.adjustments.length){
 
 /* ═══ ACTIONS ═══ */
 h+='<div class="result-actions"><button class="btn btn-ghost" onclick="window.print()" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button><button class="btn btn-ghost" onclick="navigator.clipboard.writeText(window.location.href).then(function(){showToast(\'Link copied to clipboard\',\'success\',3000)})" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="btn btn-ghost" onclick="saveToWatchlist({make:\''+esc(body.make||'')+'\',model:\''+esc(body.model||'')+'\',year:'+(body.year||0)+',valuation:'+d.estimate+',mileage_km:'+(body.mileage_km||0)+',spec:\''+esc(body.spec||'')+'\',city:\''+esc(body.city||'')+'\',country:\''+esc(body.country||'')+'\'})" style="width:auto;padding:0 24px;margin:0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Watchlist</button></div>';
+
+h+='<p style="font-size:var(--text-xs);color:var(--text-muted);text-align:center;margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--border-subtle)">This is an estimate based on comparable listings, not a formal appraisal. Market conditions change — verify before making purchase decisions.</p>';
 
 c.innerHTML=h;
 
