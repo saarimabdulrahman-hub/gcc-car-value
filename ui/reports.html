@@ -156,13 +156,13 @@ td a:hover { color:#f7f8fa }
 </div>
 
 <div class="filter-bar">
-<select class="filter-select"><option>May 2024</option><option>Last 12 months</option><option>Year to date</option></select>
-<select class="filter-select"><option>All GCC Countries</option><option>UAE</option><option>Saudi Arabia</option><option>Qatar</option></select>
-<select class="filter-select"><option>All Makes</option><option>Toyota</option><option>Nissan</option><option>BMW</option></select>
-<select class="filter-select"><option>All Models</option></select>
+<select class="filter-select" id="rpt-period"><option>May 2024</option><option>Last 12 months</option><option>Year to date</option></select>
+<select class="filter-select" id="rpt-country"><option value="">All GCC Countries</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="BH">Bahrain</option><option value="OM">Oman</option></select>
+<select class="filter-select" id="rpt-make-filter"><option value="">All Makes</option></select>
+<select class="filter-select" id="rpt-model-filter" disabled><option value="">All Models</option></select>
 <span style="flex:1"></span>
 <button class="btn ghost" onclick="window.print()">Export Report</button>
-<button class="btn primary" onclick="alert('Scheduled')">Schedule Report</button>
+<button class="btn primary" id="rpt-schedule-btn">Schedule Report</button>
 </div>
 
 <div class="analytics-grid">
@@ -216,7 +216,7 @@ td a:hover { color:#f7f8fa }
 <tr><td>Luxury Market Insights - May 2024</td><td>Segment</td><td>May 30, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
 <tr><td>GCC Price Trends - May 2024</td><td>Trend</td><td>May 29, 2024</td><td>May 2024</td><td><a href="report-detail.html">View</a></td></tr>
 </tbody></table>
-<div class="pagination"><button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>…</button><button>8</button><button>›</button></div>
+<div class="pagination" id="rpt-pagination"></div>
 </div></div>
 </div>
 </div>
@@ -227,15 +227,100 @@ td a:hover { color:#f7f8fa }
 <script>
 (function () {
   var TIMEOUT = 3000;
+  var makes = [];
+  var modelsByMake = {};
+  var page = 1;
+  var PER_PAGE = 5;
+  var CARS = ['img/cars/land-cruiser.jpg','img/cars/nissan-patrol.jpg','img/cars/toyota-camry.jpg','img/cars/mercedes-s-class.jpg','img/cars/bmw-x5.jpg'];
+
   function fmt(n) {
     if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M+';
     if (n >= 1e3) return Math.round(n).toLocaleString();
     return String(n);
   }
+
+  function filteredMakes() {
+    var m = document.getElementById('rpt-make-filter');
+    var make = m ? m.value : '';
+    if (!make) return makes.slice();
+    return makes.filter(function (x) { return x.make === make; });
+  }
+
+  function renderModels() {
+    var list = filteredMakes().slice().sort(function (a, b) { return (b.listing_count || 0) - (a.listing_count || 0); });
+    var total = list.length;
+    var pages = Math.max(1, Math.ceil(total / PER_PAGE));
+    if (page > pages) page = pages;
+    var start = (page - 1) * PER_PAGE;
+    var slice = list.slice(start, start + PER_PAGE);
+    var el = document.getElementById('rpt-models');
+    if (!el) return;
+    if (!slice.length) {
+      el.innerHTML = '<div style="text-align:center;padding:32px;color:#657180;font-size:13px">No models match the selected filter.</div>';
+    } else {
+      el.innerHTML = slice.map(function (m, i) {
+        var trend = (m.listing_count || 0) > 3000 ? 'up' : 'down';
+        return '<div class="model-row"><span class="model-rank">' + (start + i + 1) + '</span><img class="model-thumb" src="' + CARS[(start + i) % 5] + '" alt=""><div class="model-main"><strong>' + m.make + '</strong><span>' + fmt(m.listing_count) + ' listings</span></div><span class="model-trend ' + trend + '">' + (trend === 'up' ? '↑' : '↓') + '' + (Math.random() * 4 + 1).toFixed(1) + '%</span></div>';
+      }).join('');
+    }
+    renderPagination(pages);
+  }
+
+  function renderPagination(pages) {
+    var el = document.getElementById('rpt-pagination');
+    if (!el) return;
+    var html = '<button data-pg="' + (page - 1) + '"' + (page <= 1 ? ' disabled' : '') + '>‹</button>';
+    for (var i = 1; i <= pages; i++) {
+      html += '<button data-pg="' + i + '"' + (i === page ? ' class="active"' : '') + '>' + i + '</button>';
+    }
+    html += '<button data-pg="' + (page + 1) + '"' + (page >= pages ? ' disabled' : '') + '>›</button>';
+    el.innerHTML = html;
+    el.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var pg = parseInt(btn.getAttribute('data-pg'), 10);
+        if (isNaN(pg) || pg < 1 || pg > pages) return;
+        page = pg;
+        renderModels();
+      });
+    });
+  }
+
+  function renderModelFilter() {
+    var el = document.getElementById('rpt-make-filter');
+    if (!el) return;
+    el.innerHTML = '<option value="">All Makes</option>' + makes.map(function (m) {
+      return '<option value="' + m.make + '">' + m.make + '</option>';
+    }).join('');
+    el.addEventListener('change', function () {
+      page = 1;
+      renderModels();
+    });
+    renderModels();
+  }
+
+  /* Schedule report — inline confirmation, no dead alert */
+  function wireSchedule() {
+    var btn = document.getElementById('rpt-schedule-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      if (btn.dataset.scheduled) {
+        btn.dataset.scheduled = '';
+        btn.textContent = 'Schedule Report';
+        btn.style.background = 'linear-gradient(90deg,#8B6914,#5C4410,#332008)';
+        return;
+      }
+      btn.dataset.scheduled = '1';
+      btn.textContent = '✓ Scheduled — monthly';
+      btn.style.background = 'rgba(20,223,117,0.15)';
+      btn.style.color = '#14df75';
+      btn.style.border = '1px solid rgba(20,223,117,0.3)';
+    });
+  }
+
   fetch(API + '/models', { signal: AbortSignal.timeout(TIMEOUT) })
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      var makes = Array.isArray(data.makes) ? data.makes : [];
+      makes = Array.isArray(data.makes) ? data.makes : [];
       if (!makes.length) return;
       var totalListings = makes.reduce(function (s, m) { return s + (m.listing_count || 0); }, 0);
       var totalModels = makes.reduce(function (s, m) { return s + (m.model_count || 0); }, 0);
@@ -243,17 +328,20 @@ td a:hover { color:#f7f8fa }
       if (el) el.innerHTML = totalListings.toLocaleString() + ' <span class="kpi-change up">● LIVE</span>';
       el = document.getElementById('rpt-kpi-price');
       if (el) el.innerHTML = 'AED ' + fmt(totalModels * 1000) + ' <span class="kpi-change up">● LIVE</span>';
-      var sorted = makes.slice().sort(function (a, b) { return (b.listing_count || 0) - (a.listing_count || 0); }).slice(0, 5);
-      var modelsEl = document.getElementById('rpt-models');
-      if (modelsEl && sorted.length) {
-        var cars = ['img/cars/land-cruiser.jpg','img/cars/nissan-patrol.jpg','img/cars/toyota-camry.jpg','img/cars/mercedes-s-class.jpg','img/cars/bmw-x5.jpg'];
-        modelsEl.innerHTML = sorted.map(function (m, i) {
-          var trend = (m.listing_count || 0) > 3000 ? 'up' : 'down';
-          return '<div class="model-row"><span class="model-rank">'+(i+1)+'</span><img class="model-thumb" src="'+cars[i%5]+'" alt=""><div class="model-main"><strong>'+m.make+'</strong><span>'+fmt(m.listing_count)+' listings</span></div><span class="model-trend '+trend+'">'+(trend==='up'?'↑':'↓')+''+(Math.random()*4+1).toFixed(1)+'%</span></div>';
-        }).join('');
-      }
+      renderModelFilter();
+      wireSchedule();
     })
-    .catch(function () {});
+    .catch(function () {
+      /* API down — keep the static sample models, still wire schedule */
+      makes = [
+        { make: 'Toyota', listing_count: 5071 },
+        { make: 'Nissan', listing_count: 5154 },
+        { make: 'BMW', listing_count: 2981 },
+        { make: 'Mercedes', listing_count: 3421 }
+      ];
+      renderModelFilter();
+      wireSchedule();
+    });
 })();
 </script>
 </body>

@@ -1787,6 +1787,9 @@ function initIndexRoute(){
   var route=(window.location.hash||'#home').slice(1).toLowerCase();
   var allowed=['home','sell','buy','reports','watchlist','settings'];
   if(allowed.indexOf(route)===-1)route='home';
+  /* Reports lives at reports.html (standalone) — deep links to the SPA
+     hash route must go there, not to the orphaned inline copy. */
+  if(route==='reports'){window.location.replace('reports.html');return;}
   var nav=document.getElementById('nav-'+route);
   if(nav)goPage(route,nav);
 }
