@@ -31,6 +31,8 @@ fetch(API+'/models')
 loadHomeKPIs();
 
 function goPage(p,el){
+/* P1: form-preservation guard — warn before losing unsaved valuation data */
+if((curPage==='sell'||curPage==='buy')&&p!==curPage){var f=document.getElementById(curPage==='sell'?'sell-form':'buy-form');if(f){var dirty=false;var inputs=f.querySelectorAll('input:not([readonly]):not([type=file])');for(var i=0;i<inputs.length;i++){if(inputs[i].value){dirty=true;break;}}if(dirty&&!confirm('You have unsaved changes. Leave this page?'))return;}}
 curPage=p;
 if(window.location.hash!=='#'+p)history.pushState(null,'','#'+p);
 document.querySelector('.sidebar')?.classList.remove('mobile-open');
@@ -42,7 +44,7 @@ document.querySelectorAll('[id^="page-"]').forEach(function(pg){pg.classList.add
 var pg=document.getElementById('page-'+p);if(pg)pg.classList.remove('hidden');
 document.body.classList.toggle('has-sidebar',p!=='home');
 if(p==='sell')buildForm('sell-form',false);
-if(p==='buy'){buildForm('buy-form',true);}
+if(p==='buy'){buildForm('buy-form',true);var sr=document.querySelector('.sell-rail');var br=document.querySelector('.buy-rail');if(sr&&br)br.innerHTML=sr.innerHTML;}
 if(p==='browse')loadBrowseMakes();
 if(p==='market')loadMarketPage();
 if(p==='reports')initReportsDashboard();
@@ -64,6 +66,8 @@ if(p==='home'){
 }
 }
 
+/* P1: beforeunload — warn on tab close with unsaved valuation data */
+window.addEventListener('beforeunload',function(e){if(curPage==='sell'||curPage==='buy'){var f=document.getElementById(curPage==='sell'?'sell-form':'buy-form');if(!f)return;var inputs=f.querySelectorAll('input:not([readonly]):not([type=file])');for(var i=0;i<inputs.length;i++){if(inputs[i].value){e.preventDefault();return;}}}});
 
 function loadHomeKPIs(){
   fetch(API+'/admin/stats').then(function(r){return r.json()}).then(function(d){
@@ -153,9 +157,10 @@ var prefix=id==='sell-form'?'sell':'buy';
 var h='';
 
 if(isBuy){
+var curr=(JSON.parse(localStorage.getItem('gcc-settings')||'{}')).currency||'AED';
 h+='<div class="buy-asking-section">';
 h+='<div class="form-section-title" style="border-bottom:none;padding-bottom:0"><span class="sec-letter">A.</span> Asking Price</div>';
-h+='<div class="buy-asking-row"><span class="buy-asking-currency">AED</span><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in AED" aria-describedby="'+prefix+'-asking-error" aria-required="true"></div>';
+h+='<div class="buy-asking-row"><span class="buy-asking-currency">'+curr+'</span><input type="number" class="fm-asking buy-asking-input" id="'+prefix+'-asking" placeholder="Enter the asking price" aria-label="Asking price in '+curr+'" aria-describedby="'+prefix+'-asking-error" aria-required="true"></div>';
 h+='<span class="field-error buy-asking-error" id="'+prefix+'-asking-error">Please enter the asking price</span>';
 h+='</div>';
 h+='<hr class="form-divider">';
